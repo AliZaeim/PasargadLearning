@@ -1,0 +1,97 @@
+﻿@model PLCore.DTOs.Course.AddUserToCourseResultViewModel
+@using PLCore.Convertors;
+@using PLDataLayer.Entities.User;
+@using PLCore.Services.Interfaces;
+@inject ITrainingService _trainingService
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "نتیجه ثبت نام";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+<div>
+    <h3 class="alert alert-info text-xs-center">
+        <span>
+            <a href="/">صفحه اصلی</a>
+        </span>
+        <span class="text-white"> / </span>
+        <span>
+            <a href="/Home/Courses?gid=0">دوره های آموزشی</a>
+        </span>
+    </h3>
+</div>
+
+
+<div class="container">
+    @if (Model.IsSuccess == true)
+    {
+        @if (Model.Course.Course_Fee == 0)
+        {
+            <h3 class="text-xs-center alert alert-info">کاربر محترم @Model.UserRole.User.UserFirstName @Model.UserRole.User.UserFamily</h3>
+            <h4 class="text-xs-center alert alert-success">ثبت نام شما با موفقیت در دوره آموزشی انجام شد</h4>
+            <div class="ptb-20 p-r-10 border-darken-1">
+                <h4 class="text-xs-center">اطلاعات دوره</h4>
+                <p>نام دوره : @Model.Course.Course_Title</p>
+                <p>مدت کلاس : @Model.Course.Course_Duration</p>
+                <p>تاریخ شروع : @Model.Course.Course_StartDate.ToShamsiWithTime()</p>
+                <p>
+                    مدرس :
+                    @if (Model.Course.CourseUsers != null)
+                    {
+                        @if (Model.Course.CourseUsers.Count() != 0)
+                        {
+                            List<UserRole> teachers = await _trainingService.GetCourseUsersByRoleAsync(Model.Course.CourseUsers.ToList(), 3 , Model.Course.Course_Id);
+                            if (teachers != null)
+                            {
+                                @foreach (var item in teachers)
+                                {
+                                    <span>@item.User.UserFirstName @item.User.UserFamily</span>
+                                }
+                            }
+                        }
+                    }
+                </p>
+                <h3 class="text-danger m-b-10 m-t-10">
+                    @{
+                        UserRole teacher = Model.Course.CourseUsers.Where(w => w.UserRole.RoleId == 4).Select(s => s.UserRole).FirstOrDefault();
+                    }
+                    @if (teacher != null)
+                    {
+                        <a class="btn btn-danger" href="@teacher.RoomLink">ورود به کلاس</a>
+                    }
+                    else
+                    {
+                        <span class="alert alert-danger">لینک ورود به کلاس فعال نیست !</span>
+                    }
+
+                </h3>
+                <p>
+                    شهریه : رایگان
+                </p>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <h3 class="text-xs-center text-danger fs-18">برای ثبت نام در دوره و پرداخت شهریه روی دکمه پرداخت کلیک کنید</h3>
+                <br /><br />
+                <div class="col-xs-12 col-md-12 m-t-10 m-b-20">
+                    <a href="/Account/PrepareFee?cId=@Model.Course.Course_Id&urId=@Model.UserRole.URId" class="btn btn-success col-md-offset-4 col-md-4 col-xs-offset-0 col-xs-12 btn-lg fs-18">پرداخت</a>
+                </div>
+                <br /><br />
+            </div>
+        }
+    }
+    else
+    {
+        <h3 class="text-xs-center alert alert-danger m-t-10 m-b-10">متاسفانه ثبت نام شماموفقیت آمیز نبود !</h3>
+    }
+</div>
+@section Footer{
+    <partial name="_Footer" />
+}

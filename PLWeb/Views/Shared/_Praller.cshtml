@@ -1,0 +1,42 @@
+﻿@using PLCore.Services.Interfaces;
+@using PLDataLayer.Entities.SubEntities;
+@inject ISubEntityService _subService
+@{
+    string sepbg;
+    Separator sep = await _subService.GetSeparatorByName("message");
+    if (sep != null)
+    {
+        sepbg = sep.BgImage;
+    }
+    else
+    {
+        sepbg = "3.jpg";
+    }
+}
+<section class="prallex-area black-opacity parallax ptb-50 wow fadeInUp" data-speed="3" data-bg-image="../images/bg/@sepbg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-xs-12 col-xs-offset-0">
+                <div class="prallex-wrap text-center">
+                    @if (sep != null)
+                    {
+                        <h4 class="fs-20 text-white"><i class="fa fa-long-arrow-left"></i>@sep.Title <i class="fa fa-long-arrow-right"></i></h4>
+                        <h2>
+                            <i class="fa fa-quote-right"></i>
+                            @sep.Comment
+                            <i class="fa fa-quote-left"></i>
+                        </h2>
+                    }
+                    else
+                    {
+                        <h2>
+                            <i class="fa fa-quote-right"></i>مهم نیست که انسان چه اندازه می داند یا چه چیز کسب کرده و چگونه پرورش یافته، مهم این است که دانسته های خود را چگونه بکار می برد.<i class="fa fa-quote-left"></i>
+                        </h2>
+                        <span><i class="fa fa-long-arrow-left"></i> الوین تافلر <i class="fa fa-long-arrow-right"></i></span>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,86 @@
+﻿@using PLCore.Services.Interfaces;
+@using PLDataLayer.Entities.Training;
+@inject ITrainingService _tService
+@{
+    List<CourseGroup> cgs = _tService.GetCourseGroupsAsync().Result.Where(w => w.ParentId == null).ToList();
+}
+@if (cgs != null)
+{
+    <section class="service-area ptb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-xs-offset-0 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2   wow fadeInUp">
+                    <div class="section-title text-center">
+                        <h2>گروه های آموزشی</h2>
+                        <p class="fs-18 text-justify">
+                            @if (cgs != null)
+                            {
+                                @if (cgs.Count() != 0)
+                                {
+                                    <span>
+                                        @cgs.FirstOrDefault(f => f.ParentId == null).CourseGroup_Comment
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        مرکز آموزش صنعت بیمه با به کارگیری مدرسین برجسته در حوزه بیمه
+                                        و بازاریابی و فروش اقدام به تولید محتوا و برگزاری دوره های آموزشی تخصصی در بیمه های اموال
+                                        اشخاص و مسئولیت نموده است.
+                                    </span>
+                                }
+
+                            }
+                            else
+                            {
+                                <span>
+                                    مرکز آموزش صنعت بیمه با به کارگیری مدرسین برجسته در حوزه بیمه
+                                    و بازاریابی و فروش اقدام به تولید محتوا و برگزاری دوره های آموزشی تخصصی در بیمه های اموال
+                                    اشخاص و مسئولیت نموده است.
+                                </span>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            @if (cgs != null)
+            {
+                @if (cgs.Count() != 0)
+                {
+                    <div class="row">
+                        @{ double delay = 0.1f; int r = 1;}
+                        @foreach (var item in cgs.OrderBy(g => g.CourseGroup_Id))
+                        {
+                            delay = 0.1 * r;
+                            string dwd = delay.ToString() + "s";
+                            foreach (var sub in item.CourseGroups)
+                            {
+                                <div class="col-md-4 col-sm-6 col-xs-12 col wow fadeInUp" data-wow-delay=".5s">
+                                    <div class="service-wrap">
+                                        <div class="service-img">
+                                            <img src="~/images/coursegroup/@sub.CourseGroup_Image" alt="@sub.CourseGroup_Title" />
+                                        </div>
+                                        <div class="service-content">
+                                            <h3>@sub.CourseGroup_Title</h3>
+                                            <p class="text-justify">
+                                                @sub.CourseGroup_Comment
+                                            <p class="text-left">
+                                                
+                                                <a href="/Home/Courses?gid=@sub.CourseGroup_Id" class="btn btn-info">مشاهده دوره ها &ensp;<span class="tag tag-danger tag-pill">@sub.Courses.Where(w=>w.Course_IsActive).Count()</span></a>
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            
+                        }
+
+                    </div>
+                }
+            }
+
+        </div>
+    </section>
+}

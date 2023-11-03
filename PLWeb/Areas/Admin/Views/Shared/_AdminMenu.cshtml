@@ -1,0 +1,249 @@
+﻿@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+    var role = await _userService.GetRoleByIdAsync(roleId);
+    var permi = await _userService.GetPermissions_of_RoleByRoleId(roleId);
+    List<int> TakRange = new List<int> { 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 };
+}
+<div data-scroll-to-active="true" class="main-menu menu-fixed menu-dark menu-accordion menu-shadow">
+    <!-- main menu header-->
+    <div class="main-menu-header">
+        <input type="text" placeholder="جستجو" class="menu-search form-control round" />
+    </div>
+    <!-- / main menu header-->
+    <!-- main menu content-->
+    <div class="main-menu-content">
+        <ul id="main-menu-navigation" data-menu="menu-navigation" class="navigation navigation-main">
+            @if (_userService.CheckPermission(1, User.Identity.Name, roleId))
+            {
+                <li class="nav-item">
+                    <a href="index.html"><i class="icon-home3"></i><span class="menu-title">مدیریت</span></a>
+                    <ul class="menu-content">
+                        @if (_userService.CheckPermission(11, User.Identity.Name, roleId))
+                        {
+                            <li class="nav-item is-shown">
+                                <a href="#"><i class="icon-user"></i><span class="menu-title">کاربران</span></a>
+                                <ul class="menu-content">
+                                    @if (_userService.CheckPermission(51, User.Identity.Name, roleId))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="~/Admin/Users/GetAllUsers"><i class="icon-users"></i><span class="menu-title">لیست</span></a>
+                                        </li>
+                                    }
+                                    @if (_userService.CheckPermission(12, User.Identity.Name, roleId))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="~/Admin/Roles/Index"><i class="icon-renren"></i><span class="menu-title">نقشها و مجوزها دسترسی</span></a>
+                                        </li>
+                                    }
+                                    <li class="is-shown">
+                                        <a href="~/Admin/Users/CreateOp"><i class="icon-user-plus"></i><span class="menu-title">ثبت اپراتور</span></a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+                        }
+
+                        @if (_userService.CheckPermission(13, User.Identity.Name, roleId) || _userService.CheckPermission(14, User.Identity.Name, roleId))
+                        {
+                            <li class=" nav-item is-shown">
+                                <a href="#"><i class="icon-book2"></i><span class="menu-title">آموزش</span></a>
+                                <ul class="menu-content">
+                                    @if (_userService.CheckPermission(13, User.Identity.Name, roleId))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="~/Admin/CourseGroups/Index" class="menu-item showspinner">گروه های آموزشی</a>
+                                        </li>
+                                    }
+                                    @if (_userService.CheckPermission(14, User.Identity.Name, roleId))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="~/Admin/Courses/Index" class="menu-item showspinner">دوره های آموزشی</a>
+                                        </li>
+                                    }
+                                </ul>
+
+                            </li>
+                        }
+                        @if (_userService.CheckPermission(26, User.Identity.Name, roleId))
+                        {
+                            <li class="is-shown">
+                                <a href="#"><i class="icon-diamond2"></i><span class="menu-title">تخفیف</span></a>
+                                <ul class="menu-content">
+                                    @if (_userService.CheckPermission(138, User.Identity.Name, roleId))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="~/Admin/SteppedDiscountTypes/Index" class="menu-item showspinner">انواع تخفیف پلکانی</a>
+                                        </li>
+                                    }
+                                    @if (_userService.CheckPermission(143, User.Identity.Name, roleId))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="~/Admin/SteppedDiscounts/Index" class="menu-item showspinner">تخفیفهای پلکانی</a>
+                                        </li>
+                                    }
+                                    @if (_userService.CheckPermission(153, User.Identity.Name, roleId))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="~/Admin/StaticDiscounts/Index" class="menu-item showspinner">تخفیفهای ثابت</a>
+                                        </li>
+                                    }
+
+                                </ul>
+                            </li>
+                        }
+
+
+
+                        @if (_userService.CheckPermission(15, User.Identity.Name, roleId))
+                        {
+                            <li class=" nav-item is-shown">
+                                <a href="#"><i class="icon-news"></i><span class="menu-title">اخبار</span></a>
+                                <ul class="menu-content">
+                                    @if (_userService.CheckPermission(73, User.Identity.Name, roleId))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="~/Admin/NewsGroups/Index" class="menu-item showspinner">گروه های خبر</a>
+                                        </li>
+                                    }
+                                    @if (_userService.CheckPermission(77, User.Identity.Name, roleId))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="~/Admin/Publishers/Index" class="menu-item showspinner">ناشران خبر</a>
+                                        </li>
+                                    }
+                                    @if (_userService.CheckPermission(81, User.Identity.Name, roleId))
+                                    {
+                                        <li class="is-shown">
+                                            <a href="~/Admin/News/Index" class="menu-item showspinner">اخبار</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+
+                        @{
+                            var ls = permi.Select(s => s.PermissionId).Intersect(TakRange);
+                        }
+                        @if (permi.Select(s => s.PermissionId).Intersect(TakRange) != null)
+                        {
+                            if (ls.Count() != 0)
+                            {
+                                <li class=" nav-item is-shown">
+                                    <a href="#"><i class="icon-paper"></i><span class="menu-title">اطلاعات تکمیلی</span></a>
+                                    <ul class="menu-content">
+                                        @if (_userService.CheckPermission(16, User.Identity.Name, roleId))
+                                        {
+                                            <li class="is-shown">
+                                                <a href="~/Admin/Sliders/Index" class="menu-item showspinner">اسلایدر</a>
+                                            </li>
+                                        }
+                                        @if (_userService.CheckPermission(18, User.Identity.Name, roleId))
+                                        {
+                                            <li class="is-shown">
+                                                <a href="~/Admin/Abouts/Index" class="menu-item showspinner">درباره ما</a>
+                                            </li>
+                                        }
+                                        @if (_userService.CheckPermission(17, User.Identity.Name, roleId))
+                                        {
+                                            <li class="is-shown">
+                                                <a href="~/Admin/Timelines/Index" class="menu-item showspinner">جدول زمانی</a>
+                                            </li>
+                                        }
+                                        @if (_userService.CheckPermission(19, User.Identity.Name, roleId))
+                                        {
+                                            <li class="is-shown">
+                                                <a href="/Admin/ContactInfoes/Index" class="menu-item showspinner">اطلاعات تماس</a>
+                                            </li>
+                                        }
+                                        @if (_userService.CheckPermission(20, User.Identity.Name, roleId))
+                                        {
+                                            <li class="is-shown">
+                                                <a href="/Admin/Headers/Index" class="menu-item showspinner">اطلاعات کلی سایت</a>
+                                            </li>
+                                        }
+                                        @if (_userService.CheckPermission(21, User.Identity.Name, roleId))
+                                        {
+                                            <li class="is-shown">
+                                                <a href="~/Admin/InstaPosts/Index" class="menu-item showspinner">اینستاگرام</a>
+                                            </li>
+                                        }
+                                        @if (_userService.CheckPermission(22, User.Identity.Name, roleId))
+                                        {
+                                            <li class="is-shown">
+                                                <a href="~/Admin/SiteFAQs/Index" class="menu-item showspinner">سوالات متداول</a>
+                                            </li>
+                                            <li class="is-shown">
+                                                <a href="~/Admin/ContactMessages/Index" class="menu-item showspinner">پیامها</a>
+                                            </li>
+                                        }
+                                        @if (_userService.CheckPermission(23, User.Identity.Name, roleId))
+                                        {
+                                            <li class="is-shown">
+                                                <a href="~/Admin/PageInfoes/Index" class="menu-item showspinner">اطلاعات صفحات</a>
+                                            </li>
+                                        }
+                                        @if (_userService.CheckPermission(24, User.Identity.Name, roleId))
+                                        {
+                                            <li class="is-shown">
+                                                <a href="~/Admin/PackInfoes/Index" class="menu-item showspinner">اطلاعات پکیج ها</a>
+                                            </li>
+                                        }
+                                        @if (_userService.CheckPermission(25, User.Identity.Name, roleId))
+                                        {
+                                            <li class="is-shown">
+                                                <a href="~/Admin/Separators/Index" class="menu-item showspinner">جداکننده ها</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+
+                        }
+                    </ul>
+                </li>
+            }
+            @if (roleId == 1)
+            {
+                <li class="is-shown">
+                    <a href="#"><i class="icon-home32"></i><span class="menu-title">اتاق های آموزشی</span></a>
+                    <ul class="menu-content">
+                        <li class="is-shown">
+                            <a href="~/Admin/InsRooms/GetRooms" class="menu-item showspinner">اتاق ها</a>
+                        </li>
+                        <li class="is-shown">
+                            <a href="~/Admin/InsRooms/GetUsers" class="menu-item showspinner">کاربران</a>
+                        </li>
+                        <li class="is-shown">
+                            <a href="~/Admin/InsRooms/CreateRoom" class="menu-item showspinner">ایجاد اتاق</a>
+                        </li>
+                    </ul>
+                </li>
+            }
+            <li class="is-shown">
+                @if (_userService.CheckPermission(2, User.Identity.Name, roleId))
+                {
+                    <a href="~/Admin/Reports/yCourses" class="menu-item showspinner"><i class="icon-list-alt"></i><span class="menu-title">دوره های شما</span></a>
+                }
+                @if (_userService.CheckPermission(3, User.Identity.Name, roleId))
+                {
+                    <a href="~/Admin/Reports/yStudents" class="menu-item showspinner"><i class="icon-user-times"></i><span class="menu-title">فراگیران شما</span></a>
+                }
+                @*@if (_userService.CheckPermission(4, User.Identity.Name, roleId))
+                    {
+                        <a href="~/Admin/Reports/GetAllUsers" class="menu-item showspinner"><i class="icon-users2"></i><span class="menu-title">اساتید شما</span></a>
+                    }*@
+
+
+
+            </li>
+
+        </ul>
+    </div>
+    <!-- /main menu content-->
+    <!-- main menu footer-->
+    <!-- include includes/menu-footer-->
+    <!-- main menu footer-->
+</div>

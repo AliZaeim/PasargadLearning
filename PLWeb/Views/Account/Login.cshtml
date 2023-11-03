@@ -1,0 +1,71 @@
+﻿@model PLCore.DTOs.Account.LoginViewModel
+
+@{
+    ViewData["Title"] = "ورود به سایت";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section PageDescription{
+    <meta name="description" content="ورود به پتل کاربری مرکز آموزش شرکت بیمه پاسارگاد ">
+}
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+
+
+
+
+<h1 class="alert alert-info text-xs-center">ورود به سایت</h1>
+<h3 class="text-xs-center">
+
+    <span class="border-b-black-1 p-l-5 p-r-5">@Model.RoleTitle</span>
+
+</h3>
+<hr />
+<div class="container m-b-100">
+    <div class="row">
+        <div class="col-xs-offset-0 col-xs-12 col-md-offset-4 col-md-4">
+
+            <form asp-action="Login">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="LoginKey" />
+                <input type="hidden" asp-for="LoginReturnPath" />
+                <input type="hidden" asp-for="RoleId" />
+                <input type="hidden" asp-for="RoleTitle" />
+                <div class="form-group">
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserPassword" class="control-label"></label>
+                    <input asp-for="UserPassword" class="form-control" />
+                    <span asp-validation-for="UserPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+
+                    <input type="checkbox" asp-for="RememberMe" id="remember">
+                    <label> مرا به خاطر بسپار؟</label>
+
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="تایید" class="btn btn-primary btn-lg col-xs-12 fs-18" />
+                    <a href="/ForgotPassword" class="btn btn-warning col-xs-12 m-t-25 "><span class="text-danger fs-18">رمز عبور را فراموش کرده ام !</span></a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+@section Footer{
+    <partial name="_Footer" />
+}
+@section Scripts{
+
+    <script src="~/LayoutRef/js/jquery.validate.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.js"></script>
+
+}
+

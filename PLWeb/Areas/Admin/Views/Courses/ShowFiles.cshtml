@@ -1,0 +1,20 @@
+﻿@model IEnumerable<PLDataLayer.Entities.Training.CourseFile>
+@using PLCore.Services.Interfaces;
+@inject ITrainingService _tService
+@{
+    ViewData["Title"] = "فایلهای دوره آموزشی";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{ 
+    string type = ViewData["type"].ToString();
+    string cid = ViewData["cid"].ToString();
+}
+    <div class="row">
+        @if (type == "image")
+        {
+            <h3 class="text-xs-center alert alert-info">فایل های تصویری</h3>
+        }
+    </div>
+
+

@@ -1,0 +1,191 @@
+﻿@model IEnumerable<PLDataLayer.Entities.Training.CourseUser>
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@inject ITrainingService _trainingService
+@inject ISkyService _skyService;
+@using PLDataLayer.Entities.User;
+@using PLCore.Convertors;
+
+@{
+    ViewData["Title"] = "فراگیران";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+@if (Model != null)
+{
+    if (Model.Count() != 0)
+    {
+
+        int roleId = int.Parse(User.FindFirst("RoleId").Value);
+        int cId = Model.FirstOrDefault().Course_Id;
+        UserRole Teacher = null;
+        List<PLDataLayer.Entities.SkyRooms.SkyUserViewModel> skyUserViewModels = null;
+        Teacher = ViewData["teacher"] as UserRole;
+        if (Teacher != null)
+        {
+            skyUserViewModels = _skyService.GetRoomUsers(Teacher.room_id);
+        }
+
+        <h1 class="text-xs-center alert alert-info">
+            فراگیران دوره @ViewData["course"].ToString() <span class="tag tag-primary fs-18 tag-pill">@Model.Count()</span>
+            <a href="/Admin/Courses/Index" class="btn btn-warning float-xs-left">بازگشت</a>
+        </h1>
+
+        <form action="" method="post">
+            <input name="roomId" type="hidden" value="@Teacher.room_id" />
+            <input name="cId" type="hidden" value="@cId" />
+            <div class="col-xs-12 m-b-3">
+                <div class="col-md-6 col-xs-12">
+                    <p class="text-danger font-weight-bold fs-20 pt-1">حتما پس از برگزاری کلاس دسترسی فراگیران را از اتاق حذف کنید</p>
+                </div>
+                <div class="col-md-6 col-xs-12">
+                    <input type="submit" formaction="/Admin/Courses/RemoveUsersFromRoom" value="حذف دسترسی از اتاق" class="offset-md-1 col-md-5 col-xs-6 btn btn-danger btn-lg mb-2" />
+                    <input type="submit" formaction="/Admin/Courses/AddUsersToRoom" value="افزودن دسترسی به اتاق" class="offset-md-1 col-md-5 col-xs-6 btn btn-success btn-lg mb-2" />
+                </div>
+
+            </div>
+            <br />
+            <div class="col-xs-12 table-responsive">
+                <table class="table table-bordered fs-14">
+                    <thead>
+                        <tr>
+                            <th class="text-xs-center align-middle p-0">
+                                <input type="checkbox" class="checkbox-1x" id="Selall" title="انتخاب همه" />
+                            </th>
+                            <th class="text-xs-center align-middle p-0">
+                                دسترسی به اتاق
+                            </th>
+                            <th class="text-xs-center align-middle p-0">
+                                @Html.DisplayNameFor(model => model.CU_CreateDate)
+                            </th>
+                            <th class="text-xs-center align-middle p-1">
+                                @Html.DisplayNameFor(model => model.UserRole)
+                            </th>
+                            <th class="text-xs-center align-middle p-0">
+                                @Html.DisplayNameFor(model => model.UserRole.User.UserCellPhone)
+                            </th>
+                            <th class="text-xs-center align-middle p-1">
+                                @Html.DisplayNameFor(model => model.Course.Course_Fee)
+                            </th>
+                            <th class="text-xs-center align-middle p-1">
+                                @Html.DisplayNameFor(model => model.StaticDiscountCode)
+                            </th>
+                            <th class="text-xs-center align-middle p-1">
+                                @Html.DisplayNameFor(model => model.DisValue)
+                            </th>
+                            <th class="text-xs-center align-middle p-1">
+                                تخفیف کل
+                            </th>
+                            <th class="text-xs-center align-middle p-1">
+                                @Html.DisplayNameFor(model => model.PayValue)
+                            </th>
+                            <th class="text-xs-center align-middle p-0">
+                                @Html.DisplayNameFor(model => model.PayDate)
+                            </th>
+                            <th class="text-xs-center align-middle p-0">
+                                @Html.DisplayNameFor(model => model.IsActive)
+                            </th>
+                            <th class="text-xs-center align-middle p-1">
+                                عملیات
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="cTable">
+
+                        @foreach (var item in Model)
+                        {
+                            UserRole userRole = await _userService.GetUserRoleByIdAsync(item.URId);
+                            <tr>
+                                <td class="text-xs-center align-middle p-1">
+                                    <input type="checkbox" class="checkbox-1x chk" name="userIds" value="@item.UserRole.User.Sky_userId" />
+                                </td>
+                                <td class="text-xs-center align-middle p-0">
+
+                                    @if (skyUserViewModels.Any(a => a.username == item.UserRole.User.UserCellPhone))
+                                    {
+                                        <span class="tag tag-success p-1">دارد</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="tag tag-danger p-1">ندارد</span>
+                                    }
+                                </td>
+                                <td class="text-xs-center align-middle p-0">
+                                    @item.CU_CreateDate.ToShamsiWithTime()
+                                </td>
+                                <td class="text-xs-center align-middle p-1">
+                                    @userRole.User.UserFirstName @userRole.User.UserFamily
+                                </td>
+                                <td class="text-xs-center align-middle p-0">
+                                    @Html.DisplayFor(modelItem => item.UserRole.User.UserCellPhone)
+                                </td>
+                                <td class="text-xs-center align-middle p-1">
+                                    @item.Course.Course_Fee.ToString("N0")
+                                </td>
+                                <td class="text-xs-center align-middle p-1 font-tahomaBold" dir="ltr">
+                                    @Html.DisplayFor(modelItem => item.StaticDiscountCode)
+                                </td>
+                                <td class="text-xs-center align-middle p-1">
+                                    @Html.DisplayFor(modelItem => item.DisValue)
+                                </td>
+                                <td class="text-xs-center align-middle p-1">
+                                    @{
+                                        int TotalDis = 0;
+                                        if(item.IsActive == true)
+                                        {
+                                            TotalDis =item.Course.Course_Fee - item.PayValue;
+                                        }
+                                    }
+                                    @TotalDis.ToString("N0")
+                                </td>
+                                <td class="text-xs-center align-middle p-1">
+                                    @item.PayValue.ToString("N0")
+                                </td>
+
+                                <td class="text-xs-center align-middle p-0">
+                                    @item.PayDate.ToShamsiN_WithTime()
+                                </td>
+                                <td class="text-xs-center align-middle p-0">
+                                    @Html.DisplayFor(modelItem => item.IsActive)
+                                </td>
+                                <td class="text-xs-center align-middle p-1">
+                                    @if (roleId == 1)
+                                    {
+                                        <a asp-action="EditCourseUser" asp-route-id="@item.CU_Id" data-id="@item.CU_Id" class="btnEdit">ویرایش</a> <span>|</span>
+                                    }
+
+                                    @if (_userService.CheckPermission(72, User.Identity.Name, roleId))
+                                    {
+                                        <a asp-action="RemoveCourseUser" class="text-danger" asp-route-id="@item.CU_Id">حذف</a>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        <div class="col-xs-12">
+            <a href="/Admin/Courses/Index" class="btn btn-warning float-xs-left mt-2">بازگشت</a>
+        </div>
+
+
+    }
+}
+else
+{
+    <h1 class="text-xs-center alert alert-danger">کاربری موجود نمی باشد !</h1>
+}
+@section Scripts
+{    
+    <script>
+        
+        $(document).ready(function () {
+            
+            $("#Selall").click(function () {
+                $(".chk").prop('checked', this.checked);
+            })
+        })
+    </script>
+}

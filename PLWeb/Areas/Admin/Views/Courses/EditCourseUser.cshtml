@@ -1,0 +1,47 @@
+﻿@model PLDataLayer.Entities.Training.CourseUser
+@{
+    ViewData["Title"] = "ویرایش کاربر دوره";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+<h4 class="text-xs-center alert alert-info">ویرایش کاربر دوره @Model.Course.Course_Title | @Model.UserRole.User.UserFirstName @Model.UserRole.User.UserFamily</h4>
+<hr />
+<div class="row" id="EditUser">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="EditCourseUser">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CU_Id" />
+            <input type="hidden" asp-for="CU_CreateDate" />
+            <input type="hidden" asp-for="PayDate" />
+            <input type="hidden" asp-for="URId" />
+            <input type="hidden" asp-for="Course_Id" />
+            <div class="form-group">
+                <label asp-for="PayValue" class="control-label"></label>
+                <input asp-for="PayValue" class="form-control" />
+                <span asp-validation-for="PayValue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StaticDiscountCode" class="control-label"></label>
+                <input asp-for="StaticDiscountCode" class="form-control" />
+                <span asp-validation-for="StaticDiscountCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DisValue" class="control-label"></label>
+                <input asp-for="DisValue" class="form-control" />
+                <span asp-validation-for="DisValue" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+                <a href="/Admin/Courses/CourseUsers?cid=@Model.Course_Id" class="btn btn-warning mt-2 col-xs-12">بازگشت</a>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="~/LayoutRef/js/jquery.validate.min.js"></script>
+<script src="~/LayoutRef/js/jquery.validate.unobtrusive.min.js"></script>

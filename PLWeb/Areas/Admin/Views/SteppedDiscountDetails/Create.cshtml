@@ -1,0 +1,81 @@
+﻿@model PLCore.DTOs.Course.SteppedDiscountDatailsViewModel
+
+@{
+    ViewData["Title"] = "ثبت ردیف تخفیف پله ای";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">ثبت ردیف تخفیف پله ای برای کد @Model.Code</h1>
+
+
+<div class="row">
+    <div class="offset-md-5 col-md-2 col-xs-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="type" type="hidden" />
+            <input asp-for="Code" type="hidden" />
+            <input asp-for="StId" type="hidden" />
+           
+            
+            @if (Model.type == "person")
+            {
+                <div class="form-group">
+                    <label asp-for="FromPerson" class="control-label"></label>
+                    <input asp-for="FromPerson" data-val=true data-val-required="لطفا از نفر را وارد کنید" class="form-control" />
+                    <span asp-validation-for="FromPerson" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ToPerson" class="control-label"></label>
+                    <input asp-for="ToPerson" data-val=true data-val-required="لطفا تا نفر را وارد کنید" class="form-control" />
+                    <span asp-validation-for="ToPerson" class="text-danger"></span>
+                </div>
+            }
+            @if (Model.type == "time")
+            {
+                <div class="form-group">
+                    <label asp-for="FromDate" class="control-label"></label>
+                    <input asp-for="FromDate" name="FromDate" data-mask="0000/00/00" placeholder="____/__/__" dir="ltr" data-val=true data-val-required="لطفا از تاریخ را وارد کنید" class="form-control" />
+                    <span asp-validation-for="FromDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FromTime" class="control-label"></label>
+                    <input asp-for="FromTime" name="FromTime" data-mask="00:00" placeholder="__:__" dir="ltr" data-val=true data-val-required="لطفا از ساعت را وارد کنید" class="form-control" />
+                    <span asp-validation-for="FromTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ToDate" class="control-label"></label>
+                    <input asp-for="ToDate" name="ToDate" data-mask="0000/00/00" placeholder="____/__/__" dir="ltr" data-val=true data-val-required="لطفا تا تاریخ را وارد کنید" class="form-control" />
+                    <span asp-validation-for="ToDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ToTime" class="control-label"></label>
+                    <input asp-for="ToTime" name="ToTime" data-mask="00:00" placeholder="__:__" dir="ltr" data-val=true data-val-required="لطفا تا ساعت را وارد کنید" class="form-control" />
+                    <span asp-validation-for="ToTime" class="text-danger"></span>
+                </div>
+            }
+
+            <div class="form-group">
+                <label asp-for="Percent" class="control-label"></label>
+                <input asp-for="Percent"  data-val=true data-val-number="عدد صحیح یا عدد اعشاری وارد کنید"   class="form-control" />
+                <span asp-validation-for="Percent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" asp-route-code="@Model.Code">بازگشت</a>
+</div>
+@section Scripts
+{
+    <script src="~/AdminRef/app-assets/js/jquery.mask.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.min.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+
+    </script>
+}

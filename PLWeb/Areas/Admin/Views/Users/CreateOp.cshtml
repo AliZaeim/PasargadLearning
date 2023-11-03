@@ -1,0 +1,64 @@
+﻿@model PLCore.DTOs.General.OperatorUserViewModel
+
+@{
+    ViewData["Title"] = "ثبت اپراتور";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">
+    ثبت اپراتور
+    <a asp-action="GetAllUsers" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+<hr />
+<div class="row">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="CreateOp">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>            
+            <div class="form-group">
+                <label asp-for="UserFirstName" class="control-label"></label>
+                <input asp-for="UserFirstName" class="form-control" />
+                <span asp-validation-for="UserFirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserFamily" class="control-label"></label>
+                <input asp-for="UserFamily" class="form-control" />
+                <span asp-validation-for="UserFamily" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserNC" class="control-label"></label>
+                <input asp-for="UserNC" class="form-control" />
+                <span asp-validation-for="UserNC" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserBirthDate" class="control-label"></label>
+                <input asp-for="UserBirthDate" class="form-control" />
+                <span asp-validation-for="UserBirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserSex" class="control-label"></label>
+                <select asp-for="UserSex" class="form-control">
+                    <option value="مرد">مرد</option>
+                    <option value="زن">زن</option>
+                </select>
+                <span asp-validation-for="UserSex" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserCellphone" class="control-label"></label>
+                <input asp-for="UserCellphone" class="form-control" />
+                <span asp-validation-for="UserCellphone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts
+{
+    <script src="~/LayoutRef/js/jquery.validate.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.js"></script>
+    <script>
+
+    </script>
+}
+

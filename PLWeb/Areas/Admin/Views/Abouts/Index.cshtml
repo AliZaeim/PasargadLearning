@@ -1,0 +1,71 @@
+﻿@model IEnumerable<PLDataLayer.Entities.SubEntities.About>
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "لیست درباره ما";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">لیست درباره ما</h1>
+@if (_userService.CheckPermission(104, User.Identity.Name, roleId))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت درباره ما</a>
+    </p>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.About_Title)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.About_Text)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.About_Image)
+                </th>
+                <th class="text-xs-center align-middle"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.About_Title)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.Raw(item.About_Text)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        <img src="~/images/about/@item.About_Image" height="70" width="70" class="img-thumbnail" />
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @if (_userService.CheckPermission(105, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.About_Id">ویرایش</a> <span> | </span>
+                        }
+                        @if (_userService.CheckPermission(106, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.About_Id"> جزئیات </a> <span> |</span>
+                        }
+                        @if (_userService.CheckPermission(107, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.About_Id"> حــذف </a>
+                        }
+
+
+
+
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

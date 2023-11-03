@@ -1,0 +1,235 @@
+﻿@model PLCore.DTOs.General.NewsViewModel
+@using PLCore.Convertors;
+@using PLCore.Services.Interfaces;
+@inject IBlogService _blogService
+@using PLDataLayer.Entities.User;
+@inject ISubEntityService _subService
+@using PLDataLayer.Entities.SubEntities;
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    PageInfo pageInfo = await _subService.GetPageInfoByNameAsync("news");
+    string pagebg = null;
+    if (pageInfo != null)
+    {
+        pagebg = "../../images/page/" + pageInfo.PInfo_Image;
+        ViewData["Title"] = pageInfo.PInfo_Title;
+    }
+    else
+    {
+        pagebg = "../../images/bg/" + "9.jpg";
+        ViewData["Title"] = "اخبار مرکز آموزش بیمه";
+    }
+
+    string k = string.Empty;
+    if (!string.IsNullOrEmpty(Model.Key))
+    {
+
+        k = Model.Key.Substring(1, Model.Key.Length - 1).Trim();
+    }
+
+
+}
+@section PageDescription{
+    <meta name="description" content="اخبار مرکز آموزش بیمه  ">
+}
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+
+<!-- breadcumb-area start -->
+<div class="breadcumb-area black-opacity" style="background:url(@pagebg)">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="breadcumb-wrap">
+                    @if (pageInfo != null)
+                    {
+                        <h2>@pageInfo.PInfo_Title</h2>
+                    }
+                    else
+                    {
+                        <h2>اخبار مرکز آموزش بیمه</h2>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="breadcumb-menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul>
+                        <li><a href="/">صفحه اصلی</a></li>
+                        @if (Model.NewsGroup == null && Model.Publisher == null && Model.Date == null && string.IsNullOrEmpty(Model.Key))
+                        {
+                            <li>/</li>
+                            <li>اخبار</li>
+                        }
+
+                        @if (Model.NewsGroup != null)
+                        {
+                            <li>/</li>
+                            <li><a href="/News">اخبار</a></li>
+                            <li>/</li>
+                            <li>@Model.NewsGroup.NewsGroup_Title</li>
+                        }
+                        @if (Model.Publisher != null)
+                        {
+                            <li>/</li>
+                            <li><a href="/News">اخبار</a></li>
+                            <li>/</li>
+                            <li>@Model.Publisher.Publisher_Title</li>
+                        }
+                        @if (Model.Date != null)
+                        {
+                            <li>/</li>
+                            <li><a href="/News">اخبار</a></li>
+                            <li>/</li>
+                            <li>@Model.Date.ToShamsiN()</li>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Key))
+                        {
+                            @if (Model.Key.StartsWith("a"))
+                            {
+                                <li>/</li>
+                                <li><a href="/News">اخبار</a></li>
+                                <li>/</li>
+                                <li>آرشیو : @Model.Key.Substring(1, Model.Key.Length - 1)</li>
+                            }
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Key))
+                        {
+                            @if (Model.Key.StartsWith("t"))
+                            {
+                                <li>/</li>
+                                <li><a href="/News">اخبار</a></li>
+                                <li>/</li>
+                                <li>تگ : @Model.Key.Substring(1, Model.Key.Length - 1)</li>
+                            }
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Key))
+                        {
+                            @if (Model.Key.StartsWith("s"))
+                            {
+                                <li>/</li>
+                                <li><a href="/News">اخبار</a></li>
+                                <li>/</li>
+                                <li>جستجو برای : @Model.Key.Substring(1, Model.Key.Length - 1)</li>
+                            }
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcumb-area end -->
+<!-- blog-area start -->
+<!-- blog-area start -->
+<section class="blog-area ptb-140 bg-1">
+    <div class="container">
+        <div class="row">
+            @if (Model.News.Count == 0)
+            {
+                <h2 class="alert alert-warning text-xs-center ">خبری یافت نشد !</h2>
+            }
+            else
+            {
+                @foreach (var item in Model.News.OrderByDescending(r => r.News_Date))
+                {
+                    <div class="col-md-4 col-sm-6 col-xs-12 col">
+                        <div class="blog-wrap mb-30">
+
+                            <div class="blog-img">
+                                @if (!string.IsNullOrEmpty(item.News_Image))
+                                {
+                                    <img src="/images/blog/@item.News_Image" alt="@item.News_Title" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/no-img450450.jpg" alt="@item.News_Title" />
+                                }
+
+                            </div>
+                            <div class="blog-content">
+                                <div class="blog-meta">
+                                    <ul>
+                                        <li>
+                                            @{
+                                                string kp = "p" + item.Publisher_Id.ToString();
+                                            }
+                                            <a href="/News/@kp"><i class="fa fa-user" title="ناشر"></i>@item.Publisher.Publisher_Title</a>
+                                        </li>
+                                        <li>
+                                            @{
+                                                string kg = "g" + item.NewsGroup_Id.ToString();
+                                            }
+                                            <a href="/News/@kg"><i class="fa fa-group" title="گروه خبر"></i>@item.NewsGroup.NewsGroup_Title</a>
+                                        </li>
+                                        <li>
+                                            @{
+                                                string kd = "d" + item.News_Date.ToShortDateString().Replace("/", " ");
+                                            }
+                                            <a href="~/News/@kd"><i class="fa fa-calendar-times-o" title="تاریخ"></i>@item.News_Date.ToShamsi()</a>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+                                <h3><a href="~/News/d/@item.News_Code">@item.News_Title</a></h3>
+                                <p class="text-justify">
+                                    @Html.Raw(item.News_Abstract)
+
+                                </p>
+                                @if (!string.IsNullOrEmpty(k))
+                                {
+                                    <a href="~/News/d/@item.News_Code?srch=@k" class="btn-style float-l block">ادامه خبر</a><br />
+                                }
+                                else
+                                {
+                                    <a href="~/News/d/@item.News_Code" class="btn-style float-l block">ادامه خبر</a><br />
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+
+        </div>
+    </div>
+</section>
+<!-- blog-area end -->
+<!-- blog-area end -->
+@section Footer{
+    <partial name="_Footer" />
+}
+<input type="hidden" id="key" class="bg-danger" value="@k" />
+@section Scripts{
+    <script src="~/LayoutRef/js/jquery.mark.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var k = $("#key").val();
+
+            $(".blog-area").mark(k, {
+                "className": "bg-info",
+                "separateWordSearch": false,
+                "accuracy": {
+                    "value": "exactly",
+                    "limiters": [",", "."]
+                },
+                "exclude": [
+                    '.btn-style'
+                ]
+            });
+        });
+    </script>
+}

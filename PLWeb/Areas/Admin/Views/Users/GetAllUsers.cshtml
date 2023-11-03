@@ -1,0 +1,274 @@
+﻿@model IEnumerable<PLDataLayer.Entities.User.UserRole>
+@using PLDataLayer.Entities.User;
+@using PLCore.Services.Interfaces;
+@using PLCore.Convertors;
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "تمام کاربران";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["message"] != null)
+{
+    <h2 class="text-xs-center alert alert-success">@TempData["message"].ToString()</h2>
+}
+<style>
+    table tr th {
+        padding: 1mm !important;
+    }
+
+    table tr td {
+        padding: 1mm !important;
+    }
+</style>
+<h1 class="text-xs-center alert alert-info">تمام کاربران</h1>
+
+<div class="col-xs-12 offset-md-4 col-md-4 mb-2">
+    <input placeholder="جستجو" class="form-control" id="myInput" type="text" />
+</div>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle ">#</th>
+                <th class="text-xs-center align-middle ">تاریخ ثبت</th>
+                <th class="text-xs-center align-middle ">نام و نام خانوادگی</th>
+                <th class="text-xs-center align-middle ">کد ملی</th>
+                <th class="text-xs-center align-middle ">تلفن</th>
+                <th class="text-xs-center align-middle ">تاریخ تولد</th>
+                <th class="text-xs-center align-middle ">شهر</th>
+                <th class="text-xs-center align-middle ">کاربری</th>
+                <th class="text-xs-center align-middle ">نقش</th>
+                <th class="text-xs-center align-middle ">عملیات</th>
+            </tr>
+        </thead>
+        <tbody id="myTable">
+            @{ int rad = 1;}
+            @foreach (var item in Model.GroupBy(g => g.User).OrderByDescending(r => r.Key.UserRegisteredDate))
+            {
+                <tr>
+                    <td class="text-xs-center align-middle ">@rad</td>
+                    <td class="text-xs-center align-middle ">@item.Key.UserRegisteredDate.ToShamsiWithTime()</td>
+                    <td class="text-xs-center align-middle ">@item.Key.UserFirstName @item.Key.UserFamily</td>
+                    <td class="text-xs-center align-middle ">@item.Key.UserNC</td>
+                    <td class="text-xs-center align-middle ">@item.Key.UserCellPhone</td>
+                    <td class="text-xs-center align-middle ">@item.Key.UserBirthDate</td>
+                    <td class="text-xs-center align-middle ">
+                        @{
+                            User user = await _userService.GetUserByIdAsync((int)item.Key.UserId);
+                        }
+                        @if (user != null)
+                        {
+                            if (user.CountyId != null)
+                            {
+                                <span>@user.County.CountyName</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </td>
+                    <th class="text-xs-center align-middle ">
+                        @if (item.Key.UserIsActive == true)
+                        {
+                            <span class="tag tag-success cursor-pointer isact" data-userName="@item.Key.UserName" title="فعال" data-fullname="@item.Key.UserFirstName @item.Key.UserFamily" data-act="false">فعال</span>
+                        }
+                        else
+                        {
+                            <span class="tag tag-danger cursor-pointer isact" data-userName="@item.Key.UserName" title="غیرفعال" data-fullname="@item.Key.UserFirstName @item.Key.UserFamily" data-act="true">غیرفعال</span>
+                        }
+                    </th>
+                    <td class="text-xs-center align-middle ">
+                        @{
+                            List<Role> roles = await _userService.Get_User_Roles_ByNC_Async(item.Key.UserNC);
+
+                        }
+                        @foreach (var rol in roles.OrderBy(r => r.RoleId))
+                        {
+                            UserRole userRole = await _userService.GetUserRoleBy_UserName_RoleId(item.Key.UserName, rol.RoleId);
+                            if (userRole.IsActive == true)
+                            {
+                                <span class="tag tag-success acde cursor-pointer" id="@rol.RoleId" title="فعال" data-userName="@item.Key.UserName" data-roleId="@rol.RoleId" data-act="false">
+                                    @rol.RoleTitle
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="tag tag-danger acde cursor-pointer" id="@rol.RoleId" title="غیرفعال" data-userName="@item.Key.UserName" data-roleId="@rol.RoleId" data-act="true">
+                                    @rol.RoleTitle
+                                </span>
+                            }
+
+
+                        }
+
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        <a asp-action="Edit" asp-route-id="@item.Key.UserId" title="ویرایش"><i class="fa fa-edit text-success"></i></a>&ensp;
+                        <a asp-action="Details" asp-route-id="@item.Key.UserId" title="جزئیات"><i class="fa fa-list-alt text-info"></i></a>&ensp;
+                        @*<a href="" title="حــذف"><i class="fa fa-remove text-danger"></i></a>*@
+                        @if (roles.Any(a => a.RoleId == 3))
+                        {
+                            UserRole userRole = await _userService.GetUserRoleBy_UserName_RoleId(item.Key.UserName, 3);
+                            if (userRole != null)
+                            {
+                                <a href="/Admin/Users/UpdateTeacherInfo?urId=@userRole.URId" title="ویرایش اطلاعات مدرس"><i class="fa fa-edit text-danger"></i></a>
+                            }
+                        }
+
+                        
+                    </td>
+    </tr>
+    rad++;
+    }
+</tbody>
+</table>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/LayoutRef/js/jquery.mark.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $("#myInput").on("propertychange change keyup paste input", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+                $("#myTable").mark($(this).value(), {
+                    "className": "bg-warning",
+                });
+
+            });
+            $(".acde").click(function () {
+
+                var un = $(this).attr("data-userName");
+                var rid = $(this).attr("data-roleId");
+                var ac = $(this).attr("data-act");
+                var rn = $(this).text();
+                var par = $(this).parent();
+                var pr;
+                if (ac === "true") {
+                    pr = " آیا مطمئن به فعال کردن نقش" + rn + " هستید؟";
+                }
+                if (ac === "false") {
+                    pr = " آیا مطمئن به غیرفعال کردن نقش" + rn + " هستید؟";
+                }
+                //var p = confirm(pr);
+                var th = $(this);
+                Swal.fire({
+                    title: 'عملیات نقش',
+                    text: pr,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'بله هستم',
+                    cancelButtonText: "انصراف"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url: "/Admin/Users/AcDeUserRole",
+                            data: { userName: un, roleId: rid, act: ac },
+                            type: "Get",
+                            success: function (data) {
+                                Swal.fire(
+                                    'انجام شد',
+                                    'عملیات با موفقیت انجام شد',
+                                    'success'
+                                );
+                                if (ac === "true") {
+                                    th.attr("data-act", "false");
+                                    th.attr("title", "فعال");
+                                    //th.text("فعال");
+                                    th.removeClass("tag-danger").addClass("tag-success");
+                                }
+                                if (ac === "false") {
+                                    th.attr("data-act", "true");
+                                    th.attr("title", "غیرفعال");
+                                    //th.text("غیرفعال");
+                                    th.removeClass("tag-success").addClass("tag-danger");
+                                }
+
+
+                            }
+                        })
+
+                    }
+                })
+            })
+            $(".isact").click(function () {
+
+                var un = $(this).attr("data-userName");
+                var fN = $(this).attr("data-fullname");
+                var ac = $(this).attr("data-act");
+
+                var pr;
+                if (ac === "true") {
+                    pr = " آیا مطمئن به فعال کردن کاربری" + " " + fN + " هستید؟";
+                }
+                if (ac === "false") {
+                    pr = " آیا مطمئن به غیرفعال کردن کاربری" + " " + fN + " هستید؟";
+                }
+                //var p = confirm(pr);
+                var th = $(this);
+                Swal.fire({
+                    title: 'عملیات نقش',
+                    text: pr,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'بله هستم',
+                    cancelButtonText: "انصراف"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url: "/Admin/Users/AcDeUser",
+                            data: { userName: un, act: ac },
+                            type: "Get",
+                            success: function (result) {
+                                if (result === true) {
+                                    Swal.fire(
+                                        'انجام شد',
+                                        'عملیات با موفقیت انجام شد',
+                                        'success'
+                                    );
+                                }
+
+                                if (ac === "true") {
+                                    th.attr("data-act", "false");
+                                    th.attr("title", "فعال");
+                                    th.text("فعال");
+                                    th.removeClass("tag-danger").addClass("tag-success");
+                                }
+                                if (ac === "false") {
+                                    th.attr("data-act", "true");
+                                    th.attr("title", "غیرفعال");
+                                    th.text("غیرفعال");
+                                    th.removeClass("tag-success").addClass("tag-danger");
+                                }
+                                e.stopPropagation();
+
+                            }
+                        })
+
+                    }
+                })
+            })
+            //$(".ncFile").elevateZoom();
+
+
+        });
+
+
+    </script>
+}

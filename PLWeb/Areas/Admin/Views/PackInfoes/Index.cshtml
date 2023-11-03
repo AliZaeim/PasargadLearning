@@ -1,0 +1,65 @@
+﻿@model IEnumerable<PLDataLayer.Entities.SubEntities.PackInfo>
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "اطلاعات پکیج ها";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">اطلاعات پکیج ها</h1>
+@if (_userService.CheckPermission(131, User.Identity.Name, roleId))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت اطلاعات</a>
+    </p>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.PackInfo_PackName)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.PackInfo_Title)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.PackInfo_Comment)
+                </th>
+                <th class="text-xs-center align-middle">عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.PackInfo_PackName)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.PackInfo_Title)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.PackInfo_Comment)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @if (_userService.CheckPermission(132, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.PackInfo_Id">ویرایش</a> <span> | </span>
+                        }
+                        @if (_userService.CheckPermission(133, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.PackInfo_Id">حــذف</a>
+                        }
+
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

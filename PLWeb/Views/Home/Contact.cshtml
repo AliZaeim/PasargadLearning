@@ -1,0 +1,171 @@
+﻿@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subService
+@using PLDataLayer.Entities.SubEntities;
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    PageInfo pageInfo = await _subService.GetPageInfoByNameAsync("contact");
+    ContactInfo contactInfo = _subService.GetContactInfosAsync().Result.LastOrDefault();
+    string pagebg = null;
+    if (pageInfo != null)
+    {
+        pagebg = "../../images/page/" + pageInfo.PInfo_Image;
+        ViewData["Title"] = pageInfo.PInfo_Title;
+    }
+    else
+    {
+        pagebg = "../../images/bg/" + "9.jpg";
+        ViewData["Title"] = "تماس با مرکز آموزش بیمه";
+    }
+}
+@section PageDescription{
+    <meta name="description" content="تماس با مرکز آموزش بیمه  ">
+}
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+<!-- breadcumb-area start -->
+<div class="breadcumb-area black-opacity" style="background:url(@pagebg)">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="breadcumb-wrap">
+                    @if (pageInfo == null)
+                    {
+                        <h2>تماس با مرکز آموزش صنعت بیمه</h2>
+                    }
+                    else
+                    {
+                        <h2>@pageInfo.PInfo_Title</h2>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="breadcumb-menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul>
+                        <li><a href="/">صفحه اصلی</a></li>
+                        <li>/</li>
+                        <li>تماس با ما</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcumb-area end -->
+<!-- contact-area start -->
+<div class="contact-area ptb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-xs-12">
+                <div class="contact-wrap form-style">
+                    <h3 class="text-xs-center alert alert-info">ارسال پیام</h3>
+                    @{
+                        PLCore.DTOs.PUser.SendMessageViewModel sendMessageViewModel = new PLCore.DTOs.PUser.SendMessageViewModel()
+                        {
+                            IsSuccess = false
+                        };
+                    }
+                    <partial name="SendMessage" model="sendMessageViewModel" />
+
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <div class="contact-wrap">
+                    <ul>
+                        <li>
+                            <i class="fa fa-phone"></i>
+                            @if (contactInfo == null)
+                            {
+                                <p>026-32712734</p>
+                                <p>029-32712734</p>
+                            }
+                            else
+                            {
+                                <p>@contactInfo.CI_Phone1</p>
+                                <p>@contactInfo.CI_Phone2</p>
+                            }
+
+                        </li>
+                        <li>
+                            <i class="fa fa-envelope"></i>
+                            @if (contactInfo == null)
+                            {
+                                <p>info@inslearn.ir</p>
+                                <p>contact@inslearn.ir</p>
+                            }
+                            else
+                            {
+                                <p>@contactInfo.CI_Email1</p>
+                                <p>@contactInfo.CI_Email2</p>
+                            }
+
+                        </li>
+                        <li>
+                            <i class="fa fa-fax"></i>
+                            @if (contactInfo == null)
+                            {
+                                <p>026-32756603</p>
+                                <p>026-32756603</p>
+                            }
+                            else
+                            {
+                                <p>@contactInfo.CI_Fax1</p>
+                                <p>@contactInfo.CI_Fax2</p>
+                            }
+
+                        </li>
+                        <li>
+                            <i class="fa fa-location-arrow"></i>
+                            @if (contactInfo == null)
+                            {
+                                <span>خيابان شهيد بهشتي، نبش وليعصر ٦، برج جهان نما، طبقه ٨، واحد ٢٢</span>
+                            }
+                            else
+                            {
+                                <p>@contactInfo.CI_Address1</p>
+                                <p>@contactInfo.CI_Address2</p>
+                            }
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- contact-area end -->
+<!-- quote-area start -->
+<div class="quote-area bg-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-sm-9 col-xs-12">
+                <div class="quote-wrap">
+                    @if (pageInfo == null)
+                    {
+                        <h2 class="text-xs-center">مرکز آموزش صنعت بیمه برای ارتقاء سطح کیفی خدمات مرکز از نظرات و پیشنهادات شما استقبال می کند</h2>
+                    }
+                    else
+                    {
+                        <h2 class="text-xs-center">@Html.Raw(pageInfo.PInfo_Comment)</h2>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- quote-area end -->
+@section Footer{
+    <partial name="_Footer" />
+}

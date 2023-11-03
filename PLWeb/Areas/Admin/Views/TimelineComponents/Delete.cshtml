@@ -1,0 +1,79 @@
+﻿@model PLDataLayer.Entities.SubEntities.TimelineComponent
+@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subEntityService
+@{
+    ViewData["Title"] = "حذف برنامه زمانی";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var timeline = await _subEntityService.GetTiemLineByIdAsync(Model.TL_Id);
+}
+
+<h1 class="text-xs-center alert alert-info">
+
+    @if (timeline != null)
+    {
+        <span>حذف برنامه جدول زمانی</span>
+        <span>@timeline.TL_Title</span>
+    }
+    else
+    {
+        <span>حذف برنامه جدول زمانی</span>
+    }
+    <a asp-action="Index" asp-controller="TimelineComponents" asp-route-tlId="@Model.TL_Id" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+
+<h3 class="text-xs-center alert alert-danger">
+    آیا مطمئن به حذف این برنامه جدول زمانی
+    @if(timeline!=null)
+    {
+        <span> @timeline.TL_Title</span>
+    }
+    هستید ؟
+</h3>
+<div>
+    <h4>برنامه جدول زمانی</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TC_Date)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TC_Date)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TC_Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TC_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TC_Text)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TC_Text)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TC_Image)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="~/images/featured/@Model.TC_Image" width="225" height="150" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TC_Rank)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TC_Rank)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Timeline)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Timeline.TL_Title)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="TC_Id" />
+        <input type="submit" value="حــذف" class="btn btn-danger" /> |
+        <a asp-action="Index" asp-controller="TimelineComponents" asp-route-tlId="@Model.TL_Id" class="btn btn-warning">بازگشت</a>
+    </form>
+</div>

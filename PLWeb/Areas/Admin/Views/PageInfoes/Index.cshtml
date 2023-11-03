@@ -1,0 +1,58 @@
+﻿@model IEnumerable<PLDataLayer.Entities.SubEntities.PageInfo>
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "اطلاعات صفحات سایت";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">اطلاعات صفحات سایت</h1>
+@if (_userService.CheckPermission(130, User.Identity.Name, roleId))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت اطلاعات صفحه</a>
+    </p>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.PInfo_PageName)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.PInfo_Title)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.PInfo_Image)
+                </th>
+                <th class="text-xs-center align-middle">عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.PInfo_PageName)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.PInfo_Title)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        <img src="~/images/page/@item.PInfo_Image" width="100" height="50" />
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @if (_userService.CheckPermission(131, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.PInfo_Id">ویرایش</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

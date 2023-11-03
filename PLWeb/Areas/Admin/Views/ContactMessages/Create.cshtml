@@ -1,0 +1,66 @@
+﻿@model PLDataLayer.Entities.SubEntities.ContactMessage
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>ContactMessage</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CM_FullName" class="control-label"></label>
+                <input asp-for="CM_FullName" class="form-control" />
+                <span asp-validation-for="CM_FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CM_Subject" class="control-label"></label>
+                <input asp-for="CM_Subject" class="form-control" />
+                <span asp-validation-for="CM_Subject" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CM_Email" class="control-label"></label>
+                <input asp-for="CM_Email" class="form-control" />
+                <span asp-validation-for="CM_Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CM_Message" class="control-label"></label>
+                <input asp-for="CM_Message" class="form-control" />
+                <span asp-validation-for="CM_Message" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CM_Date" class="control-label"></label>
+                <input asp-for="CM_Date" class="form-control" />
+                <span asp-validation-for="CM_Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OP_Create" class="control-label"></label>
+                <input asp-for="OP_Create" class="form-control" />
+                <span asp-validation-for="OP_Create" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OP_Update" class="control-label"></label>
+                <input asp-for="OP_Update" class="form-control" />
+                <span asp-validation-for="OP_Update" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OP_Remove" class="control-label"></label>
+                <input asp-for="OP_Remove" class="form-control" />
+                <span asp-validation-for="OP_Remove" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

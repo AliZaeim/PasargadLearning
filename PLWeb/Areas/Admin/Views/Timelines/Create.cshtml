@@ -1,0 +1,45 @@
+﻿@model PLDataLayer.Entities.SubEntities.Timeline
+
+@{
+    ViewData["Title"] = "ثبت جدول زمانی";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">
+    ثبت جدول زمانی
+    <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-xs-12 offset-md-4 col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TL_Title" class="control-label"></label>
+                <input asp-for="TL_Title" class="form-control" />
+                <span asp-validation-for="TL_Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TL_Text" class="control-label"></label>
+                <textarea asp-for="TL_Text" rows="10" class="form-control" ></textarea>
+                <span asp-validation-for="TL_Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+                <a asp-action="Index" class="btn btn-warning col-xs-12 mt-2">انصراف</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/LayoutRef/js/jquery.validate.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.js"></script>
+    <script>
+
+    </script>
+}
+

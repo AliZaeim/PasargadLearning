@@ -1,0 +1,123 @@
+﻿@model PLCore.DTOs.SkyRoom.RoomViewModel
+
+@{
+    ViewData["Title"] = "ثبت اتاق";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int roleId = int.Parse(User.FindFirst("RoleId").Value.ToString());
+}
+
+<h1 class="text-xs-center alert alert-info">ثبت اتاق</h1>
+
+
+<div class="row">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="CreateRoom">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="TeacherurId" class="control-label"></label>
+                <select asp-for="TeacherurId" class="form-control">
+                    @foreach (var item in Model.Teachers)
+                    {
+                        @if (Model.TeacherurId == item.URId)
+                        {
+                            <option selected value="@item.URId" data-fullname="@item.User.UserFirstName @item.User.UserFamily">@item.User.UserFirstName @item.User.UserFamily</option>
+                        }
+                        else
+                        {
+                            <option value="@item.URId" data-fullname="@item.User.UserFirstName @item.User.UserFamily">@item.User.UserFirstName @item.User.UserFamily</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="TeacherurId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="title" class="control-label"></label>
+                <input asp-for="title" class="form-control" />
+                <span asp-validation-for="title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="status" class="control-label"></label>
+                <select asp-for="status" class="form-control">
+                    <option value="1">فعال</option>
+                    <option value="0">غیرفعال</option>
+
+                </select>
+                <span asp-validation-for="status" class="text-danger"></span>
+            </div>
+
+            @if (roleId == 1)
+            {
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="op_login_first" /> @Html.DisplayNameFor(model => model.op_login_first)
+                    </label>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="guest_login" /> @Html.DisplayNameFor(model => model.guest_login)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label asp-for="guest_limit" class="control-label"></label>
+                    <input asp-for="guest_limit" class="form-control" />
+                    <span asp-validation-for="guest_limit" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="max_users" class="control-label"></label>
+                    <input asp-for="max_users" class="form-control" />
+                    <span asp-validation-for="max_users" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="time_limit" class="control-label"></label>
+                    <input asp-for="time_limit" class="form-control" />
+                    <span asp-validation-for="time_limit" class="text-danger"></span>
+                </div>
+            }
+            @if (roleId == 3)
+            {
+                <div class="form-group form-check hidden">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="op_login_first" /> @Html.DisplayNameFor(model => model.op_login_first)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label asp-for="max_users" class="control-label"></label>
+                    <input asp-for="max_users" readonly class="form-control" />
+                    <span asp-validation-for="max_users" class="text-danger"></span>
+                </div>
+
+            }
+
+
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts
+{
+
+    <script src="~/LayoutRef/js/jquery.validate.min.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#TeacherurId").change(function () {
+                var selected = $(this).find('option:selected');
+                var fullname = selected.getAttribute('data-fullname');
+
+                alert(fullname);
+                var txt = "اتاق آموزش آنلاین " + " " + fullname
+                $("#title").text(txt);
+            });
+        });
+    </script>
+}
+

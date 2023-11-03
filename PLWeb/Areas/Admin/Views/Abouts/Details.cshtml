@@ -1,0 +1,53 @@
+﻿@model PLDataLayer.Entities.SubEntities.About
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "جزئیات درباره ما";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">
+    جزئیات درباره ما
+    <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+<div>
+    <h4>درباره ما</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.About_Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.About_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.About_Text)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(Model.About_Text)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.About_Image)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="~/images/about/@Model.About_Image" width="50" height="50" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.About_HImage)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="~/images/about/@Model.About_HImage" width="200" height="50" />
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (_userService.CheckPermission(105, User.Identity.Name, roleId))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.About_Id">ویرایش</a> <span> | </span>
+    }
+
+    <a asp-action="Index">بازگشت</a>
+</div>

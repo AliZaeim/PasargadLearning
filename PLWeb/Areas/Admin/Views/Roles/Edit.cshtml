@@ -1,0 +1,217 @@
+﻿@model PLCore.DTOs.PUser.RolePermissionViewModel
+
+@{
+    ViewData["Title"] = "ویرایش نقش";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<style type="text/css">
+    .just-padding {
+        padding: 15px;
+    }
+
+    .list-group.list-group-root {
+        padding: 0;
+        overflow: hidden;
+    }
+
+        .list-group.list-group-root .list-group {
+            margin-bottom: 0;
+        }
+
+        .list-group.list-group-root .list-group-item {
+            border-radius: 0;
+            border-width: 1px 0 0 0;
+        }
+
+        .list-group.list-group-root > .list-group-item:first-child {
+            border-top-width: 0;
+        }
+
+        .list-group.list-group-root > .list-group > .list-group-item {
+            padding-right: 30px;
+        }
+
+        .list-group.list-group-root > .list-group > .list-group > .list-group-item {
+            padding-right: 45px;
+        }
+
+    .list-group-item .glyphicon {
+        margin-right: 5px;
+    }
+</style>
+<div>
+    <h1 class="alert alert-info text-xs-center">
+        <span>ویرایش نقش</span>
+        <a href="~/Admin/Roles/Index" class="float-xs-left text-danger">
+            <span class="icon-backward2" title="بازگشت"></span>
+        </a>
+    </h1>
+</div>
+
+<div class="row">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RoleId" />
+            <div class="form-group">
+                <label asp-for="RoleName" class="control-label"></label>
+                <input asp-for="RoleName" class="form-control" />
+                <span asp-validation-for="RoleName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RoleTitle" class="control-label"></label>
+                <input asp-for="RoleTitle" class="form-control" />
+                <span asp-validation-for="RoleTitle" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <h3 class="alert alert-info text-xs-center">مجوزهای نقش | تعداد : <span class="tag tag-pill tag-danger">@Model.Permissions_of_Role.Count()</span></h3>
+
+                <div class="just-padding">
+                    <div class="list-group list-group-root">
+                        <p class="list-group-item">
+                            <input type="checkbox" class="ui-checkbox chk0 ml-1" data-id="all" @((Model.SelectedPermissions.Count() == Model.AllPermissions.Count() ? "checked" : "")) value="all"> تمام مجوزها
+                            <span class="tag tag-pill tag-danger allper">@Model.AllPermissions.Count()</span>
+                        </p>
+                        @foreach (var item in Model.AllPermissions.Where(w => w.ParentId == null))
+                        {
+                            string itemHref = "item" + item.PermissionId.ToString();
+                            if (item.Permissions.Count() != 0)
+                            {
+                                <a href="#@itemHref" class="list-group-item" data-toggle="collapse">
+                                    <input type="checkbox" @((Model.SelectedPermissions.Any(p => p == item.PermissionId) ? "checked" : "")) class="ui-checkbox chk1" data-id="@item.PermissionId" name="SelectedPermissions" value="@item.PermissionId">
+                                    <i class="fa fa-plus-circle mr-2 ml-1"></i>@item.PermissionId - @item.PermissionTitle
+                                    <span class="tag tag-pill tag-danger">@item.Permissions.Count()</span>
+                                </a>
+                            }
+                            else
+                            {
+                                <p class="list-group-item">
+                                    <input type="checkbox" class="ui-checkbox chk1" data-id="@item.PermissionId" @((Model.SelectedPermissions.Any(p => p == item.PermissionId) ? "checked" : "")) name="SelectedPermissions" value="@item.PermissionId">
+                                    <span> @item.PermissionId - @item.PermissionTitle</span>
+                                    <span class="tag tag-pill tag-danger">@item.Permissions.Count()</span>
+                                </p>
+                            }
+                            @if (Model.AllPermissions.Any(a => a.ParentId == item.PermissionId))
+                            {
+                                <div class="list-group collapse " id="@itemHref">
+                                    @foreach (var sub in item.Permissions)
+                                    {
+                                        string subHref = "sub" + sub.PermissionId.ToString();
+                                        <a href="#@subHref" class="list-group-item pr-1" data-toggle="collapse">
+                                            <input type="checkbox" @((Model.SelectedPermissions.Any(p => p == sub.PermissionId) ? "checked" : "")) class="ui-checkbox chk2" data-id="@item.PermissionId" name="SelectedPermissions" value="@sub.PermissionId">
+                                            <i class="fa fa-plus-circle mr-2 ml-1 text-success"></i><span >@sub.PermissionId - @sub.PermissionTitle</span>
+                                            <span class="tag tag-pill tag-success chk2count">@Model.SelectedPermissoinsList.Where(w => w.ParentId == sub.PermissionId).Count()</span>
+                                            <span> از </span>
+                                            <span class="tag tag-pill tag-info chk2tcount">@sub.Permissions.Count()</span>
+                                        </a>
+                                        @if (Model.AllPermissions.Any(a => a.ParentId == sub.PermissionId))
+                                        {
+                                            <ul class="list-group collapse" id="@subHref">
+                                                @foreach (var sub2 in sub.Permissions)
+                                                {
+                                                    <li class="list-group-item ">
+                                                        <input type="checkbox" @((Model.SelectedPermissions.Any(p => p == sub2.PermissionId) ? "checked" : "")) class="ui-checkbox chk3 ml-1 pr-3" data-id="@item.PermissionId" name="SelectedPermissions" value="@sub2.PermissionId">
+                                                        <span>@sub2.PermissionId - @sub2.PermissionTitle</span>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        }
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.list-group-item').click(function () {
+                $('.fa', this)
+                    .toggleClass('fa-plus-circle')
+                    .toggleClass('fa-minus-circle');
+            });
+            $('.list-group-item input[type=checkbox]').on('click', function (e) {
+                var id = $(this).attr("data-id");
+                if (id === "all") {
+                    $('.ui-checkbox').not(this).prop('checked', this.checked);
+                }
+                
+                e.stopPropagation();
+            });
+            $(".chk0").on("click", function () {
+                $(".chk2").each(function (index, el) {
+                    var total = $(el).parent().next(".collapse").find('.chk3:checked').length;
+
+                    $(el).parent().children(".chk2count").text(total);
+                    if (parseInt(total) === 0) {
+                        $(this).parent().parent().prev("a").children(".chk1").prop('checked', false);
+                    }
+                    else {
+                        $(this).parent().parent().prev("a").children(".chk1").prop('checked', true);
+                    }
+                });
+            });
+            $(".chk1").on('click', function () {                 
+                $(this).parent().next(".collapse").find(".chk2").prop('checked', this.checked);
+                $(this).parent().next(".collapse").find('.chk3').prop('checked', this.checked);
+                $(".chk2").each(function (index, el) {
+                    var total = $(el).parent().next(".collapse").find('.chk3:checked').length;                    
+                    $(el).parent().children(".chk2count").text(total);                    
+                });
+                var allper = $(".allper").text();
+                var totalchk3 = $(".chk2").parent().next(".collapse").find('.chk3:checked').length;
+                var totalchk2 = $(".chk2:checked").length;
+                var totalchk1 = $(".list-group-root").find('.chk1:checked').length;                
+                if (parseInt(totalchk1) + parseInt(totalchk2) + parseInt(totalchk3) === parseInt(allper)) {
+                    $(".chk0").prop('checked', true);
+                }
+                else {
+                    $(".chk0").prop('checked', false);
+                }
+            });
+            $(".chk2").on('click', function () {
+                $(this).parent().next(".collapse").find('.chk3').prop('checked', this.checked);
+                var total = $(this).parent().next(".collapse").find('.chk3:checked').length;
+                $(this).parent().children(".chk2count").text(total);
+                var alltotal = $(".list-group-root").find('.chk3:checked').length;                
+                if (alltotal === 0) {
+                    $(this).parent().parent().prev("a").children(".chk1").prop('checked', false);
+                }
+                else {
+                    $(this).parent().parent().prev("a").children(".chk1").prop('checked', true);
+                }
+            });
+            $(".chk3").on('click', function () {
+                var total = $(this).parent().parent().children().find('.chk3:checked').length;
+                $(this).parent().parent().prev("a").children(".chk2count").text(total);
+                var allcount = $(this).parent().parent().prev("a").children(".chk2tcount").text();
+
+                if (parseInt(total) === 0) {
+                    $(this).parent().parent().prev("a").children(".chk2").prop('checked', false);
+                    $(this).parent().parent().parent().prev("a").children(".chk1").prop('checked', false);
+                }
+                else {
+                    $(this).parent().parent().prev("a").children(".chk2").prop('checked', true);
+                    $(this).parent().parent().parent().prev("a").children(".chk1").prop('checked', true);
+                }
+            });
+            $('.list-group-item').on('show.bs.collapse', function (e) {
+
+                if (!$('a input[type=checkbox]').is(':checked')) {
+                    return false;
+                }
+            });
+        })
+
+    </script>
+}
+

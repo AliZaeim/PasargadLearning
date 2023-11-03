@@ -1,0 +1,52 @@
+﻿@using PLCore.Services.Interfaces;
+@using PLDataLayer.Entities.SubEntities; 
+@inject ITrainingService _tService
+@inject IUserService _uService
+@inject ISubEntityService _subService
+@{ 
+    
+    string sepbg;
+    Separator sep = await _subService.GetSeparatorByName("statistics");
+    if(sep!=null)
+    {
+        sepbg = sep.BgImage;
+    }
+    else
+    {
+        sepbg = "1.jpg";
+    }
+}
+<section class="fanfact-area parallax black-opacity ptb-50" data-speed="5" data-bg-image="../images/bg/@sepbg">
+    <div class="table">
+        <div class="table-cell">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-6 wow fadeInUp text-center" data-wow-delay=".1s">
+                        <div class="fanfact-wrap">
+                            <h2 class="counter">@_tService.GetCourseGroupsAsync().Result.Count()</h2>
+                            <p>سرفصل آموزشی</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-6 wow fadeInUp text-center" data-wow-delay=".2s">
+                        <div class="fanfact-wrap">
+                            <h2 class="counter">@_tService.GetCoursesAsync().Result.Count()</h2>
+                            <p>دوره</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-6 wow fadeInUp text-center" data-wow-delay=".3s">
+                        <div class="fanfact-wrap">
+                            <h2 class="counter">@_uService.GetTeachersAsync().Result.Where(w=>w.IsActive==true && w.User.UserIsActive==true).Count()</h2>
+                            <p>مدرس</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-6 wow fadeInUp text-center" data-wow-delay=".4s">
+                        <div class="fanfact-wrap">
+                            <h2 class="counter">@_uService.GetSchoolsAsync().Result.Where(w => w.IsActive == true && w.User.UserIsActive == true).Count()</h2>
+                            <p>فراگیر</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

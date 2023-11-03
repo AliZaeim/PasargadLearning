@@ -1,0 +1,60 @@
+﻿@model PLCore.DTOs.General.PrepareFeeViewModel
+
+@{
+    ViewData["Title"] = "پرداخت هزینه دوره";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section Header{
+    <partial name="_Header" />
+}
+<h1 class="text-xs-center alert alert-info">پرداخت هزینه دوره</h1>
+
+
+<div class="row">
+    <div class="col-md-offset-4 col-md-4 col-xs-offset-0 col-xs-12 m-b-20">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CourseId" />
+            <input type="hidden" asp-for="urId" />
+            <input type="hidden" asp-for="DiscountValue" value="@Model.DiscountValue" />
+            <div class="form-group">
+                <label asp-for="Fee" class="control-label"></label> (تومان)
+                <input asp-for="Fee" readonly class="form-control " dir="ltr" />
+                <span asp-validation-for="Fee" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DisCode" class="control-label"></label>
+                <input asp-for="DisCode" class="form-control font-tahoma" placeholder="کد تخفیف خود را وارد کنید" dir="ltr" />
+                <span asp-validation-for="DisCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">قابل پرداخت</label> (تومان)
+                <input asp-for="TotalValue" value="@Model.TotalValue" readonly class="form-control font-tahoma" dir="ltr" />
+
+            </div>
+            <div class="form-group">
+                <input type="submit" formaction="/Account/PrepareFee" value="اعمال تخفیف" class="fs-18 btn btn-warning col-xs-12 m-b-5 btn-lg" />
+                @if (Model.IsValid == true)
+                {
+                    if (Model.TotalValue == 0)
+                    {
+                        <input type="submit" formaction="/Account/PayFee" value="تکمیل ثبت نام" class="fs-18 btn btn-primary col-xs-12 m-b-5 btn-lg" />
+                    }
+                    else
+                    {
+                        <input type="submit" formaction="/Account/PayFee" value="پرداخت" class="fs-18 btn btn-primary col-xs-12 m-b-5 btn-lg" />
+                    }
+
+                }
+
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Footer{
+    <partial name="_Footer" />
+}

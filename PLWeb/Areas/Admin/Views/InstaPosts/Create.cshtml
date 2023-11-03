@@ -1,0 +1,57 @@
+﻿@model PLDataLayer.Entities.SubEntities.InstaPost
+
+@{
+    ViewData["Title"] = "ثبت پست ایستاگرام";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="alert alert-info text-xs-center">
+    <span>ثبت پست</span>
+    <a href="~/Admin/InstaPosts/Index" class="float-xs-left text-danger">
+        <span class="icon-backward2" title="بازگشت"></span>
+    </a>
+</h1>
+<h3 class="text-xs-center alert alert-warning">ابعاد تصویر - عرض: 200 و ارتفاع : 200 و حجم : حداکثر 50 کیلوبایت</h3>
+<hr />
+<div class="row">
+    <div class="col-xs-12 offset-md-4 col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="InstaPostTitle" class="control-label"></label>
+                <input asp-for="InstaPostTitle" class="form-control" />
+                <span asp-validation-for="InstaPostTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InstaPostText" class="control-label"></label>
+                <textarea asp-for="InstaPostText" class="form-control" rows="10"></textarea>
+                <span asp-validation-for="InstaPostText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InstaPostImage" class="control-label"></label>
+                <input asp-for="InstaPostImage" type="file" class="form-control" />
+                <span asp-validation-for="InstaPostImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InstaPostLink" class="control-label"></label>
+                <input asp-for="InstaPostLink" class="form-control" />
+                <span asp-validation-for="InstaPostLink" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Photographer" class="control-label"></label>
+                <input asp-for="Photographer" class="form-control" />
+                <span asp-validation-for="Photographer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+

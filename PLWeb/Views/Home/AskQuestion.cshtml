@@ -1,0 +1,49 @@
+﻿@model PLCore.DTOs.PUser.AskQuestionViewModel
+
+@if (Model.IsSuccess == false)
+{
+    <div class="row">
+        <div class="col-xs-12" id="AskQ">
+            <form asp-action="AskQuestion" asp-controller="Home"
+                  data-ajax="true"
+                  data-ajax-method="POST"
+                  data-ajax-mode="replace"
+                  data-ajax-update="#AskQ">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="SiteFAQ_Name" class="control-label"></label>
+                    <input asp-for="SiteFAQ_Name" class="form-control" />
+                    <span asp-validation-for="SiteFAQ_Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SiteFAQ_Email" class="control-label"></label>
+                    <input asp-for="SiteFAQ_Email" class="form-control" />
+                    <span asp-validation-for="SiteFAQ_Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SiteFAQ_Subject" class="control-label"></label>
+                    <input asp-for="SiteFAQ_Subject" class="form-control" />
+                    <span asp-validation-for="SiteFAQ_Subject" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SiteFAQ_Question" class="control-label"></label>
+                    <input asp-for="SiteFAQ_Question" class="form-control" />
+                    <span asp-validation-for="SiteFAQ_Question" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="ارسال" class="btn btn-primary col-xs-12" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <h3 class="text-xs-center alert alert-success">سوال شما با موفقیت ثبت شد</h3>
+    <a href="/Home/AskQuestion" class="btn btn-primary col-xs-12 col-md-offset-4 col-md-4" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#AskQ" data-ajax-method="Get">ارسال سئوال</a>
+}
+
+
+<script src="~/LayoutRef/js/jquery.validate.js"></script>
+<script src="~/LayoutRef/js/jquery.validate.unobtrusive.js"></script>
+

@@ -1,0 +1,43 @@
+﻿@model PLDataLayer.Entities.SubEntities.PackInfo
+
+@{
+    ViewData["Title"] = "حـذف اطلاعات پکیج";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">
+    حــذف اطلاعات پکیج
+    <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+
+<h3 class="alert alert-warning">آیا مطمئن به حــذف اطلاعات هستید؟</h3>
+<div>
+    <h4>اطلاعات پکیج</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PackInfo_PackName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PackInfo_PackName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PackInfo_Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PackInfo_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PackInfo_Comment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PackInfo_Comment)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="PackInfo_Id" />
+        <input type="submit" value="حــذف" class="btn btn-danger" />
+        <a asp-action="Index">بازگشت</a>
+    </form>
+</div>

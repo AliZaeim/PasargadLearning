@@ -1,0 +1,106 @@
+﻿@using PLCore.Services.Interfaces;
+@using PLDataLayer.Entities.SubEntities;
+@using PLCore.DTOs.PUser;
+@inject ISubEntityService _subService
+@{
+    Header header = await _subService.GetLastHeader();
+    ContactInfo contactInfo = await _subService.GetLastContactInfo();
+    List<InstaPost> instaPosts = await _subService.GetInstaPosts();
+
+}
+<footer>
+    <div class="footer-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-6 col-xs-12  col wow fadeInUp" data-wow-delay=".1s">
+                    <div class="footer-widget footer-logo">
+                        @if (header != null)
+                        {
+                            @if (!string.IsNullOrEmpty(header.Header_Text))
+                            {
+                                <h1 class="text-xs-center">@header.Header_Title</h1>
+                            }
+                            else
+                            {
+                                <h1 class="text-xs-center">مرکز آموزش بیمه</h1>
+                            }
+                        }
+                        else
+                        {
+                            <h1 class="text-xs-center">مرکز آموزش بیمه</h1>
+                        }
+
+                        @if (header != null)
+                        {
+                            if (!string.IsNullOrEmpty(header.Header_About))
+                            {
+                                <p class="text-justify">
+                                    @header.Header_About
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="text-justify">
+                                    سايت مركز آموزش صنعت بيمه با هدف آموزش نمايندگان، اركان سازمان فروش و ساير فعالين صنعت بيمه راه اندازي شده است.
+                                </p>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-justify">
+                                سايت مركز آموزش صنعت بيمه با هدف آموزش نمايندگان، اركان سازمان فروش و ساير فعالين صنعت بيمه راه اندازي شده است.
+                            </p>
+                        }
+                        @if (contactInfo != null)
+                        {
+                            <ul>
+                                <li><i class="fa fa-phone"></i>@contactInfo.CI_Phone1</li>
+                                <li><i class="fa fa-envelope"></i>@contactInfo.CI_Email1</li>
+                            </ul>
+                        }
+
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 col wow fadeInUp" data-wow-delay=".2s">
+                    <div class="footer-widget footer-menu">
+                        <h2>دسترسی سریع</h2>
+                        <ul>
+                            <li><a href="/Home/FrAQu">پرسش و پاسخ</a></li>
+                            <li><a href="/About">درباره ما</a></li>
+                            <li><a href="/Home/Courses">دوره های آموزشی</a></li>
+                            <li><a href="/News">اخبار و اطلاعیه ها</a></li>
+                            <li><a href="/Archive">آرشیو مطالب</a></li>
+                            <li><a href="/Teachers">مدرسان</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 col wow fadeInUp" data-wow-delay=".3s">
+                    <div class="footer-widget instagram-wrap">
+                        <h2>اینستاگرام</h2>
+                        <ul>
+                            @foreach (var ins in instaPosts.Take(6))
+                            {
+                                <li><a href="@ins.InstaPostLink" target="_blank"><img src="/images/instagram/@ins.InstaPostImage" alt="@ins.InstaPostTitle"></a></li>
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 col wow fadeInUp" data-wow-delay=".4s">
+                    <div class="footer-widget footer-menu text-xs-center">
+                        <img src="~/images/logo/Flogo.png" title="لوگوی مرکز آموزش صنعت بیمه" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    تمامی حقوق براي مركز آموزش صنعت بيمه محفوظ است &copy 1398
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

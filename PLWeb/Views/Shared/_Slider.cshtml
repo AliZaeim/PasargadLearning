@@ -1,0 +1,60 @@
+﻿@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subEntity;
+@using PLDataLayer.Entities.SubEntities;
+@{
+    List<Slider> sliders = await _subEntity.GetSlidersAsync();
+}
+@if (sliders != null)
+{
+    if (sliders.Count() != 0)
+    {
+        <section class="slider-area" >
+            <div class="slider-active2">
+                @foreach (var item in sliders)
+                {
+                    if (!string.IsNullOrEmpty(item.SliderImage))
+                    {
+                        <div class="slider-items">
+                            <img src="~/images/slider/@item.SliderImage" alt="@item.SliderText1" class="slider" style="min-width:100%;max-height:640px;">
+
+                            <div class="slider-content text-center">
+                                <div class="table">
+                                    <div class="table-cell">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-xs-offset-0 col-xs-12 col-md-8 col-md-offset-2">
+                                                    @if (!string.IsNullOrEmpty(item.SliderText1))
+                                                    {
+                                                        <h2 class="col-xs-12 text-xs-center" style="color:@item.SliderText1Class">@item.SliderText1</h2>
+                                                    }
+                                                    @if (!string.IsNullOrEmpty(item.SliderText2))
+                                                    {
+                                                        <p class="col-xs-12 text-xs-center fs-18 myBold" style="color:@item.SliderText2Class">
+                                                            @item.SliderText2
+                                                        </p>
+                                                    }
+
+                                                    <ul class="col-xs-12 text-xs-center">
+                                                        @if (!string.IsNullOrEmpty(item.SliderButton1Text) && !string.IsNullOrEmpty(item.SliderButton1Link))
+                                                        {
+                                                            <li><a href="@item.SliderButton1Link">@item.SliderButton1Text</a></li>
+                                                        }
+                                                        @if (!string.IsNullOrEmpty(item.SliderButton2Text) && !string.IsNullOrEmpty(item.SliderButton2Link))
+                                                        {
+                                                            <li><a class="m-t-2" href="@item.SliderButton2Link">@item.SliderButton2Text</a></li>
+                                                        }
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </section>
+    }
+}

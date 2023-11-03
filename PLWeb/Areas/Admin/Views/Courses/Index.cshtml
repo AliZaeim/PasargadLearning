@@ -1,0 +1,324 @@
+﻿@model IEnumerable<PLDataLayer.Entities.Training.Course>
+@using PLDataLayer.Entities.User;
+@using PLDataLayer.Entities.Training;
+@using PLCore.Convertors;
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@inject ITrainingService _tService;
+@{
+    ViewData["Title"] = "دوره های آموزشی";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">دوره های آموزشی</h1>
+<div class="offset-md-4 col-md-4 col-xs-12 mb-2">
+    <input placeholder="جستجو" class="form-control " id="myCInput" type="text" />
+</div>
+@if (_userService.CheckPermission(65, User.Identity.Name, roleId))
+{
+    <div class="col-xs-12 mb-2">
+
+        <a asp-action="Create" class="btn btn-success">ثبت دوره</a>
+    </div>
+}
+
+<div class="table-responsive">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-xs-center align-middle p-0">
+                        @Html.DisplayNameFor(model => model.Course_Title)
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        @Html.DisplayNameFor(model => model.Course_Duration)
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        @Html.DisplayNameFor(model => model.Course_CreateDate)
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        @Html.DisplayNameFor(model => model.Course_StartDate)
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        @Html.DisplayNameFor(model => model.Course_EndDate)
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        مدرس
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        ثبت نامی
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        @Html.DisplayNameFor(model => model.Course_Capacity)
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        @Html.DisplayNameFor(model => model.Course_IsActive)
+                    </th>
+                    <th class="text-xs-center align-middle p-0">
+                        فایلها
+                    </th>
+                    <th class="text-xs-center align-middle">عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="cBody">
+                @foreach (var item in Model.OrderByDescending(r =>r.Course_IsActive).ThenByDescending(r=>r.Course_CreateDate) )
+                {
+                    <tr>
+                        <td class="text-xs-center align-middle p-0">
+                            @Html.DisplayFor(modelItem => item.Course_Title)
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @Html.DisplayFor(modelItem => item.Course_Duration)
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @item.Course_CreateDate.ToShamsi()
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @item.Course_StartDate.ToShamsi()
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @item.Course_EndDate.ToShamsi()
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @if (item.CourseUsers != null)
+                            {
+                                if (item.CourseUsers.Count() != 0)
+                                {
+                                    foreach (var users in item.CourseUsers)
+                                    {
+                                        UserRole userRole = await _userService.GetUserRoleByIdAsync(users.URId);
+
+                                        if (userRole.RoleId == 3)
+                                        {
+                                            var user = await _userService.GetUserByIdAsync(userRole.UserId);
+                                            <span>@user.UserFirstName @user.UserFamily</span>
+                                        }
+                                    }
+
+
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @item.CourseUsers.Where(w => w.UserRole.RoleId == 4).Count()
+                            <a href="/Admin/Courses/CourseUsers?cid=@item.Course_Id"><span class="fa fa fa-eye"></span></a>
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @Html.DisplayFor(modelItem => item.Course_Capacity)
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @if (item.Course_IsActive == true)
+                            {
+                                <span class="AcDe tag tag-success cursor-pointer" title="فعال" data-id="@item.Course_Id" data-status="false">فعال</span>
+                            }
+                            else
+                            {
+                                <span class="AcDe tag tag-danger cursor-pointer" title="غیرفعال" data-id="@item.Course_Id" data-status="true">غیرفعال</span>
+                            }
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @{
+                                int imgcount = 0; int vcount = 0; int acount = 0; int txtcount = 0;
+                            }
+                            @foreach (var f in item.CourseFiles)
+                            {
+                                string[] t = f.CF_Type.Split("/");
+                                if (f.CF_Type.StartsWith("image"))
+                                {
+                                    imgcount++;
+                                }
+                                if (f.CF_Type.StartsWith("video"))
+                                {
+                                    vcount++;
+                                }
+                                if (f.CF_Type.StartsWith("audio"))
+                                {
+                                    acount++;
+                                }
+                                if (f.CF_Type.StartsWith("application"))
+                                {
+                                    txtcount++;
+                                }
+
+                            }
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="align-middle text-xs-center p-1">تصویر</th>
+                                        <th class="align-middle text-xs-center p-1">ویدئو</th>
+                                        <th class="align-middle text-xs-center p-1">صوت</th>
+                                        <th class="align-middle text-xs-center p-1">متن</th>
+
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="align-middle text-center p-1">
+                                            <span class="tag tag-primary tag-pill">
+                                                @if (imgcount != 0)
+                                                {
+                                                    <a href="~/Admin/Courses/ShowFiles?type=image&courseId=@item.Course_Id" title="مشاهده">@imgcount</a>
+                                                }
+                                                else
+                                                {
+                                                    @imgcount
+                                                }
+
+                                            </span>
+                                        </td>
+                                        <td class="align-middle text-center p-1">
+                                            <span class="tag tag-success tag-pill">
+                                                @if (vcount != 0)
+                                                {
+                                                    <a href="~/Admin/Courses/ShowFiles?type=video&courseId=@item.Course_Id" title="مشاهده">@vcount</a>
+                                                }
+                                                else
+                                                {
+                                                    @vcount
+                                                }
+                                            </span>
+                                        </td>
+                                        <td class="align-middle text-center p-1">
+                                            <span class="tag tag-info tag-pill">
+                                                @if (acount != 0)
+                                                {
+                                                    <a href="~/Admin/Courses/ShowFiles?type=audio&courseId=@item.Course_Id" title="مشاهده">@acount</a>
+                                                }
+                                                else
+                                                {
+                                                    @acount
+                                                }
+                                            </span>
+                                        </td>
+                                        <td class="align-middle text-center p-1">
+                                            <span class="tag tag-default tag-pill">
+                                                @if (txtcount != 0)
+                                                {
+                                                    <a href="~/Admin/Courses/ShowFiles?type=app&courseId=@item.Course_Id" title="مشاهده">@txtcount</a>
+                                                }
+                                                else
+                                                {
+                                                    @txtcount
+                                                }
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </td>
+                        <td class="text-xs-center align-middle p-0">
+                            @if (_userService.CheckPermission(66, User.Identity.Name, roleId))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Course_Id">ویرایش</a> <span> | </span>
+                            }
+                            @if (_userService.CheckPermission(67, User.Identity.Name, roleId))
+                            {
+                                <a asp-action="Details" asp-route-id="@item.Course_Id">جزئیات</a> <span> | </span>
+                            }
+                            @if (_userService.CheckPermission(68, User.Identity.Name, roleId))
+                            {
+                                <a asp-action="Delete" asp-route-id="@item.Course_Id">حــذف</a> <span> | </span>
+                            }
+                            @if (_userService.CheckPermission(69, User.Identity.Name, roleId))
+                            {
+                                <a asp-action="InsertFiles" asp-route-courseId="@item.Course_Id">افزودن فایل</a>
+                            }
+
+
+
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/LayoutRef/js/jquery.mark.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#myCInput").on("propertychange change keyup paste input", function () {
+                var value = $(this).val().toLowerCase();
+                $("#cBody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+                $("#cBody").mark($(this).value(), {
+                    "className": "bg-warning",
+                });
+
+            });
+            $(".AcDe").click(function () {
+
+
+                var cid = $(this).attr("data-id");
+                var ac = $(this).attr("data-status");
+
+
+                if (ac === "true") {
+                    pr = " آیا مطمئن به فعال کردن هستید ؟";
+                }
+                if (ac === "false") {
+                    pr = " آیا مطمئن به غیرفعال کردن هستید؟";
+                }
+                //var p = confirm(pr);
+                var th = $(this);
+                Swal.fire({
+                    title: 'فعالسازی/غیرفعالسازی دوره',
+                    text: pr,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'بله هستم',
+                    cancelButtonText: "انصراف"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url: "/Admin/Courses/ManageCourseStatus",
+                            data: { id: cid, status: ac },
+                            type: "Get",
+                            success: function (result) {
+                                Swal.fire(
+                                    'انجام شد',
+                                    'عملیات با موفقیت انجام شد',
+                                    'success'
+                                );
+                                if (ac === "true") {
+                                    th.attr("data-status", "false");
+                                    th.attr("title", "فعال");
+                                    th.text("فعال");
+                                    th.removeClass("tag-danger").addClass("tag-success");
+                                }
+                                if (ac === "false") {
+                                    th.attr("data-status", "true");
+                                    th.attr("title", "غیرفعال");
+                                    th.text("غیرفعال");
+                                    th.removeClass("tag-success").addClass("tag-danger");
+                                }
+
+
+                            }
+                        })
+
+                    }
+                })
+            })
+        });
+    </script>
+}

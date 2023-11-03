@@ -1,0 +1,405 @@
+﻿@model PLCore.DTOs.PUser.UpdateUserViewModel
+
+@{
+    ViewData["Title"] = "ویرایش کاربر";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">
+    ویرایش کاربر @Model.UserFirstName @Model.UserFamily
+    <a asp-action="GetAllUsers" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+<hr />
+<div class="row">
+    <div class="col-xs-12">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="UserNCImage" />
+            <input type="hidden" asp-for="EducationFile" />
+            <input type="hidden" asp-for="UserAvatar" />
+            <input type="hidden" asp-for="UserBirthDate" />
+
+            <div class="col-xs-12 col-md-4">
+
+                <div class="form-group">
+                    <label asp-for="UserFirstName" class="control-label"></label>
+                    <input asp-for="UserFirstName" class="form-control" />
+                    <span asp-validation-for="UserFirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserFamily" class="control-label"></label>
+                    <input asp-for="UserFamily" class="form-control" />
+                    <span asp-validation-for="UserFamily" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserNC" class="control-label"></label>
+                    <input asp-for="UserNC" class="form-control" />
+                    <span asp-validation-for="UserNC" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserNCImage" class="control-label"></label>
+                    <span class="fa fa-question-circle-o text-danger" data-toggle="tooltip" title="ماوس رو بر روی عکس ببرید تا زوم شود"></span>
+                    <img src="~/images/usersnc/@Model.UserNCImage" data-zoom-image="/images/usersnc/@Model.UserNCImage" id="NCImage" class="float-xs-left cursor-pointer" width="30" height="30" />
+                    <input asp-for="UserNCImage" type="file" class="form-control" />
+                    <span asp-validation-for="UserNCImage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserOrgCode" class="control-label"></label>
+                    <input asp-for="UserOrgCode" class="form-control" />
+                    <span asp-validation-for="UserOrgCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserBirthDate" class="control-label"></label>
+                    <input asp-for="UserBirthDate" class="form-control" />
+                    <span asp-validation-for="UserBirthDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserFatherName" class="control-label"></label>
+                    <input asp-for="UserFatherName" class="form-control" />
+                    <span asp-validation-for="UserFatherName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Skyuser_id" class="control-label"></label>
+                    <input asp-for="Skyuser_id" class="form-control" />
+                    <span asp-validation-for="Skyuser_id" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4">
+
+
+                <div class="form-group">
+                    <label asp-for="StateId" class="control-label"></label>
+                    <select asp-for="StateId" class="form-control" id="state">
+                        <option value="">لطفا استان خود را انتخاب کنید</option>
+                        @foreach (var st in Model.States)
+                        {
+                            if (Model.StateId == st.StateId)
+                            {
+                                <option value="@st.StateId" selected>@st.StateName</option>
+                            }
+                            else
+                            {
+                                <option value="@st.StateId">@st.StateName</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="StateId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CountyId" class="control-label"></label>
+                    <select asp-for="CountyId" class="form-control" id="county">
+                        <option value="">لطفا شهرستان خود را انتخاب کنید</option>
+                        @foreach (var co in Model.Counties)
+                        {
+
+                            if (Model.CountyId == co.CountyId)
+                            {
+                                <option value="@co.CountyId" selected>@co.CountyName</option>
+                            }
+                            else
+                            {
+                                <option value="@co.CountyId">@co.CountyName</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="CountyId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserRestAddress" class="control-label"></label>
+                    <input asp-for="UserRestAddress" class="form-control" />
+                    <span asp-validation-for="UserRestAddress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserAvatar" class="control-label"></label>
+                    <span class="fa fa-question-circle-o text-danger" data-toggle="tooltip" title="ماوس رو بر روی عکس ببرید تا زوم شود"></span>
+                    <img src="~/images/usersavatar/@Model.UserAvatar" id="avatar" class="float-xs-left" width="30" height="30" />
+                    <input asp-for="UserAvatar" type="file" class="form-control" />
+
+                    <span asp-validation-for="UserAvatar" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LevelOfEducation" class="control-label"></label>
+                    <select asp-for="LevelOfEducation" class="form-control">
+                        <option value="">لطفا میزان تحصیلات خود را انتخاب کنید</option>
+
+                        @if (Model.LevelOfEducation == "زیر دیپلم")
+                        {
+                            <option value="زیر دیپلم" selected>زیر دیپلم</option>
+                        }
+                        else
+                        {
+                            <option value="زیر دیپلم">زیر دیپلم</option>
+                        }
+                        @if (Model.LevelOfEducation == "دیپلم")
+                        {
+                            <option value="دیپلم" selected>دیپلم</option>
+                        }
+                        else
+                        {
+                            <option value="دیپلم">دیپلم</option>
+                        }
+                        @if (Model.LevelOfEducation == "فوق دیپلم")
+                        {
+                            <option value="فوق دیپلم" selected>فوق دیپلم</option>
+                        }
+                        else
+                        {
+                            <option value="فوق دیپلم">فوق دیپلم</option>
+                        }
+
+                        @if (Model.LevelOfEducation == "لیسانس")
+                        {
+                            <option value="لیسانس" selected>لیسانس</option>
+                        }
+                        else
+                        {
+                            <option value="لیسانس">لیسانس</option>
+                        }
+                        @if (Model.LevelOfEducation == "فوق لیسانس")
+                        {
+                            <option value="فوق لیسانس" selected>فوق لیسانس</option>
+                        }
+                        else
+                        {
+                            <option value="فوق لیسانس">فوق لیسانس</option>
+                        }@if (Model.LevelOfEducation == "دکتری")
+                        {
+                            <option value="دکتری" selected>دکتری</option>
+                        }
+                        else
+                        {
+                            <option value="دکتری">دکتری</option>
+                        }
+                    </select>
+                    <span asp-validation-for="LevelOfEducation" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EducationFile" class="control-label"></label>
+                    <span class="fa fa-question-circle-o text-danger" data-toggle="tooltip" title="ماوس رو بر روی عکس ببرید تا زوم شود"></span>
+                    <img src="~/images/usersorgdoc/@Model.EducationFile" id="eduFile" class="float-xs-left" width="30" height="30" />
+                    <input asp-for="EducationFile" type="file" class="form-control" />
+                    <span asp-validation-for="EducationFile" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserUniversity" class="control-label"></label>
+                    <input asp-for="UserUniversity" class="form-control" />
+                    <span asp-validation-for="UserUniversity" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserLabel" class="control-label"></label>
+                    <input asp-for="UserLabel" class="form-control" />
+                    <span asp-validation-for="UserLabel" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserDescription" class="control-label"></label>
+                    <input asp-for="UserDescription" class="form-control" />
+                    <span asp-validation-for="UserDescription" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4">
+
+                <div class="form-group">
+                    <label asp-for="UserYearofGraduataion" class="control-label"></label>
+                    <input asp-for="UserYearofGraduataion" class="form-control" />
+                    <span asp-validation-for="UserYearofGraduataion" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserBiography" class="control-label"></label>
+                    <textarea asp-for="UserBiography" rows="3" maxlength="2000" class="form-control"></textarea>
+                    <span asp-validation-for="UserBiography" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserSex" class="control-label"></label>
+                    <select asp-for="UserSex" class="form-control">
+                        @if (Model.UserSex == "مرد")
+                        {
+                            <option value="مرد" selected>مرد</option>
+                        }
+                        else
+                        {
+                            <option value="مرد">مرد</option>
+                        }
+
+                        @if (Model.UserSex == "زن")
+                        {
+                            <option value="زن" selected>زن</option>
+                        }
+                        else
+                        {
+                            <option value="زن">زن</option>
+                        }
+                    </select>
+                    <span asp-validation-for="UserSex" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserCellPhone" class="control-label"></label>
+                    <input asp-for="UserCellPhone" class="form-control" />
+                    <span asp-validation-for="UserCellPhone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserEmail" class="control-label"></label>
+                    <input asp-for="UserEmail" class="form-control" />
+                    <span asp-validation-for="UserEmail" class="text-danger"></span>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="UserIsActive" /> @Html.DisplayNameFor(model => model.UserIsActive)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserLevel_Id" class="control-label"></label>
+                    <select asp-for="UserLevel_Id" class="form-control" id="userlevel">
+                        <option value="">لطفا سمت سازمانی  را انتخاب کنید</option>
+                        @foreach (var item in Model.UserLevels)
+                        {
+                            @if (item.UserLevel_Id == Model.UserLevel_Id)
+                            {
+                                <option selected value="@item.UserLevel_Id" data-upload="@item.UserLevel_HasUpload">@item.UserLevel_Title</option>
+                            }
+                            else
+                            {
+                                <option value="@item.UserLevel_Id" data-upload="@item.UserLevel_HasUpload">@item.UserLevel_Title</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="UserLevel_Id" class="text-danger"></span>
+                </div>
+
+                @if (Model.ContractUploade == true)
+                {
+                    <div class="form-group" id="uploaducimg">
+                        <label asp-for="UserContractImage" class="control-label"></label>
+                        <span class="fa fa-question-circle-o text-danger" data-toggle="tooltip" title="ماوس رو بر روی عکس ببرید تا زوم شود"></span>
+                        <img src="~/images/usersorgdoc/@Model.UserContractImage" id="ContImage" class="float-xs-left" width="30" height="30" />
+                        <input asp-for="UserContractImage" type="file" class="form-control" />
+                        <span asp-validation-for="UserContractImage" class="text-danger"></span>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group hidden" id="uploaducimg">
+                        <label asp-for="UserContractImage" class="control-label"></label>
+                        <span class="fa fa-question-circle-o text-danger" data-toggle="tooltip" title="ماوس رو بر روی عکس ببرید تا زوم شود"></span>
+                        <img src="~/images/usersorgdoc/@Model.UserContractImage" id="ContImage" class="float-xs-left" width="30" height="30" />
+                        <input asp-for="UserContractImage" type="file" class="form-control" />
+                        <span asp-validation-for="UserContractImage" class="text-danger"></span>
+                    </div>
+                }
+
+
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12 offset-md-4 col-md-4" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/LayoutRef/js/jquery.validate.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.js"></script>
+    <script src="~/AdminRef/app-assets/js/jquery.elevatezoom.js"></script>
+    <script>
+        $('[data-toggle="tooltip"]').tooltip();
+        $(document).ready(function () {
+            function charCount(id, max, showId) {
+
+                var tlength = $(id).val().length;
+                $(id).val($(id).val().substring(0, max));
+                var tlength = $(id).val().length;
+                remain = max - parseInt(tlength);
+
+                $(showId).text(remain);
+            }
+            charCount("#Course_abstract", 500, "#abschar-count");
+            charCount("#Course_about", 200, "#aboutchar-count");
+            $('#Course_abstract').keyup(function () {
+                charCount(this, 500, "#abschar-count");
+            });
+            $('#Course_about').keyup(function () {
+                charCount(this, 200, '#aboutchar-count');
+            });
+           
+        })
+
+
+        //$("#NCImage").elevateZoom({
+
+        //    zoomWindowFadeIn: 1000,
+        //    zoomWindowFadeOut: 1000,
+        //    lensFadeIn: 500,
+        //    lensFadeOut: 500,
+        //    zoomWindowWidth: 5000,
+        //    zoomWindowHeight: 5000,
+        //    zoomWindowPosition: 12 
+        //});
+        $("#NCImage").elevateZoom({ zoomWindowPosition: 12 });
+        $("#eduFile").elevateZoom({
+
+            zoomWindowFadeIn: 500,
+            zoomWindowFadeOut: 500,
+            lensFadeIn: 500,
+            lensFadeOut: 500,
+            zoomWindowWidth: 300,
+            zoomWindowHeight: 300
+        });
+        $("#avatar").elevateZoom({
+
+            zoomWindowFadeIn: 500,
+            zoomWindowFadeOut: 500,
+            lensFadeIn: 500,
+            lensFadeOut: 500,
+            zoomWindowWidth: 300,
+            zoomWindowHeight: 300
+        });
+        $("#ContImage").elevateZoom({
+
+            zoomWindowFadeIn: 500,
+            zoomWindowFadeOut: 500,
+            lensFadeIn: 500,
+            lensFadeOut: 500,
+            zoomWindowWidth: 300,
+            zoomWindowHeight: 300
+        });
+
+        $("#userlevel").change(function () {
+            var upload = $(this).find('option:selected').attr("data-upload");
+
+            if (upload === "True") {
+                $("#uploaducimg").removeClass("hidden");
+            }
+            else {
+
+                $("#uploaducimg").addClass("hidden");
+            }
+        });
+         $("#state").change(function () {
+                var sid = $(this).children("option:selected").val();
+                
+                if (sid !== "") {
+                    $.ajax({
+                        url: "/Account/GetCounties",
+                        data: { stateId: sid },
+                        type: "GET",
+                        success: function (result) {
+                            $("#county").html(result);
+                        }
+                    });
+                }
+                else {
+                    $("#county").html("<option value=''>لطفا شهرستان خود را انتخاب کنید</option>");
+                }
+            });
+    </script>
+}
+
+

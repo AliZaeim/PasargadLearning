@@ -1,0 +1,75 @@
+﻿@model IEnumerable<PLDataLayer.Entities.SubEntities.Timeline>
+@using PLCore.Services.Interfaces;
+@inject IUserService _UserService
+@{
+    ViewData["Title"] = "جدول زمانی";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">جدول زمانی</h1>
+@if (_UserService.CheckPermission(94, User.Identity.Name, roleId))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ایجاد جدول زمانی</a>
+    </p>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle ">
+                    @Html.DisplayNameFor(model => model.TL_Title)
+                </th>
+                <th class="text-xs-center align-middle ">
+                    @Html.DisplayNameFor(model => model.TL_Text)
+                </th>
+                <th class="text-xs-center align-middle">عملیات جدول زمانی</th>
+                <th class="text-xs-center align-middle">عملیات برنامه ها</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.TL_Title)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.TL_Text)
+                    </td>
+                    <td class="text-xs-center align-middle p-1">
+                        @if (_UserService.CheckPermission(95, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.TL_Id">ویرایش</a> <br />
+                        }
+                        @if (_UserService.CheckPermission(96, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.TL_Id">جزئیات</a> <span> | </span>
+                        }
+                        @if (_UserService.CheckPermission(97, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.TL_Id">حذف</a>
+                        }
+                    </td>
+                    <td class="text-xs-center align-middle p-1">
+                        @if (_UserService.CheckPermission(99, User.Identity.Name, roleId))
+                        {
+                            <a href="~/Admin/TimelineComponents/Create?tlId=@item.TL_Id">ثبت برنامه</a> <br />
+                        }
+                        @if (_UserService.CheckPermission(98, User.Identity.Name, roleId))
+                        {
+                            <a href="~/Admin/TimelineComponents/Index?tlId=@item.TL_Id">تمام برنامه ها</a>
+                        }
+
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

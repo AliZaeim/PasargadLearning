@@ -1,0 +1,83 @@
+﻿@model PLDataLayer.Entities.SubEntities.Slider
+
+@{
+    ViewData["Title"] = "ثبت اسلایدر";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+    
+<h1 class="text-xs-center alert alert-info">
+    ثبت اسلایدر
+    <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+<ul>
+    توجه :
+    <li>حجم عکس حداکثر 50 کیلوبایت می تواند باشد.</li>
+    <li>طول تصویر 3 برابر عرض آن باشد</li>
+</ul>
+<hr />
+<div class="row">
+    <div class="col-xs-12 offset-md-4 col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SliderImage" class="control-label"></label>
+                <input asp-for="SliderImage" type="file" class="form-control" />
+                <span asp-validation-for="SliderImage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SliderText1" class="control-label"></label>
+                <input asp-for="SliderText1" class="form-control" />
+                <span asp-validation-for="SliderText1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SliderText1Class" class="control-label"></label>
+                <input type="color" asp-for="SliderText1Class" value="#ffffff" class="form-control" />
+                <span asp-validation-for="SliderText1Class" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SliderText2" class="control-label"></label>
+                <input asp-for="SliderText2" class="form-control" />
+                <span asp-validation-for="SliderText2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SliderText2Class" class="control-label"></label>
+                <input type="color" asp-for="SliderText2Class" value="#ffffff" class="form-control" />
+                <span asp-validation-for="SliderText2Class" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SliderButton1Text" class="control-label"></label>
+                <input asp-for="SliderButton1Text" class="form-control" />
+                <span asp-validation-for="SliderButton1Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SliderButton1Link" class="control-label"></label>
+                <input asp-for="SliderButton1Link" class="form-control" />
+                <span asp-validation-for="SliderButton1Link" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SliderButton2Text" class="control-label"></label>
+                <input asp-for="SliderButton2Text" class="form-control" />
+                <span asp-validation-for="SliderButton2Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SliderButton2Link" class="control-label"></label>
+                <input asp-for="SliderButton2Link" class="form-control" />
+                <span asp-validation-for="SliderButton2Link" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts
+{
+    <script src="~/LayoutRef/js/jquery.validate.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.js"></script>
+    <script>
+
+    </script>
+}

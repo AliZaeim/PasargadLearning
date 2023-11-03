@@ -1,0 +1,93 @@
+﻿@model PLDataLayer.Entities.SubEntities.About;
+@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subService
+@using PLDataLayer.Entities.SubEntities;
+@section PageDescription{
+    <meta name="description" content="درباره مرکز آموزش بیمه  | این مرکز با هدف یکپارچگی و یکسان سازی آموزشهای علمی و کاربردی صنعت بیمه و همچنین تمرکز و گردهمایی اساتید و فراگیران این حوزه در یک هاب آموزشی راه اندازی شده است" />
+}
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    PageInfo pageInfo = await _subService.GetPageInfoByNameAsync("about");
+    string pagebg = null;
+    if (pageInfo != null)
+    {
+        pagebg = "../../images/page/" + pageInfo.PInfo_Image;
+        ViewData["Title"] = pageInfo.PInfo_Title;
+    }
+    else
+    {
+        pagebg = "../../images/bg/" + "9.jpg";
+        ViewData["Title"] = "درباره مرکز آموزش بیمه ";
+    }
+}
+
+<div class="breadcumb-area black-opacity " style="background:url(@pagebg)">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="breadcumb-wrap">
+                    @if (pageInfo != null)
+                    {
+                        <h2>@pageInfo.PInfo_Title</h2>
+                    }
+                    else
+                    {
+                        <h2>درباره مرکز آموزش صنعت بیمه </h2>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="breadcumb-menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul>
+                        <li>
+                            <a href="/">صفحه اصلی</a>
+                        </li>
+                        <li>/</li>
+                        <li>
+                            درباره مرکز
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcumb-area end -->
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+@section About{
+    <partial name="_About" />
+}
+@section Service{
+    <partial name="_Service" />
+}
+@section Team{
+    <partial name="_Team" />
+}
+@section Newsletter{
+    <partial name="_Newsletter" />
+}
+@section FAQ{
+    <div class="container">
+        <partial name="_FAQ" />
+        <div>
+            <a href="/Home/FrAQu" class="floatleft m-t-10 m-b-10 btn btn-info">پرسش و پاسخ</a>
+        </div>
+        <br />
+    </div>
+
+}
+
+@section Footer{
+    <partial name="_Footer" />
+}

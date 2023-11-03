@@ -1,0 +1,78 @@
+﻿@model PLDataLayer.Entities.SubEntities.Slider
+
+@{
+    ViewData["Title"] = "حذف اسلایدر";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+    <h1 class="text-xs-center alert alert-info">
+        حــذف اسلایدر
+        <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+    </h1>
+<h3>آیا نسبت به حذف اسلاید مطمئن هستید ؟</h3>
+<div>
+    <h4>اسلاید</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SliderImage)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SliderImage)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SliderText1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SliderText1)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SliderText1Class)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SliderText1Class)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SliderText2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SliderText2)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SliderText2Class)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SliderText2Class)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SliderButton1Text)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SliderButton1Text)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SliderButton1Link)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SliderButton1Link)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SliderButton2Text)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SliderButton2Text)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SliderButton2Link)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SliderButton2Link)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="SliderId" />
+        <input type="submit" value="حــذف" class="btn btn-danger" /> |
+        <a asp-action="Index">بازگشت</a>
+    </form>
+</div>

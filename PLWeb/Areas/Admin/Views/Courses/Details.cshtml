@@ -1,0 +1,253 @@
+﻿@model PLDataLayer.Entities.Training.Course
+@using PLCore.Convertors;
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@inject ITrainingService _tService;
+@{
+    ViewData["Title"] = "جزئیات دوره آموزشی";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">
+    جزئیات دوره آموزشی
+    <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+<div>
+    <h4>اطلاعات دوره</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Duration)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_Duration)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_StartDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Course_StartDate.ToShamsi()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_EndDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Course_EndDate.ToShamsi()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_StartTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Course_StartTime
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_EndTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Course_EndTime
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Comment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(Model.Course_Comment)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Image)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="~/images/course/@Model.Course_Image" width="100" height="100" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseTypeofMeasurment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseTypeofMeasurment.CTM_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_EndDateRegistration)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Course_EndDateRegistration.ToShamsi()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Capacity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_Capacity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Fee)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_Fee) تومان
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Tags)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_Tags)
+        </dd>
+        <dt class="col-sm-2">
+            مدرس
+        </dt>
+        <dd class="col-sm-10">
+            @{ PLDataLayer.Entities.User.UserRole teacher = await _tService.GetCourseTeacherAsync(Model.Course_Id);}
+            @if (teacher != null)
+            {
+                <span> @teacher.User.UserFirstName @teacher.User.UserFamily</span>
+            }
+        </dd>
+        <dt class="col-sm-2">
+             اتاق آموزش
+        </dt>
+        <dd class="col-sm-10">
+            <a href="@teacher.RoomLink" class="btn btn-success" target="_blank">ورود به اتاق آموزش</a>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_CreateDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Course_CreateDate.ToShamsi()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_UpdateDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Course_UpdateDate.ToShamsiN()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_IsActive)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_IsActive)
+        </dd>
+        <dt class="col-sm-2">
+            حذف شده
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseGroup)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseGroup.CourseGroup_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseStatus)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseStatus.CourseStatus_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseLevel)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseLevel.CourseLevel_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SteppedDiscountCode)
+        </dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrEmpty(Model.SteppedDiscountCode))
+            {
+                <a asp-action="Index" asp-controller="SteppedDiscountDetails" asp-route-code="@Model.SteppedDiscountCode" title="مشاهده جزئیات">
+                    @Model.SteppedDiscountCode
+                </a>
+            }
+        </dd>
+
+    </dl>
+    <div>
+        <h2 class="text-xs-center alert alert-info">فایلهای دوره</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-xs-center align-middle">#</th>
+                        <th class="text-xs-center align-middle">نوع فایل</th>
+                        <th class="text-xs-center align-middle">فایل</th>
+                        <th class="text-xs-center align-middle">توضیح</th>
+                        <th class="text-xs-center align-middle">وضعیت دانلود</th>
+                        <th class="text-xs-center align-middle">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int rad = 1;}
+                    @foreach (var item in Model.CourseFiles.OrderBy(r => r.CF_Type))
+                    {
+                        <tr>
+                            <td class="text-xs-center align-middle">@rad</td>
+                            <td class="text-xs-center align-middle">@item.CF_Type</td>
+                            <td class="text-xs-center align-middle">
+                                @if (item.CF_Type.Contains("image"))
+                                {
+                                    <img src="~/courseFiles/@item.CF_File" width="200" height="200" />
+                                }
+                                else if (item.CF_Type.Contains("pdf"))
+                                {
+                                    <a href="~/courseFiles/@item.CF_File"></a>
+                                }
+                                else if (item.CF_Type.Contains("video"))
+                                {
+                                    <video controls width="200" height="200">
+                                        <source src="~/courseFiles/@item.CF_File" />
+                                    </video>
+                                }
+                                else if (item.CF_Type.Contains("audio"))
+                                {
+                                    <audio controls>
+                                        <source src="~/courseFiles/@item.CF_File" />
+                                    </audio>
+                                }
+                            </td>
+                            <td class="text-xs-center align-middle">@item.CF_Comment</td>
+                            <td class="text-xs-center align-middle">
+                                @if (item.CF_IsFree == true)
+                                {
+                                    <span>عمومی</span>
+                                }
+                                else
+                                {
+                                    <span>پس از ثبت نام</span>
+                                }
+                            </td>
+                            <td class="text-xs-center align-middle">
+                                @if (_userService.CheckPermission(70, User.Identity.Name, roleId))
+                                {
+                                    <a asp-action="EditFile" asp-route-cfId="@item.CF_Id" title="ویرایش فایل"><i class="fa fa-edit fa-2x text-success"></i></a><span>&emsp;</span>
+                                }
+                                @if (_userService.CheckPermission(71, User.Identity.Name, roleId))
+                                {
+                                    <a asp-action="DeleteFile" asp-route-id="@item.CF_Id" title="حذف فایل"><i class="fa fa-remove fa-2x text-danger"></i></a>
+                                }
+
+
+                            </td>
+                        </tr>
+                        rad++;
+
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+<div>
+    @if (_userService.CheckPermission(66, User.Identity.Name, roleId))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Course_Id">ویرایش</a> <span> | </span>
+    }
+
+    <a asp-action="Index">بازگشت</a>
+</div>

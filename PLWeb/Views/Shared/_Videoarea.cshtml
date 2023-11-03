@@ -1,0 +1,39 @@
+﻿@using PLCore.Services.Interfaces;
+@using PLDataLayer.Entities.SubEntities;
+@inject ISubEntityService _subService
+@{
+    string sepbg;
+    Separator sep = await _subService.GetSeparatorByName("film");
+    if(sep!=null)
+    {
+        sepbg = sep.BgImage;
+    }
+    else
+    {
+        sepbg = "2.jpg";
+    }
+}
+@if(sep!=null)
+{
+    <section class="video-area  parallax black-opacity fadeInUp wow ptb-80" data-speed="5" data-bg-image="/images/bg/@sepbg">
+        <h2 class="text-xs-center text-white">@sep.Title</h2>
+        <h4 class="m-t-10 text-white text-xs-center">@sep.Comment</h4>
+        <div class="table">
+            <div class="table-cell">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="video-wrap text-center">
+                                <a href="@sep.FileLink" target="_blank" class="video-popup">
+                                    <i class="fa fa-play"></i>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+    

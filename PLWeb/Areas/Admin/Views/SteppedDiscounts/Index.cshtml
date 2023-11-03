@@ -1,0 +1,90 @@
+﻿@model IEnumerable<PLDataLayer.Entities.Sale.SteppedDiscount>
+@using PLCore.Convertors;
+@using PLCore.Services.Interfaces;
+@inject IUserService _UserService
+@inject ITrainingService _tService;
+@{
+    ViewData["Title"] = "تخفیف های پلکانی";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">تخفیفهای پلکانی</h1>
+@if (_UserService.CheckPermission(144, User.Identity.Name, roleId))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.RegDate)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.SteppedDiscountType)
+            </th>
+            
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderByDescending(r => r.Id))
+        {
+        <tr>
+            <td class="text-xs-center align-middle font-tahoma" dir="ltr">
+                <span class="font-tahoma zltr">@Html.DisplayFor(modelItem => item.Code)</span>
+            </td>
+            <td class="text-xs-center align-middle">
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td class="text-xs-center align-middle">
+                @item.RegDate.ToShamsiWithTime()
+            </td>
+            <td class="text-xs-center align-middle">
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td class="text-xs-center align-middle">
+                @Html.DisplayFor(modelItem => item.SteppedDiscountType.Title)
+            </td>
+            
+            <td class="text-xs-center align-middle">
+                @if (_UserService.CheckPermission(145, User.Identity.Name, roleId))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                }
+                @if (_UserService.CheckPermission(146, User.Identity.Name, roleId))
+                {
+                    <a asp-action="Details" asp-route-id="@item.Id">جزئیات</a> <span>|</span>
+                }
+                @if (_UserService.CheckPermission(147, User.Identity.Name, roleId))
+                {
+                    <a asp-action="Delete" asp-route-id="@item.Id">حــذف</a>
+                }
+                <br />
+                @if (_UserService.CheckPermission(148, User.Identity.Name, roleId))
+                {
+                    <a asp-action="Index" asp-route-code="@item.Code" asp-controller="SteppedDiscountDetails"> &ensp; <span class="tag tag-info tag-pill ">@item.SteppedDiscountDetails.Count()</span>تمام ردیفها</a> <span>|</span>
+                }
+                @if (_UserService.CheckPermission(154, User.Identity.Name, roleId))
+                {
+                    <a asp-action="Create" asp-controller="SteppedDiscountDetails" asp-route-stcode="@item.Code">ثبت ردیف</a> <span>|</span>
+                }
+
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

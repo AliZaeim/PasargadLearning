@@ -1,0 +1,61 @@
+﻿@model IEnumerable<PLCore.DTOs.SkyRoom.SkyUserViewModel>
+
+@{
+    ViewData["Title"] = "کاربران اسکای";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center">کاربران اسکای</h1>
+
+@*<p>
+        <a asp-action="Create">ایجاد کاربر</a>
+    </p>*@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.id)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.username)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.nickname)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.status)
+            </th>
+            <th class="text-xs-center align-middle"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.id)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.username)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.nickname)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (item.status == 0)
+                    {
+                        <span class="tag tag-danger">غیرفعال</span>
+                    }
+                    @if (item.status == 1)
+                    {
+                        <span class="tag tag-info">فعال</span>
+                    }
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.ActionLink("اتاقهای کاربر", "GetUserRooms", new { userid = item.id })
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

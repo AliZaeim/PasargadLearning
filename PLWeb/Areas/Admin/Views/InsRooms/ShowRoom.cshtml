@@ -1,0 +1,102 @@
+﻿@model PLCore.DTOs.SkyRoom.SkyRoomViewModel
+
+@{
+    ViewData["Title"] = "جزئیات اتاق";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">جزئیات اتاق</h1>
+
+<div>
+    
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.status)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.status)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.guest_login)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.guest_login)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.guest_limit)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.guest_limit)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.op_login_first)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.op_login_first)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.max_users)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.max_users)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.session_duration)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.session_duration)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.time_limit)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.time_limit)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.time_usage)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.time_usage)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.time_total)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.time_total)
+        </dd>
+        <dt class="col-sm-2">
+            لینک کلاس
+        </dt>
+        <dd class="col-sm-10">
+            <a href="https://www.skyroom.online/ch/inslearn/@Model.name">لینک</a>
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

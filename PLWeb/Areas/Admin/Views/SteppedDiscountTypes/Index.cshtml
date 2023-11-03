@@ -1,0 +1,57 @@
+﻿@model IEnumerable<PLDataLayer.Entities.Sale.SteppedDiscountType>
+@using PLCore.Services.Interfaces;
+@inject IUserService _UserService
+@{
+    ViewData["Title"] = "نوع تخفیف های پله ای";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">نوع تخفیفهای پله ای</h1>
+@if (_UserService.CheckPermission(139, User.Identity.Name, 139))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت نوع جدید</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @if (_UserService.CheckPermission(140, User.Identity.Name, roleId))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span>|</span>
+                    }
+
+                    @if (_UserService.CheckPermission(141, User.Identity.Name, roleId))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+                    }
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

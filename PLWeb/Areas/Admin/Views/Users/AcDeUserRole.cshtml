@@ -1,0 +1,13 @@
+﻿@model (PLDataLayer.Entities.User.Role, bool)
+@if (Model.Item2 == true)
+{
+    <span class="tag tag-success acde cursor-pointer" title="فعال">
+        @Model.Item1.RoleTitle
+    </span>
+}
+else
+{
+    <span class="tag tag-danger " title="غیرفعال">
+        @Model.Item1.RoleTitle
+    </span>
+}

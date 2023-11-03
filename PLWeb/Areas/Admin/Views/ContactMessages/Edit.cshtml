@@ -1,0 +1,48 @@
+﻿@model PLDataLayer.Entities.SubEntities.ContactMessage
+
+@{
+    ViewData["Title"] = "ویرایش پیام";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">ویرایش پیام</h1>
+
+<div class="row">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CM_Id" />
+            <input type="hidden" asp-for="CM_Date" />
+            <div class="form-group">
+                <label asp-for="CM_FullName" class="control-label"></label>
+                <input asp-for="CM_FullName" class="form-control" />
+                <span asp-validation-for="CM_FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CM_Subject" class="control-label"></label>
+                <input asp-for="CM_Subject" class="form-control" />
+                <span asp-validation-for="CM_Subject" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CM_Email" class="control-label"></label>
+                <input asp-for="CM_Email" class="form-control" />
+                <span asp-validation-for="CM_Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CM_Message" class="control-label"></label>
+                <textarea asp-for="CM_Message" rows="5" class="form-control" ></textarea>
+                <span asp-validation-for="CM_Message" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+

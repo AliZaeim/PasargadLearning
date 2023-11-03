@@ -1,0 +1,45 @@
+﻿@model PLDataLayer.Entities.Training.CourseUser
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@using PLDataLayer.Entities.User;
+@using PLCore.Convertors;
+@{
+    ViewData["Title"] = "حذف فراگیر از دوره";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    UserRole userRole = await _userService.GetUserRoleByIdAsync(Model.URId); 
+}
+
+<h1 class="text-xs-center alert alert-danger">حذف فراگیر از دوره</h1>
+
+<h3>آیا مطمئن به حذف فراگیر هستید؟</h3>
+<div>
+    <h4>مشخصات</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CU_CreateDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.CU_CreateDate.ToShamsiWithTime()
+        </dd>
+        
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Course)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Course.Course_Title)
+        </dd class>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UserRole)
+        </dt>
+        <dd class = "col-sm-10">
+           @Model.UserRole.User.UserFirstName @Model.UserRole.User.UserFamily
+        </dd class>
+    </dl>
+    
+    <form asp-action="RemoveCourseUser">
+        <input type="hidden" asp-for="CU_Id" />
+        <input type="submit" value="حــذف" class="btn btn-danger" /> |
+        <a asp-action="CourseUsers" asp-route-cid="@Model.Course_Id">بازگشت</a>
+    </form>
+</div>

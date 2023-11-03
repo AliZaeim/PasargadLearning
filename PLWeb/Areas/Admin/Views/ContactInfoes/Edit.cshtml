@@ -1,0 +1,79 @@
+﻿@model PLDataLayer.Entities.SubEntities.ContactInfo
+
+@{
+    ViewData["Title"] = "ویرایش اطلاعات تماس";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">
+    ویرایش اطلاعات تماس
+    <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+<hr />
+<div class="row">
+    <div class="col-xs-12 offset-md-2 col-md-8">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CI_Id" />
+            <div class="form-group">
+                <label asp-for="CI_Phone1" class="control-label"></label>
+                <input asp-for="CI_Phone1" class="form-control" />
+                <span asp-validation-for="CI_Phone1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CI_Phone2" class="control-label"></label>
+                <input asp-for="CI_Phone2" class="form-control" />
+                <span asp-validation-for="CI_Phone2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CI_Fax1" class="control-label"></label>
+                <input asp-for="CI_Fax1" class="form-control" />
+                <span asp-validation-for="CI_Fax1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CI_Fax2" class="control-label"></label>
+                <input asp-for="CI_Fax2" class="form-control" />
+                <span asp-validation-for="CI_Fax2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CI_Email1" class="control-label"></label>
+                <input asp-for="CI_Email1" class="form-control" />
+                <span asp-validation-for="CI_Email1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CI_Email2" class="control-label"></label>
+                <input asp-for="CI_Email2" class="form-control" />
+                <span asp-validation-for="CI_Email2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CI_Address1" class="control-label"></label>
+                <input asp-for="CI_Address1" class="form-control" />
+                <span asp-validation-for="CI_Address1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CI_Address2" class="control-label"></label>
+                <input asp-for="CI_Address2" class="form-control" />
+                <span asp-validation-for="CI_Address2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CI_ContactTime" class="control-label"></label>
+                <input asp-for="CI_ContactTime" class="form-control" />
+                <span asp-validation-for="CI_ContactTime" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+                </label>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-warning">بازگشت</a>
+</div>
+

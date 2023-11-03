@@ -1,0 +1,187 @@
+﻿@model IEnumerable<PLDataLayer.Entities.Training.CourseGroup>
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService;
+@inject ITrainingService _tService;
+@{
+    ViewData["Title"] = "گروههای آموزشی";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="alert alert-info text-xs-center ">گروه ها و زیرگروه های آموزشی</h1>
+
+<p>
+    @if (_userService.CheckPermission(61, User.Identity.Name, roleId))
+    {
+        <a asp-action="Create" class="btn btn-success">ثبت گروه</a>
+        <a asp-action="CreateSub" class="btn btn-primary">ثبت زیرگروه</a>
+    }
+
+    <span class="tag tag-warning pr-3">توجه داشته باشید فقط تا 2 مرحله زیر گروه برای هر گروه ایجاد کنید</span>
+</p>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr class="bg-blue-grey text-white">
+                <th class="text-xs-center align-middle">
+                    #
+                </th>
+                <th class="text-xs-center align-middle">
+                    گروه
+                </th>
+                <th class="text-xs-center align-middle">
+                    توضیحات
+                </th>
+                <th class="text-xs-center align-middle">عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int Gradif = 1;}
+            @foreach (var item in Model.Where(w => w.ParentId == null).OrderByDescending(r => r.CourseGroup_Id))
+            {
+                <tr class="text-xs-center align-middle">
+                    <td>
+                        @Gradif
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourseGroup_Title)
+                        <img src="~/images//coursegroup/@item.CourseGroup_Image" width="50" height="50" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourseGroup_Comment)
+
+                    </td>
+                    <td>
+                        @if (_userService.CheckPermission(62, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.CourseGroup_Id">ویرایش</a>
+                        }
+                        @if (_userService.CheckPermission(63, User.Identity.Name, roleId))
+                        {
+                            @if (!Model.Any(a => a.ParentId == item.CourseGroup_Id))
+                            {
+                                @if (await _tService.GetCoursesByGroupId(item.CourseGroup_Id) == null)
+                                {
+                                    <span> |</span>
+                                    <a asp-action="Delete" class="text-danger" asp-route-id="@item.CourseGroup_Id">حذف</a>
+                                }
+
+                            }
+                        }
+
+
+
+                    </td>
+                </tr>
+
+                @if (Model.Any(a => a.ParentId == item.CourseGroup_Id))
+                {
+                    <tr class="text-xs-center">
+
+                        <td colspan="4">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="bg-inverse text-white">
+                                        <th class="text-xs-center align-middle">#</th>
+                                        <th class="text-xs-center align-middle">زیر گروه</th>
+                                        <th class="text-xs-center align-middle">تصویر</th>
+                                        <th class="text-xs-center align-middle">توضیحات</th>
+                                        <th class="text-xs-center align-middle">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{int subRadif = 1;}
+                                    @foreach (var sub in Model.Where(w => w.ParentId == item.CourseGroup_Id).OrderByDescending(r => r.CourseGroup_Id))
+                                    {
+                                        <tr class="text-xs-center align-middle">
+                                            <td class="text-xs-center align-middle">@subRadif</td>
+                                            <td class="text-xs-center align-middle">@sub.CourseGroup_Title</td>
+                                            <td class="text-xs-center align-middle">
+                                                <img src="~/images/coursegroup/@sub.CourseGroup_Image" width="50" height="50" />
+                                            </td>
+                                            <td class="text-justify align-middle">@sub.CourseGroup_Comment</td>
+                                            <td class="text-xs-center align-middle">
+                                                @if (_userService.CheckPermission(62, User.Identity.Name, roleId))
+                                                {
+                                                    <a asp-action="EditSub" asp-route-id="@sub.CourseGroup_Id">ویرایش</a> <span> | </span>
+                                                }
+                                                @if (_userService.CheckPermission(63, User.Identity.Name, roleId))
+                                                {
+                                                    @if (await _tService.GetCoursesByGroupId(sub.CourseGroup_Id) == null)
+                                                    {
+                                                        <a asp-action="Delete" class="text-danger" asp-route-id="@sub.CourseGroup_Id">حذف</a>
+                                                    }
+
+                                                }
+
+
+                                            </td>
+                                        </tr>
+                                        subRadif++;
+
+
+                                        @if (Model.Any(a => a.ParentId == sub.CourseGroup_Id))
+                                        {
+                                            <tr class="text-xs-center">
+                                                <td colspan="4">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr class="bg-inverse text-white">
+                                                                <th class="text-xs-center align-middle">#</th>
+                                                                <th class="text-xs-center align-middle">زیر گروه</th>
+                                                                <th class="text-xs-center align-middle">تصویر</th>
+                                                                <th class="text-xs-center align-middle">توضیحات</th>
+                                                                <th class="text-xs-center align-middle">عملیات</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @{int ssubRadif = 1;}
+                                                            @foreach (var ssub in Model.Where(w => w.ParentId == sub.CourseGroup_Id))
+                                                            {
+                                                                <tr class="text-xs-center align-middle">
+                                                                    <td class="text-xs-center align-middle">@ssubRadif</td>
+                                                                    <td class="text-xs-center align-middle">@ssub.CourseGroup_Title</td>
+                                                                    <td class="text-xs-center align-middle">
+                                                                        <img src="~/images/coursegroup/@ssub.CourseGroup_Image" width="50" height="50" />
+                                                                    </td>
+                                                                    <td class="text-justify align-middle">@ssub.CourseGroup_Comment</td>
+                                                                    <td class="text-xs-center align-middle">
+                                                                        @if (_userService.CheckPermission(62, User.Identity.Name, roleId))
+                                                                        {
+                                                                            <a asp-action="EditSub" asp-route-id="@ssub.CourseGroup_Id">ویرایش</a> <span> | </span>
+
+                                                                        }
+
+                                                                        @if (_userService.CheckPermission(63, User.Identity.Name, roleId))
+                                                                        {
+                                                                            <a asp-action="Delete" class="text-danger" asp-route-id="@ssub.CourseGroup_Id">حذف</a>
+                                                                        }
+
+                                                                    </td>
+                                                                </tr>
+                                                                ssubRadif++;
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        }
+
+
+
+                                    }
+                                </tbody>
+
+                            </table>
+                        </td>
+                    </tr>
+
+                }
+
+                Gradif++;
+
+            }
+        </tbody>
+    </table>
+</div>

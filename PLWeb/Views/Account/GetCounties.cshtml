@@ -1,0 +1,6 @@
+﻿@model IEnumerable<PLDataLayer.Entities.SubEntities.County>
+
+@foreach (var co in Model)
+{
+    <option value="@co.CountyId">@co.CountyName</option>
+}

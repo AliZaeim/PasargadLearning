@@ -1,0 +1,97 @@
+﻿@model IEnumerable<PLDataLayer.Entities.SubEntities.ContactInfo>
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "اطلاعات تماس";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">اطلاعات تماس</h1>
+@if (_userService.CheckPermission(109, User.Identity.Name, roleId))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت اطلاعات جدید</a>
+    </p>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.CI_Phone1)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.CI_Phone2)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.CI_Fax1)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.CI_Fax2)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.CI_Email1)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.CI_Email2)
+                </th>
+
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.CI_ContactTime)
+                </th>
+
+                <th class="text-xs-center align-middle">عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.CI_Phone1)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.CI_Phone2)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.CI_Fax1)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.CI_Fax2)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.CI_Email1)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.CI_Email2)
+                    </td>
+
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.CI_ContactTime)
+                    </td>
+
+                    <td class="text-xs-center align-middle">
+                        @if (_userService.CheckPermission(110, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.CI_Id">ویرایش</a> <span> | </span>
+                        }
+                        @if (_userService.CheckPermission(111, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.CI_Id">جزئیات</a> <span> | </span>
+                        }
+                        @if (_userService.CheckPermission(112, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.CI_Id">حذف</a>
+                        }
+
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

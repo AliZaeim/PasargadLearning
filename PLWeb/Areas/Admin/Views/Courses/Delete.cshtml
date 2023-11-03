@@ -1,0 +1,121 @@
+﻿@model PLDataLayer.Entities.Training.Course
+@using PLCore.Convertors;
+@{
+    ViewData["Title"] = "حذف دوره آموزشی";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<script src="~/AdminRef/ckeditor/ckeditor.js"></script>
+<h1 class="text-xs-center alert alert-info">
+    حذف دوره آموزشی
+    <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+
+<h3 class="text-xs-center alert alert-danger">آیا مطمئن به حذف دوره آموزشی با مشخصات زیر هستید ؟</h3>
+<div>
+    <h4>اطلاعات دوره</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Duration)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_Duration)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_StartDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Course_StartDate.ToShamsi()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_EndDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Course_EndDate.ToShamsi()
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Image)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="~/images/course/@Model.Course_Image" width="150" height="150" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseTypeofMeasurment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseTypeofMeasurment)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_EndDateRegistration)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Course_EndDateRegistration.ToShamsi()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Capacity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_Capacity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Fee)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_Fee)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_Tags)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_Tags)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseTypeofMeasurment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseTypeofMeasurment.CTM_Title)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Course_IsActive)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Course_IsActive)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseGroup)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseGroup.CourseGroup_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseStatus)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseStatus.CourseStatus_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CourseLevel)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CourseLevel.CourseLevel_Title)
+        </dd>
+
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Course_Id" />
+        <input type="submit" value="حــذف" class="btn btn-danger" /> |
+        <a asp-action="Index">بازگشت</a>
+    </form>
+</div>

@@ -1,0 +1,198 @@
+﻿@model PLDataLayer.Entities.Sale.StaticDiscount
+@using PLCore.Convertors;
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@inject ITrainingService _trainingService
+@{
+    ViewData["Title"] = "جزئیات کد تخفیف";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">جزئیات کد تخفیف</h1>
+
+<div class="col-md-4 col-xs-12">
+
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.SD_Code)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.SD_Code)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.SD_IsGeneral)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.SD_IsGeneral)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.SD_StartDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Model.SD_StartDate.ToShamsiN_WithTime()
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.SD_EndDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Model.SD_EndDate.ToShamsiN_WithTime()
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.SD_UsableCount)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.SD_UsableCount)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.SD_Remain)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.SD_Remain)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.SD_MinCourseValue)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.SD_MinCourseValue)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.SD_MaxCourseValue)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.SD_MaxCourseValue)
+        </dd>
+
+    </dl>
+</div>
+<div class="col-md-4 col-xs-12">
+
+    <dl class="row">
+
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.SD_Percent)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.SD_Percent)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.SD_IsActive)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.SD_IsActive)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.RegisterDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Model.RegisterDate.ToShamsiWithTime()
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.SD_Comment)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.SD_Comment)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+    </dl>
+</div>
+<div class="col-md-4 col-xs-12">
+    @if (_userService.CheckPermission(155, User.Identity.Name, roleId))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.SD_Id">ویرایش</a> <span>|</span>
+    }
+
+    <a asp-action="Index">بازگشت</a>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <h3 class="text-xs-center alert alert-info">فراگیران</h3>
+        @if (Model.SD_IsGeneral)
+        {
+            <h4 class="text-xs-center">تمام فراگیران</h4>
+
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-xs-center align-middle">#</th>
+                            <th class="text-xs-center align-middle">نام</th>
+                            <th class="text-xs-center align-middle">نام خانوادگی</th>
+                            <th class="text-xs-center align-middle">کد ملی</th>
+                            <th class="text-xs-center align-middle">تلفن</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int rad = 1;}
+                        @foreach (var user in Model.UserRoleStaticDiscounts)
+                        {
+                            var userRole = await _userService.GetUserRoleByIdAsync(user.URId).ConfigureAwait(false);
+                            <tr>
+                                <td class="text-xs-center align-middle">@rad</td>
+                                <td class="text-xs-center align-middle">@userRole.User.UserFirstName</td>
+                                <td class="text-xs-center align-middle">@userRole.User.UserFamily</td>
+                                <td class="text-xs-center align-middle">@userRole.User.UserNC</td>
+                                <td class="text-xs-center align-middle">@userRole.User.UserCellPhone</td>
+
+                            </tr>
+                            rad++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <h3 class="text-xs-center alert alert-info">دوره ها</h3>
+        @if (Model.CourseStaticDiscounts == null)
+        {
+            <h4 class="text-xs-center ">دوره ای انتخاب نشده</h4>
+
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-xs-center align-middle">#</th>
+                            <th class="text-xs-center align-middle">نام دوره</th>
+                            <th class="text-xs-center align-middle">تاریخ شروع</th>
+                            <th class="text-xs-center align-middle">نام استاد</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int rad = 1;}
+                        @foreach (var co in Model.CourseStaticDiscounts)
+                        {
+                            var course = await _trainingService.GetCourseAsync(co.Course_Id).ConfigureAwait(false);
+                            var teacher = await _trainingService.GetCourseTeacherAsync(co.Course_Id).ConfigureAwait(false);
+                            <tr>
+                                <td class="text-xs-center align-middle">@rad</td>
+                                <td class="text-xs-center align-middle">
+                                    <a href="/Admin/Courses/Details/@course.Course_Id"><span class="p-1 tag tag-primary">@course.Course_Title</span></a>
+                                </td>
+                                <td class="text-xs-center align-middle">@course.Course_StartDate.ToShamsi() | @course.Course_StartTime</td>
+                                <td class="text-xs-center align-middle">@teacher.User.UserFirstName @teacher.User.UserFamily</td>
+                            </tr>
+                            rad++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

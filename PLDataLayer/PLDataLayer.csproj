@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200509094002_plcourse.cs" />
+    <Compile Remove="Migrations\20200509094002_plcourse.Designer.cs" />
+    <Compile Remove="Migrations\20200509140141_staticdiscount.cs" />
+    <Compile Remove="Migrations\20200509140141_staticdiscount.Designer.cs" />
+    <Compile Remove="Migrations\20200509142024_staticdiscountFull.cs" />
+    <Compile Remove="Migrations\20200509142024_staticdiscountFull.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
+  </ItemGroup>
+
+</Project>

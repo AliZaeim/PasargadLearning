@@ -1,0 +1,274 @@
+﻿@model PLCore.DTOs.Course.CourseViewModel
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "ثبت دوره آموزشی";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int roleId = int.Parse(User.FindFirst("RoleId").Value.ToString());
+}
+<script src="~/AdminRef/ckeditor/ckeditor.js"></script>
+<h1 class="text-xs-center alert alert-info">
+    ثبت دوره آموزشی
+    <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+
+<hr />
+<div class="row">
+    <div class="col-xs-12 ">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group col-xs-12 col-md-4">
+                <div class="form-group">
+                    <label asp-for="CourseGroup_Id" class="control-label"></label>
+                    <select asp-for="CourseGroup_Id" class="form-control">
+                        <option value="">لطفا گروه دوره را انتخاب کنید</option>
+                        @foreach (var cg in Model.CourseGroups.Where(w => w.ParentId != null))
+                        {
+                            if (Model.CourseGroup_Id == cg.CourseGroup_Id)
+                            {
+                                <option value="@cg.CourseGroup_Id" selected>@cg.CourseGroup_Title</option>
+                            }
+                            else
+                            {
+                                <option value="@cg.CourseGroup_Id">@cg.CourseGroup_Title</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="CourseGroup_Id" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CourseLevel_Id" class="control-label"></label>
+                    <select asp-for="CourseLevel_Id" class="form-control">
+                        <option value="">لطفا سطح دوره را انتخاب کنید</option>
+                        @foreach (var cl in Model.CourseLevels)
+                        {
+                            if (Model.CourseLevel_Id == cl.CourseLevel_Id)
+                            {
+                                <option value="@cl.CourseLevel_Id" selected>@cl.CourseLevel_Title</option>
+                            }
+                            else
+                            {
+                                <option value="@cl.CourseLevel_Id">@cl.CourseLevel_Title</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="CourseLevel_Id" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CourseStatus_Id" class="control-label"></label>
+
+                    <select asp-for="CourseStatus_Id" class="form-control">
+                        <option value="">لطفا وضعیت دوره را انتخاب کنید</option>
+                        @foreach (var cs in Model.CourseStatuses)
+                        {
+                            if (Model.CourseStatus_Id == cs.CourseStatus_Id)
+                            {
+                                <option value="@cs.CourseStatus_Id" selected>@cs.CourseStatus_Title</option>
+                            }
+                            else
+                            {
+                                <option value="@cs.CourseStatus_Id">@cs.CourseStatus_Title</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="CourseStatus_Id" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course_Title" class="control-label"></label>
+                    <input asp-for="Course_Title" class="form-control" />
+                    <span asp-validation-for="Course_Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course_Duration" class="control-label"></label>
+                    <input asp-for="Course_Duration" class="form-control" />
+                    <span asp-validation-for="Course_Duration" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course_abstract" class="control-label"></label>&ensp;
+                    <span data-toggle="tooltip" class="fa fa-question-circle-o text-warning cursor-pointer" title="حداکثر می توانید 500 کاراکتر برای معرفی مهمترین ویژگی های دوره وارد کنید"></span> &ensp;
+                    <span class="tag tag-success">نمایش در لیست دوره ها </span>
+                    <span class="float-xs-left"><span id="abschar-count" class="tag tag-pill tag-info cursor-pointer" data-toggle="tooltip" title="حداکثر 500 کاراکتر">500</span></span>
+                    <textarea asp-for="Course_abstract" rows="5" maxlength="500" class="form-control"></textarea>
+                    <span asp-validation-for="Course_abstract" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-xs-12 col-md-4">
+                <div class="form-group">
+                    <label asp-for="Course_StartDate" class="control-label"></label>
+                    <input asp-for="Course_StartDate" class="form-control" placeholder="1398/05/11" dir="ltr" />
+                    <span asp-validation-for="Course_StartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course_EndDate" class="control-label"></label>
+                    <input asp-for="Course_EndDate" class="form-control" placeholder="1398/05/15" dir="ltr" />
+                    <span asp-validation-for="Course_EndDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course_Image" class="control-label"></label>&ensp;
+                    <span data-toggle="tooltip" class="fa fa-question-circle-o text-warning cursor-pointer" title="حداکثر 50 کیلو بایت : عرض 400 پیکسل و ارتفاع 250 پیکسل "></span> &ensp;
+                    <input asp-for="Course_Image" type="file" class="form-control" />
+                    <span asp-validation-for="Course_Image" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CTM_Id" class="control-label"></label>
+
+                    <select asp-for="CTM_Id" class="form-control">
+                        <option value="">لطفا نوع سنجش را انتخاب کنید</option>
+                        @foreach (var ct in Model.TypeofMeurements)
+                        {
+                            if (Model.CTM_Id == ct.CTM_Id)
+                            {
+                                <option value="@ct.CTM_Id" selected>@ct.CTM_Title </option>
+                            }
+                            else
+                            {
+                                <option value="@ct.CTM_Id">@ct.CTM_Title </option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="CTM_Id" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TeacherId" class="control-label"></label>
+
+                    <select asp-for="TeacherId" class="form-control">
+                        <option value="">لطفا مدرس دوره را انتخاب کنید</option>
+
+                        @foreach (var t in Model.CourseTeachers.Where(w => w.IsActive == true && w.User.UserIsActive == true))
+                        {
+                            if (Model.TeacherId == t.URId)
+                            {
+                                <option value="@t.URId" selected>@t.User.UserFirstName @t.User.UserFamily </option>
+                            }
+                            else
+                            {
+                                <option value="@t.URId">@t.User.UserFirstName @t.User.UserFamily </option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="TeacherId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course_about" class="control-label"></label>&ensp;
+                    <span data-toggle="tooltip" class="fa fa-question-circle-o text-warning cursor-pointer" title="حداکثر می توانید 200 کاراکتر برای معرفی مختصر دوره وارد کنید"></span> &ensp;
+                    <span class="tag tag-success">نمایش در جزئیات دوره </span>
+                    <span class="float-xs-left"><span id="aboutchar-count" class="tag tag-pill tag-info cursor-pointer" data-toggle="tooltip" title="حداکثر 200 کاراکتر">200</span></span>
+                    <textarea asp-for="Course_about" rows="3" maxlength="200" class="form-control"></textarea>
+                    <span asp-validation-for="Course_about" class="text-danger"></span>
+                </div>
+                @if (roleId == 1)
+                {
+                    <div class="form-group hidden" id="steppedDiv">
+                        <label asp-for="SteppedDiscountCode" class="control-label"></label>
+                        <select asp-for="SteppedDiscountCode" class="form-control">
+                            <option value="">کد تخفیف پله ای را انتخاب کنید</option>
+                            @{ string sep = " | ";}
+                            @foreach (var stCode in Model.SteppedDisCodes.Where(w => w.IsActive == true))
+                            {
+                                <option value="@stCode.Code">
+                                    @stCode.Code | @stCode.SteppedDiscountType.Title
+                                    @if (!string.IsNullOrEmpty(stCode.Comment))
+                                    {
+
+                                        @sep @stCode.Comment;
+                                    }
+
+
+                                </option>
+                            }
+                        </select>
+
+                        <span asp-validation-for="SteppedDiscountCode" class="text-danger"></span>
+                    </div>
+                }
+
+            </div>
+            <div class="form-group col-xs-12 col-md-4">
+                <div class="form-group">
+                    <label asp-for="Course_EndDateRegistration" class="control-label"></label>
+                    <input asp-for="Course_EndDateRegistration" placeholder="1398/05/08" dir="ltr" class="form-control" />
+                    <span asp-validation-for="Course_EndDateRegistration" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course_Capacity" class="control-label"></label>
+                    <input asp-for="Course_Capacity" data-val-number="لطفا ظرفیت را مشخص کنید" class="form-control" />
+                    <span asp-validation-for="Course_Capacity" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course_StartTime" class="control-label"></label>
+                    <input asp-for="Course_StartTime" class="form-control" />
+                    <span asp-validation-for="Course_StartTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course_EndTime" class="control-label"></label>
+                    <input asp-for="Course_EndTime" class="form-control" />
+                    <span asp-validation-for="Course_EndTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course_Fee" class="control-label"></label>&ensp;<span>(تومان)</span>
+                    <input asp-for="Course_Fee" class="form-control" />
+                    <span asp-validation-for="Course_Fee" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course_Tags" class="control-label"></label>&ensp;<span data-toggle="tooltip" class="fa fa-question-circle-o text-warning cursor-pointer" title="تگها را با خط تیره (-) از هم جدا کنید"></span> &ensp;
+                    <textarea asp-for="Course_Tags" rows="3" class="form-control"></textarea>
+                    <span asp-validation-for="Course_Tags" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group col-xs-12">
+                <label asp-for="Course_Comment" class="control-label"></label>
+                <textarea asp-for="Course_Comment" rows="10" class="form-control"></textarea>
+                <span asp-validation-for="Course_Comment" class="text-danger"></span>
+            </div>
+            <script>
+                CKEDITOR.replace('Course_Comment');
+            </script>
+
+
+
+
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12 offset-md-4 col-md-4" />
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts
+{
+
+    <script src="~/LayoutRef/js/jquery.validate.min.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $('[data-toggle="tooltip"]').tooltip();
+        $(document).ready(function () {
+            function charCount(id, max, showId) {
+
+                var tlength = $(id).val().length;
+                $(id).val($(id).val().substring(0, max));
+                var tlength = $(id).val().length;
+                remain = max - parseInt(tlength);
+
+                $(showId).text(remain);
+            }
+            charCount("#Course_abstract", 500, "#abschar-count");
+            charCount("#Course_about", 200, "#aboutchar-count");
+            $('#Course_abstract').keyup(function () {
+                charCount(this, 500, "#abschar-count");
+            });
+            $('#Course_about').keyup(function () {
+                charCount(this, 200, '#aboutchar-count');
+            });
+            $("#Course_Fee").keyup(function () {
+                var valu = $(this).val();
+
+                if (valu == "" || valu == "0") {
+                    $("#steppedDiv").addClass("hidden");
+
+                }
+                else {
+                    $("#steppedDiv").removeClass("hidden");
+                }
+            })
+        })
+    </script>
+}

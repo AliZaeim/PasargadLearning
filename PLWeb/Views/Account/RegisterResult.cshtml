@@ -1,0 +1,208 @@
+﻿@model PLCore.DTOs.Account.RegisterResultViewModel
+@using PLCore.Convertors;
+<div class="p-3 m-b-30">
+    <h3 class="text-xs-center alert alert-info">
+        @if (Model.UserRole.Role.RoleId == 4)
+        {
+            <span>فراگیر عزیز : </span>
+        }
+        @if (Model.UserRole.Role.RoleId == 3)
+        {
+            <span>مدرس عزیز : </span>
+        }
+
+        @if (Model.UserRole.User.UserSex == "مرد")
+        {
+            <span>آقای</span>
+        }
+        else
+        {
+            <span>خانم</span>
+        }
+        @Model.UserRole.User.UserFirstName @Model.UserRole.User.UserFamily
+    </h3>
+    <div class="text-xs-center  fs-18">
+
+        @if (Model.Course == null)
+        {
+            <span>ثبت نام شما با موفقیت انجام شد</span>
+            <br />
+            <br />
+            <br />
+            <span>کد کاربری  : @Model.UserRole.User.UserName</span>
+            <br />
+            <br />
+            <span class="m-t-15">رمز عبور : @Model.UserRole.User.LastPassword</span>
+            <br />
+            <br />
+            if (Model.UserRole.room_id != null)
+            {
+                <span class="p-2"><a href="@Model.Teacher.RoomLink" target="_blank" class="btn btn-warning">ورود به کلاس</a></span><br /><br />
+                <br />
+                <br />
+            }
+
+            <span class="text-danger m-t-3">اطلاعات فوق را جهت ورود به سایت یادداشت کنید</span>
+        }
+        else
+        {
+
+            if (Model.RegInCourseOnly == false)
+            {
+                if (Model.TotalFee != 0)
+                {
+                    <span>ثبت نام شما در سایت با موفقیت  انجام شد</span><br /><br />
+                    <span>کد کاربری  : @Model.UserRole.User.UserName</span>
+                    <br />
+                    <br />
+                    <span>رمز عبور : @Model.UserRole.User.LastPassword</span>
+                    <br />
+                    <br />
+                    if (Model.UserRole.room_id != null)
+                    {
+                        <span class="p-2"><a href="@Model.Teacher.RoomLink" target="_blank" class="btn btn-warning">ورود به کلاس</a></span>
+                        <br />
+                        <br />
+                    }
+                    <span class="text-danger mt-3">اطلاعات فوق را جهت ورود به سایت یادداشت کنید</span>
+                    <br />
+                    <br />
+                    <span class="text-danger fs-18">برای ثبت نام در دوره و پرداخت شهریه روی دکمه پرداخت کلیک کنید</span>
+                    <br /><br /><br /><br /><br /><br />
+                    <span>
+                        <a href="/Account/PrepareFee?cId=@Model.Course.Course_Id&urId=@Model.UserRole.URId" class="btn btn-success col-xs-12 btn-lg fs-18">پرداخت</a>
+                    </span>
+
+
+                }
+                else
+                {
+                    if (Model.Course.CourseStatus.CourseStatus_Title != "دانلودی")
+                    {
+                        <span>ثبت نام شما با موفقیت در سایت و دوره انجام شد</span>
+                        <br />
+                        <br />
+                        <br />
+                        <span>کد کاربری  : @Model.UserRole.User.UserName</span>
+                        <br />
+                        <br />
+                        <span>رمز عبور : @Model.UserRole.User.LastPassword</span>
+                        <br />
+                        <br />
+                        if (Model.UserRole.room_id != null)
+                        {
+                            <span>شناسه اتاق : @Model.UserRole.room_id</span>
+                            <br />
+                            <br />
+                        }
+                        <span class="text-danger mt-3">اطلاعات فوق را جهت ورود به سایت یادداشت کنید</span>
+                        <br />
+                        <br />
+                        <span class="p-2">نام دوره : @Model.Course.Course_Title</span><br /><br />
+                        <span class="p-2">نام مدرس : @Model.Teacher.User.UserFirstName @Model.Teacher.User.UserFamily</span><br /><br />
+                        <span class="p-2">تاریخ برگزاری : @Model.Course.Course_StartDate.ToShamsi()</span><br /><br />
+                        <span class="p-2">ساعت شروع : @Model.Course.Course_StartTime</span><br /><br />
+                        <span class="p-2"><a href="@Model.Teacher.RoomLink" target="_blank" class="btn btn-warning">ورود به کلاس</a></span><br /><br />
+                    }
+                    else
+                    {
+                        <span>ثبت نام شما در سایت با موفقیت  انجام شد</span><br /><br />
+                        <span>کد کاربری  : @Model.UserRole.User.UserName</span>
+                        <br />
+                        <br />
+                        <span>رمز عبور : @Model.UserRole.User.LastPassword</span>
+                        <br />
+                        <br />
+                        <span class="text-danger mt-3">اطلاعات فوق را جهت ورود به سایت یادداشت کنید</span>
+                        <br /><br /><br /><br /><br /><br />
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <span class="p-2">
+                                <a href="/Home/CourseDetails/@Model.Course.Course_Id" class="btn btn-warning">دانلود فایلها</a>
+                            </span><br /><br />
+                        }
+                        else
+                        {
+                            <span class="p-2">
+                                <a href="/Login/S?returl=/Home/CourseDetails/@Model.Course.Course_Id" class="btn btn-warning">ورود برای دانلود فایلها</a>
+                            </span><br /><br />
+                        }
+
+                    }
+
+                }
+
+            }
+            else
+            {
+                if (Model.TotalFee != 0)
+                {
+                    <span class="text-danger fs-18">برای ثبت نام در دوره و پرداخت شهریه روی دکمه پرداخت کلیک کنید</span>
+                    <br /><br />
+                    <span>
+                        <a href="/Account/PrepareFee?cId=@Model.Course.Course_Id&urId=@Model.UserRole.URId" class="btn btn-primary col-xs-12 btn-lg fs-18">پرداخت</a>
+                    </span>
+                }
+                else
+                {
+                    @if (Model.Course.CourseStatus.CourseStatus_Title != "دانلودی")
+                    {
+                        <span>ثبت نام شما با موفقیت در دوره انجام شد</span>
+                        <br />
+                        <br />
+                        <span class="p-2">نام دوره : @Model.Course.Course_Title</span><br /><br />
+                        <span class="p-2">نام مدرس : @Model.Teacher.User.UserFirstName @Model.Teacher.User.UserFamily</span><br /><br />
+                        <span class="p-2">تاریخ برگزاری : @Model.Course.Course_StartDate.ToShamsi()</span><br /><br />
+                        <span class="p-2">ساعت شروع : @Model.Course.Course_StartTime</span><br /><br />
+                        <span class="p-2"><a href="@Model.Teacher.RoomLink" target="_blank" class="btn btn-warning">ورود به کلاس</a></span><br /><br />
+                    }
+                    else
+                    {
+                        <span>ثبت نام شما با موفقیت در دوره انجام شد</span>
+                        <br />
+                        <br />
+                        <span class="p-2">نام دوره : @Model.Course.Course_Title</span><br /><br />
+                        <span class="p-2">نام مدرس : @Model.Teacher.User.UserFirstName @Model.Teacher.User.UserFamily</span><br /><br />
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <span class="p-2">
+                                <a href="/Home/CourseDetails/@Model.Course.Course_Id" class="btn btn-warning">دانلود فایلها</a>
+                            </span><br /><br />
+                        }
+                        else
+                        {
+                            <span class="p-2">
+                                <a href="/Login/S?returl=/Home/CourseDetails/@Model.Course.Course_Id" class="btn btn-warning">ورود برای دانلود فایلها</a>
+                            </span><br /><br />
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+    </div>
+
+
+
+    @if (Model.UserRole.User.UserIsActive == false)
+    {
+        <h4 class="text-xs-center alert alert-warning">
+            کاربری شما طی 24 ساعت آینده فعال می شود.
+        </h4>
+    }
+    else
+    {
+        if (Model.UserRole.IsActive == false)
+        {
+            <h4 class="text-xs-center alert alert-warning">
+                کاربری شما طی 24 ساعت آینده فعال می شود.
+            </h4>
+        }
+    }
+
+
+</div>
+

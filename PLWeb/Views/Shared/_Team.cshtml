@@ -1,0 +1,80 @@
+﻿@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@inject ISubEntityService _subService
+@using PLDataLayer.Entities.User;
+@using PLDataLayer.Entities.SubEntities;
+@{
+    List<UserRole> teachers = await _userService.GetTeachersAsync();
+    PackInfo packInfo = await _subService.GetPackInfoByName("pteachers");
+}
+@if (teachers != null)
+{
+    <section class="team-area  ptb-100">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12 col-xs-offset-0  wow fadeInUp">
+                    <div class="section-title text-center">
+                        @if (packInfo != null)
+                        {
+                            <h2>@packInfo.PackInfo_Title</h2>
+                            <p class="fs-18 text-justify">
+                                @packInfo.PackInfo_Comment
+                            </p>
+                        }
+                        else
+                        {
+                            <h2>مدرسان مرکز</h2>
+                            <p class="fs-18 text-justify">
+                                مرکز آموزش صنعت بیمه با بهره گیری از مدرسان برجسته در زمینه بیمه، بازاریابی و فروش امکان بهره گیری فراگیران
+                                از جدیدترین و کاملترین دوره های آموزشی تحت آموزش این مدرسان را فراهم نموده
+                                و همچنین از افردای که دارای تخصص و تجربه کافی در حوزه های مربوطه هستند پس از انجام گزینش دعوت به همکاری می نماید.
+                            </p>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                @foreach (var th in teachers.Where(w => w.IsActive == true && w.User.UserIsActive == true).OrderBy(a => Guid.NewGuid()).ToList().Take(8))
+                {
+                    <div class="col-md-3 col-xs-12 col wow m-b-20 fadeInUp "  data-wow-delay=".1s">
+                        <div class="team-wrap2 pr-3 pl-3">
+                            <div class="team-img text-xs-center">
+                                
+                                    @if (!string.IsNullOrEmpty(th.User.UserAvatar))
+                                    {
+                                        <img class="w-100" src="~/images/usersavatar/@th.User.UserAvatar" alt="@th.User.UserFirstName @th.User.UserFamily" />
+                                    }
+                                    else
+                                    {
+                                        <img class="w-100" src="~/images/no-img450450.jpg" alt="@th.User.UserFirstName @th.User.UserFamily" />
+                                    }
+                               
+                                <div class="overlay">
+                                    <h3>@th.User.UserFirstName @th.User.UserFamily </h3>
+                                    <span>@th.User.UserLabel</span>
+                                    <p>@th.User.UserDescription  </p>
+                                </div>
+                            </div>
+                            <div class="team-content">
+                                <h3>
+                                    <a href="/Home/TeacherInfo?urId=@th.URId"  class="fs-20">
+                                        @th.User.UserFirstName @th.User.UserFamily
+                                    </a>
+                                </h3>
+                                <p>@th.User.UserLabel</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                }
+            </div>
+            <div>
+                <a href="/Teachers" class="float-xs-left m-t-10 btn btn-info">مدرسان</a>
+            </div>
+        </div>
+        
+    </section>
+}

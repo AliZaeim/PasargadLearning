@@ -1,0 +1,77 @@
+﻿@using PLCore.Services.Interfaces;
+@inject ISubEntityService subService
+@using PLDataLayer.Entities.SubEntities;
+@{
+    int rad = 1;
+    List<SiteFAQ> siteFAQs = await subService.GetSiteFAQs();
+
+}
+
+@if (siteFAQs != null)
+{
+    @if (siteFAQs.Count() != 0)
+    {
+       
+        <script src="~/LayoutRef/js/vendor/jquery-1.12.4.min.js"></script>
+        <script src="~/LayoutRef/js/bootstrap.min.js"></script>
+        <div class="faq-area">
+
+            <div class="wow fadeInRight">
+                <div class="faq-wrap">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+                        @foreach (var item in siteFAQs.Where(w => w.IsActive == true).OrderByDescending(r => r.SiteFAQ_Date).Take(10))
+                        {
+
+                            string idd = "heading" + rad.ToString();
+                            string cnt = "collapse" + rad.ToString();
+                            string hreff = "#" + cnt;
+
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading" id="@idd">
+                                    <h4 class="panel-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="@hreff" aria-expanded="false" aria-controls="@cnt">
+                                            @item.SiteFAQ_Question
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="@cnt" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <p class="text-justify">@item.SiteFAQ_Reply</p>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            rad++;
+                        }
+
+
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            $(document).ready(function () {
+                //$(".panel").click(function () {
+                //    alert("test");
+                //});
+                $(".btn-primary").click(function () {
+                    $(".collapse").collapse('toggle');
+                });
+                $(".btn-success").click(function () {
+                    $(".collapse").collapse('show');
+                });
+                $(".btn-warning").click(function () {
+                    $(".collapse").collapse('hide');
+                });
+            });
+        </script>
+    }
+
+}

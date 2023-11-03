@@ -1,0 +1,62 @@
+﻿@model PLDataLayer.Entities.Sale.SteppedDiscountDetail
+@using PLCore.Services.Interfaces;
+@inject IUserService _UserService
+@{
+    ViewData["Title"] = "شرح ردیف تخفیف پله ای";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">شرح ردیف تخفیف پله ای</h1>
+
+<div>
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SteppedDiscount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SteppedDiscount.Code)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FromPerson)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FromPerson)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ToPerson)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ToPerson)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FromDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FromDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ToDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ToDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Percent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Percent)
+        </dd>
+
+    </dl>
+</div>
+<div>
+    @if (_UserService.CheckPermission(150, User.Identity.Name, roleId))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id">ویرایش</a> <span>|</span>
+    }
+
+    <a asp-action="Index" asp-route-code="@Model.SteppedDiscount.Code">بازگشت</a>
+</div>

@@ -1,0 +1,98 @@
+﻿@using PLDataLayer.Entities.SubEntities;
+@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subService
+@{
+    PackInfo ideaInfo = await _subService.GetPackInfoByName("pideas");
+}
+<section class="testmonial-area ptb-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12 col-xs-offset-0 wow fadeInUp">
+                <div class="section-title text-center">
+                    @if (ideaInfo != null)
+                    {
+                        <h2>@ideaInfo.PackInfo_Title</h2>
+                        <p class="fs-18 text-justify">
+                            @ideaInfo.PackInfo_Comment
+                        </p>
+                    }
+                    else
+                    {
+                        <h2>نظرات کاربران</h2>
+                        <p class="fs-18 text-justify">
+                            تعامل دو سویه بین مرکز آموزش و کاربران مرکز می تواند موجب پیشرفت و تعالی بهره وری سازمان شود.
+                            به همین منظور واحد پشتیبانی سایت به طور مکرر نسبت به نظرسنجی از کاربران اقدام نموده و نظرات و پیشنهادات کاربران را
+                            به واحد های مربوطه انتقال می دهد. در ادامه برخی نظرات کاربران را با شما به اشتراک گذاشته ایم.
+                        </p>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="rtl-test-active dotate-style">
+                <div class="col-xs-12 wow fadeInRight">
+                    <div class="client-wrap fix">
+                        <div class="client-info text-xs-right">
+                            <h3>محمد حسینی</h3>
+                            <p class="text-justify">
+                               وجود یک منبع رسمی و قابل اعتماد در زمینه آموزش بیمه همیشه یکی از دغدغه های
+                                نمایندگان و سازمان فروش بوده و خوشحالم که چنین سایتی با اساتید برجسته صنعت بیمه
+                                 ایجاد شده و در اختیار نمایندگان قرار گرفته است.
+
+                            </p>
+                        </div>
+                        @*<div class="client-img pull-right">
+                                <img src="/images/client/1.jpg" alt="" />
+                            </div>*@
+                    </div>
+                </div>
+                <div class="col-xs-12 wow fadeInLeft">
+                    <div class="client-wrap fix">
+                        <div class="client-info text-xs-left">
+                            <h3>لیلا لشگری</h3>
+                            <p class="text-justify">
+                                علاوه ب اینکه ارائه آموزشها از طریق این سایت کمک زیادی به کیفیت عملکرد نمایندگان می کنه، موضوع 
+                                سنجش و آزمون هم یکی از موضوعات مهمه که خداروشکر در این سایت امکانش فراهم شده. ممنونم از متولیان این امر
+                            </p>
+                        </div>
+                        @*<div class="client-img pull-left client-img2">
+                                <img src="/images/client/2.jpg" alt="" />
+                            </div>*@
+                    </div>
+                </div>
+                <div class="col-xs-12 wow fadeInRight">
+                    <div class="client-wrap fix">
+                        <div class="client-info text-xs-right">
+                            <h3>بابک سلطانی</h3>
+                            <p class="text-justify">
+                                من به عنوان یکی از مدیران فروش شرکت که در شهرستان فعالیت دارم همیشه با مشکل آموزش و منابع آموزشی مواجه بودم
+                                که متاسفانه تاثیر زیادی روی عملکرد مجموعه ام داشت. مطمئنا این سایت می تونه خیلی از مشکلات ما در شهرستان ها رو حل کنه.
+                            </p>
+                        </div>
+                        @*<div class="client-img pull-right">
+                                <img src="/images/client/3.jpg" alt="" />
+                            </div>*@
+                    </div>
+                </div>
+                <div class="col-xs-12 wow fadeInLeft">
+                    <div class="client-wrap fix">
+                        <div class="client-info text-xs-left">
+                            <h3>فرانک مجدی</h3>
+                            <p class="text-justify">
+
+                                آموزش مهمترین رکن موفقیت و پیشرفت یک سازمانه و صنعت بزرگی مثل صنعت بیمه 
+                                به عنوان نهادی موثر در توسعه رفاه و خدمات اجتماعی حتما باید به موضوع آموزش شبکه فروش توجه 
+                                ویژه ای داشته باشه که خداروشکر با این سامانه بخش مهمی از این موضوع مورد توجه قرار گرفته.
+
+                            </p>
+                        </div>
+                        @*<div class="client-img pull-left client-img2">
+                                <img src="/images/client/4.jpg" alt="" />
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

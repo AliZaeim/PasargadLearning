@@ -1,0 +1,48 @@
+﻿@model PLDataLayer.Entities.SubEntities.ContactMessage
+@using PLCore.Convertors; 
+@{
+    ViewData["Title"] = "جزئیات پیام";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">جزئیات پیام</h1>
+
+<div>    
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CM_FullName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CM_FullName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CM_Subject)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CM_Subject)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CM_Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CM_Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CM_Message)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CM_Message)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CM_Date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.CM_Date.ToShamsiWithTime()
+        </dd>
+        
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.CM_Id">ویرایش</a> |
+    <a asp-action="Index">بازگشت</a>
+</div>

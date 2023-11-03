@@ -1,0 +1,71 @@
+[
+  {
+    "outputFileName": "wwwroot/LayoutRef/css/bundle/bootstrapAll.min.css",
+    "inputFiles": [
+      "wwwroot/LayoutRef/css/bootstrap.min.css",
+      "wwwroot/LayoutRef/css/bootstrap-msg.css",
+      "wwwroot/LayoutRef/css/animate.css",
+      "wwwroot/LayoutRef/css/owl.carousel.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/LayoutRef/css/bundle/styles.min.css",
+    "inputFiles": [
+      "wwwroot/LayoutRef/css/magnific-popup.css",
+      "wwwroot/LayoutRef/css/colors.css",
+      "wwwroot/LayoutRef/css/slicknav.min.css",
+      "wwwroot/LayoutRef/css/styles.css",
+      "wwwroot/LayoutRef/css/rtl.css",
+      "wwwroot/LayoutRef/css/responsive.css",
+      "wwwroot/LayoutRef/css/rtl-responsive.css",
+      "wwwroot/LayoutRef/css/slicknav.min.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/LayoutRef/js/bundle/JqueryAjax.min.js",
+    "inputFiles": [
+      "wwwroot/LayoutRef/js/vendor/jquery-1.12.4.min.js",
+      "wwwroot/LayoutRef/js/jquery.unobtrusive-ajax.min.js"
+      
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/LayoutRef/js/bundle/boots.min.js",
+    "inputFiles": [
+      "wwwroot/LayoutRef/js/bootstrap.min.js",
+      "wwwroot/LayoutRef/js/bootstrap-msg.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/LayoutRef/js/bundle/plug_script.min.js",
+    "inputFiles": [
+      "wwwroot/LayoutRef/js/plugins.js",
+      "wwwroot/LayoutRef/js/scripts.js",
+      "wwwroot/LayoutRef/js/SiteScripts.js"
+
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  }
+
+
+
+]

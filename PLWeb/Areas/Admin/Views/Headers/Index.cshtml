@@ -1,0 +1,89 @@
+﻿@model IEnumerable<PLDataLayer.Entities.SubEntities.Header>
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "اطلاعات سایت";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">اطلاعات سایت</h1>
+@if (_userService.CheckPermission(114, User.Identity.Name, roleId))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ایجاد اطلاعات جدید</a>
+    </p>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.Header_Title)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.Header_Text)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.Header_Btn1Text)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.Header_Btn1Link)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.Header_Btn2Text)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.Header_Btn2Link)
+                </th>
+
+                <th class="text-xs-center align-middle">عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.Header_Title)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.Header_Text)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.Header_Btn1Text)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.Header_Btn1Link)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.Header_Btn2Text)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.Header_Btn2Link)
+                    </td>
+
+                    <td class="text-xs-center align-middle">
+                        @if (_userService.CheckPermission(115, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Header_id">ویرایش</a> <span> | </span>
+                        }
+                        @if (_userService.CheckPermission(116, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Header_id">جزئیات</a> <span> | </span>
+                        }
+                        @if (_userService.CheckPermission(117, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Header_id">حــذف</a>
+                        }
+
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

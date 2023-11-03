@@ -1,0 +1,56 @@
+﻿@model PLDataLayer.Entities.Training.CourseFile
+
+@{
+    ViewData["Title"] = "حذف فایل";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+    <h1 class="text-xs-center alert alert-info">
+        حــذف فایل
+        <a asp-action="Details" asp-route-id="@Model.Course_Id" class="float-xs-left btn btn-warning">بازگشت</a>
+    </h1>
+
+<h3>آیا مطمئن به حذف فایل هستید؟</h3>
+<div>
+    <h4>مشخصات فایل</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CF_File)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CF_File)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CF_Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CF_Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CF_Comment)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CF_Comment)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CF_Type)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CF_Type)
+        </dd>        
+        
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Course.Course_Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Course.Course_Title)
+        </dd class>
+    </dl>
+    
+    <form asp-action="DeleteFile">
+        <input type="hidden" asp-for="CF_Id" />
+        <input type="submit" value="حــذف" class="btn btn-danger" /> |
+        <a asp-action="Index">بازگشت به لیست دوره ها</a>
+    </form>
+</div>

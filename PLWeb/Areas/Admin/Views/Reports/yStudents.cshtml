@@ -1,0 +1,62 @@
+﻿@model IEnumerable<PLDataLayer.Entities.User.UserRole>
+@using PLDataLayer.Entities.Training;
+@using PLCore.Services.Interfaces;
+@inject ITrainingService _trainingService
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "فراگیران شما";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+    var userrole = await _userService.GetUserRoleBy_UserName_RoleId(User.Identity.Name, roleId);
+    List<Course> Tcourses = await _trainingService.GetCoursesByRole(userrole.URId);
+}
+
+<h1 class="text-xs-center alert alert-info">فراگیران شما</h1>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle p-0">
+                #
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.User.UserFirstName)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.User.UserFamily)
+            </th>
+            <th class="text-xs-center align-middle">
+                دوره ها
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{ int rad = 1;}
+        @foreach (var item in Model.Where(w => w.IsActive == true && w.User.UserIsActive == true))
+        {
+            List<Course> Usercourses = await _trainingService.GetCoursesByRole(item.URId);
+            Usercourses = Usercourses.Intersect(Tcourses).ToList();
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @rad
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.User.UserFirstName)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.User.UserFamily)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @foreach (var co in Usercourses)
+                    {
+                        <span class="tag tag-info">@co.Course_Title</span>
+                    }
+                </td>
+
+            </tr>
+            rad++;
+        }
+    </tbody>
+</table>

@@ -1,0 +1,151 @@
+﻿@model IEnumerable<PLDataLayer.Entities.Blog.News>
+@using PLCore.Convertors;
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "اخبار";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">اخبار</h1>
+<h4 class="alert alert-warning">توجه : فایلهای پیوست شده به خبر در جزئیات خبر قابل مشاهده هستند</h4>
+@if (_userService.CheckPermission(82, User.Identity.Name, roleId))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success btn-lg">ثبت خبر</a>
+    </p>
+}
+
+<input id="newsSearch" class="offset-md-4 col-md-4 mb-2 input-lg height-50 rounded border-info col-xs-12" placeholder="جستجو در اخبار" />
+<br />
+<div class="table-responsive">
+    <table class="table table-bordered" id="newsTable">
+        <thead>
+
+            <tr>
+                <th class="text-xs-center align-middle">
+                    لینک خبر
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.News_Date)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.News_Title)
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.News_Abstract)
+                </th>
+                <th class="text-xs-center align-middle">
+                    فایلها
+                </th>
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.Publisher)
+                </th>
+
+                <th class="text-xs-center align-middle">
+                    @Html.DisplayNameFor(model => model.NewsGroup)
+                </th>
+                <th class="text-xs-center align-middle">عملیات</th>
+            </tr>
+        </thead>
+        <tbody id="newsBody">
+            @foreach (var item in Model.OrderByDescending(r=>r.News_Date))
+            {
+                <tr>
+                    <td class="text-xs-center align-middle" dir="ltr">
+                        <a href="/News/d/@item.News_Code">لینک خبر</a>
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @item.News_Date.ToShamsiWithTime()
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.News_Title)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.News_Abstract)
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @{
+                            int imgcount = 0; int vcount = 0; int acount = 0; int txtcount = 0;
+                        }
+                        @foreach (var f in item.NewsFiles)
+                        {
+                            string[] t = f.NF_Type.Split("/");
+                            if (f.NF_Type.StartsWith("image"))
+                            {
+                                imgcount++;
+                            }
+                            if (f.NF_Type.StartsWith("video"))
+                            {
+                                vcount++;
+                            }
+                            if (f.NF_Type.StartsWith("audio"))
+                            {
+                                acount++;
+                            }
+                            if (f.NF_Type.StartsWith("application"))
+                            {
+                                txtcount++;
+                            }
+
+                        }
+                        <p>تصویر : <span class="tag tag-primary tag-pill">@imgcount</span></p>
+                        <p>ویدئو : <span class="tag tag-success tag-pill">@vcount</span> </p>
+                        <p>صوت : <span class="tag tag-info tag-pill">@acount</span></p>
+                        <p>متن : <span class="tag tag-default tag-pill">@txtcount</span></p>
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.Publisher.Publisher_Title)
+                    </td>
+
+                    <td class="text-xs-center align-middle">
+                        @Html.DisplayFor(modelItem => item.NewsGroup.NewsGroup_Title)
+                    </td>
+                    <td class="text-xs-center align-middle">
+                        @if (_userService.CheckPermission(86, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="InsertFiles" asp-route-newsId="@item.News_Id" data-toggle="tooltip" title="افزودن فایل"><i class="fa fa-plus-circle fa-2x text-success"></i></a> <br />
+                        }
+                        @if (_userService.CheckPermission(83, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.News_Id" data-toggle="tooltip" title="ویرایش"><i class="fa fa-edit fa-2x text-warning"></i></a> <br />
+                        }
+                        @if (_userService.CheckPermission(84, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.News_Id" data-toggle="tooltip" title="جزئیات"><i class="fa fa-list fa-2x text-info"></i></a> <br />
+                        }
+                        @if (_userService.CheckPermission(85, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.News_Id" data-toggle="tooltip" title="حــذف"><i class="fa fa-remove fa-2x text-danger"></i></a>
+                        }
+
+
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $("#newsSearch").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+
+                $("#newsBody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+
+    </script>
+}

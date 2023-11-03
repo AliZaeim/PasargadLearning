@@ -1,0 +1,158 @@
+﻿@model PLDataLayer.Entities.SubEntities.Header
+
+@{
+    ViewData["Title"] = "حــذف اطلاعات";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+    <h1 class="text-xs-center alert alert-info">
+        حــذف اطلاعات
+        <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+    </h1>
+
+    <h3 class="alert alert-danger text-xs-center">آیا مطمئن به حذف اطلاعات هستید؟</h3>
+<div>
+    <h4>اطلاعات </h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Text)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Text)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_About)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_About)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Btn1Text)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Btn1Text)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Btn1Link)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Btn1Link)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Btn2Text)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Btn2Text)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Btn2Link)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Btn2Link)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social1Text)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social1Text)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social1Class)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social1Class)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social1Link)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social1Link)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social2Text)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social2Text)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social2Class)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social2Class)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social2Link)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social2Link)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social3Text)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social3Text)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social3Class)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social3Class)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social3Link)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social3Link)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social4Text)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social4Text)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social4Class)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social4Class)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social4Link)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social4Link)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social5Text)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social5Text)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social5Class)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social5Class)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Header_Social5Link)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Header_Social5Link)
+        </dd>
+
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Header_id" />
+        <input type="submit" value="حــذف" class="btn btn-danger" /> |
+        <a asp-action="Index">بازگشت</a>
+    </form>
+</div>

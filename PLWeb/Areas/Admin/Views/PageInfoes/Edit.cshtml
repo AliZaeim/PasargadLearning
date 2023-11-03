@@ -1,0 +1,66 @@
+﻿@model PLDataLayer.Entities.SubEntities.PageInfo
+
+@{
+    ViewData["Title"] = "ویرایش اطلاعات صفحه";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+    <script src="~/AdminRef/ckeditor/ckeditor.js"></script>
+<h1 class="text-xs-center alert alert-info">
+    ویرایش اطلاعات صفحه
+    <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+<hr />
+<div class="row">
+    <div class="col-xs-12 offset-md-4 col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="PInfo_Id" />
+            <input type="hidden" asp-for="PInfo_Image" />
+            <div class="form-group">
+                <label asp-for="PInfo_PageName" class="control-label"></label>
+                <select asp-for="PInfo_PageName" class="form-control">
+                    <option value="about">درباره ما</option>
+                    <option value="course">دوره ها</option>
+                    <option value="teacher">مدرسان</option>
+                    <option value="archive">آرشیو</option>
+                    <option value="news">اخبار</option>
+                    <option value="contact">تماس با ما</option>
+                    <option value="faq">پرسش و پاسخ</option>
+                </select>
+                <span asp-validation-for="PInfo_PageName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PInfo_Title" class="control-label"></label>
+                <input asp-for="PInfo_Title" class="form-control" />
+                <span asp-validation-for="PInfo_Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PInfo_Comment" class="control-label"></label>
+                <textarea asp-for="PInfo_Comment" rows="10" class="form-control"></textarea>
+                <span asp-validation-for="PInfo_Comment" class="text-danger"></span>
+            </div>
+            <script>
+                CKEDITOR.replace('PInfo_Comment');
+            </script>
+            <div class="form-group">
+                <label asp-for="PInfo_Image" class="control-label"></label>
+                <span class="fa fa-question-circle-o text-danger" data-toggle="tooltip" title="عرض تصویر : 1920 پیکسل و ارتفاع تصویر : 400 پیکسل"></span>
+                <img src="~/images/page/@Model.PInfo_Image" width="100" height="50" title="تصویر فعلی" class="float-xs-left" />
+                <input asp-for="PInfo_Image" type="file" class="form-control" />
+                <span asp-validation-for="PInfo_Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/LayoutRef/js/jquery.validate.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.js"></script>
+    <script>
+        $('[data-toggle="tooltip"]').tooltip();
+    </script>
+}

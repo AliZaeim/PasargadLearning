@@ -1,0 +1,312 @@
+﻿@model PLCore.DTOs.General.ArchiveViewModel;
+@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subService
+@using PLDataLayer.Entities.SubEntities;
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    PageInfo pageInfo = await _subService.GetPageInfoByNameAsync("archive");
+    string pagebg = null;
+    if (pageInfo != null)
+    {
+        pagebg = "../../images/page/" + pageInfo.PInfo_Image;
+        ViewData["Title"] = pageInfo.PInfo_Title;
+    }
+    else
+    {
+        pagebg = "../../images/bg/" + "9.jpg";
+        ViewData["Title"] = "آرشیو بیمه";
+    }
+
+}
+@section PageDescription{
+    <meta name="description" content="آرشیو فایلهای مرکز آموزش بیمه  ">
+}
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+
+<!-- breadcumb-area start -->
+<div class="breadcumb-area black-opacity" style="background:url(@pagebg)">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="breadcumb-wrap">
+                    @if (pageInfo != null)
+                    {
+                        <h2>@pageInfo.PInfo_Title</h2>
+                    }
+                    else
+                    {
+                        <h2>آرشیو محتوای آموزشی مرکز</h2>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="breadcumb-menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul>
+                        <li><a href="/">صفحه اصلی</a></li>
+                        <li>/</li>
+                        @if (Model.Type == "all")
+                        {
+                            <li>آرشیو</li>
+                        }
+                        else
+                        {
+
+                            <li><a href="/Archive">آرشیو</a></li>
+                            <li>/</li>
+                            <li>@Model.Title</li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.NewsFiles == null)
+{
+    <section class="about-area ptb-140">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-xs-12 wow fadeInRight">
+                    <div class="about-wrap">
+                        @if (pageInfo != null)
+                        {
+
+                            @Html.Raw(pageInfo.PInfo_Comment)
+                        }
+
+
+                    </div>
+                </div>
+                <div class="col-md-6 col-xs-12 wow fadeInLeft">
+                    <div class="row mt-60">
+                        <a href="/Archive?type=video">
+                            <div class="col-sm-6 col-xs-12 col">
+                                <div class="about-items mb-30">
+                                    <i class="fa fa-film"></i>
+                                    <h3>ویدئو</h3>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="/Archive?type=image">
+                            <div class="col-sm-6 col-xs-12 col">
+                                <div class="about-items mb-30">
+                                    <i class="fa fa-picture-o"></i>
+                                    <h3>تصویر</h3>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="/Archive?type=audio">
+                            <div class="col-sm-6 col-xs-12 col">
+                                <div class="about-items">
+                                    <i class="fa fa-file-sound-o"></i>
+                                    <h3>صوت</h3>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="/Archive?type=application">
+                            <div class="col-sm-6 col-xs-12 col">
+                                <div class="about-items">
+                                    <i class="fa fa-file"></i>
+                                    <h3>فایل</h3>
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+
+    @if (Model.Type == "image")
+    {
+
+        <h2 class="text-xs-center alert alert-info">مجموعه تصاویر</h2>
+
+    }
+    @if (Model.Type == "video")
+    {
+
+        <h2 class="text-xs-center alert alert-info">مجموعه ویدئوها</h2>
+
+    }
+    @if (Model.Type == "application")
+    {
+
+        <h2 class="text-xs-center alert alert-info">مجموعه فایلها</h2>
+
+    }
+    @if (Model.Type == "audio")
+    {
+
+        <h2 class="text-xs-center alert alert-info">مجموعه صوت ها</h2>
+
+    }
+    @if (Model.NewsFiles != null)
+    {
+        <section class="porftolio-area ptb-100" dir="rtl">
+            <div class="container">
+
+                <div class="row grid">
+                    @if (Model.Type == "image")
+                    {
+
+                        @foreach (var item in Model.NewsFiles.OrderByDescending(r => r.NF_Date))
+                        {
+                            <div class="col-md-4 portfolio clean col-sm-6 col-xs-12 col">
+                                <div class="portfolio-wrap">
+                                    <div class="overlay">
+
+                                        <a class="popup" href="~/newsFiles/@item.NF_File">
+                                            <i class="fa fa-link pt-1"></i>
+                                        </a>
+                                        <h3 class="alert alert-info text-xs-center m-t-5">@item.News.News_Title</h3>
+                                        @if (!string.IsNullOrEmpty(item.NF_Comment))
+                                        {
+                                            <p class="height-75 distblCell valign-bottom text-xs-center p-b-5">@item.NF_Comment</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="height-75 distblCell valign-bottom text-xs-center p-b-5">بدون توضیحات...</p>
+                                        }
+                                    </div>
+                                    <div class="portfolio-img">
+                                        <img src="~/newsFiles/@item.NF_File" alt="@item.NF_Comment" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @if (Model.Type == "video")
+                    {
+
+                        @foreach (var item in Model.NewsFiles.OrderByDescending(r => r.NF_Date))
+                        {
+                            <div class="col-md-4 portfolio clean col-sm-6 col-xs-12 col">
+                                <div class="portfolio-wrap">
+                                    @if (string.IsNullOrEmpty(item.NF_Comment))
+                                    {
+                                        <p class="height-75 distblCell valign-bottom text-xs-center p-b-5">بدون توضیحات...</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="height-75 distblCell valign-bottom text-xs-center p-b-5">@item.NF_Comment</p>
+                                    }
+
+                                    <div class="portfolio-img w-100 h260 p-b-5 p-t-5  bg-info  ">
+                                        <video controls poster="/images/vc5-f.jpg" height="250" class="w-100 ">
+                                            <source src="~/newsFiles/@item.NF_File" type="@item.NF_Type" />
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @if (Model.Type == "application")
+                    {
+
+                        @foreach (var item in Model.NewsFiles.OrderByDescending(r => r.NF_Date))
+                        {
+                            <div class="col-md-4 portfolio clean col-sm-6 col-xs-12 col zborder-gray1">
+                                <div class="portfolio-wrap">
+                                    <h3 class="alert alert-info text-xs-center m-t-5">@item.News.News_Title</h3>
+                                    @if (string.IsNullOrEmpty(item.NF_Comment))
+                                    {
+                                        <p class="height-75 distblCell valign-bottom text-xs-center p-b-5">بدون توضیحات...</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="height-75 distblCell valign-bottom text-xs-center p-b-5">@item.NF_Comment</p>
+                                    }
+
+                                    <div class="portfolio-img text-xs-center">
+                                        <div class="portfolio-img">
+                                            <a href="~/newsFiles/@item.NF_File">
+                                                <img src="~/images/pdf-icon.jpg" alt="@item.NF_Comment" class="maxh100 h100" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @if (Model.Type == "audio")
+                    {
+
+                        @foreach (var item in Model.NewsFiles.OrderByDescending(r => r.NF_Date))
+                        {
+                            <div class="col-md-4 portfolio clean col-sm-6 col-xs-12 col zborder-gray1">
+                                <div class="portfolio-wrap p-0">
+                                    <h3 class="text-xs-center alert alert-success m-t-5">@item.News.News_Title</h3>
+                                    @if (string.IsNullOrEmpty(item.NF_Comment))
+                                    {
+                                        <p class="height-75 distblCell valign-bottom text-xs-center p-b-5">بدون توضیحات...</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="height-75 distblCell valign-bottom text-xs-center p-b-5">@item.NF_Comment</p>
+                                    }
+
+                                    <div class="portfolio-img">
+                                        <audio controls class="w-100">
+                                            <source src="~/newsFiles/@item.NF_File" type="@item.NF_Type" />
+                                        </audio>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+
+
+                </div>
+                @*<div class="row">
+                        <div class="col-xs-12">
+                            <div class="seemore-btn text-center">
+                                <a href="javascript:void(0);">مشاهده بیشتر</a>
+                            </div>
+                        </div>
+                    </div>*@
+            </div>
+        </section>
+    }
+    else
+    {
+        <h2 class="text-xs-center alert alert-warning">فایلی یافت نشد !</h2>
+    }
+
+}
+@*<div class="quote-area bg-1">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-9 col-xs-12">
+                    <div class="quote-wrap">
+                        <h2>مرکز آموزش صنعت بیمه فایلهای صوتی و تصویری تایید شده شما را در سایت منتشر می کند</h2>
+                    </div>
+                </div>
+                <div class="col-sm-3 col-xs-12">
+                    <div class="quote-wrap text-right">
+                        <a href="contact.html">ارسال فایل</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+<!-- quote-area end -->
+@section Footer{
+    <partial name="_Footer" />
+}

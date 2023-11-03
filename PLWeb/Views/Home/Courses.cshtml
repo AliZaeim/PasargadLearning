@@ -1,0 +1,406 @@
+﻿@model PLCore.DTOs.Course.ShowCoursesViewModel;
+@using PLCore.Services.Interfaces;
+@using PLDataLayer.Entities.Training;
+@using PLCore.Convertors;
+@inject ITrainingService _trainingService
+@using PLDataLayer.Entities.User;
+@inject ISubEntityService _subService
+@using PLDataLayer.Entities.SubEntities;
+@{
+
+
+    PageInfo pageInfo = await _subService.GetPageInfoByNameAsync("course");
+
+    string pagebg = null;
+    if (pageInfo != null)
+    {
+        pagebg = "../../images/page/" + pageInfo.PInfo_Image;
+    }
+    else
+    {
+        pagebg = "../../images/bg/" + "9.jpg";
+    }
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string k = Model.SerachText;
+    @if (Model.CourseGroup != null)
+    {
+        ViewData["Title"] = Model.CourseGroup.CourseGroup_Title;
+    }
+    else
+    {
+        @if (pageInfo != null)
+        {
+            @if (string.IsNullOrEmpty(pageInfo.PInfo_Title))
+            {
+                ViewData["Title"] = "دوره های مرکز آموزش صنعت بیمه ";
+            }
+            else
+            {
+                ViewData["Title"] = pageInfo.PInfo_Title;
+            }
+        }
+        else
+        {
+            ViewData["Title"] = "دوره های مرکز آموزش صنعت بیمه ";
+        }
+
+
+    }
+}
+
+@section PageDescription{
+    <meta name="description" content="دوره های آموزشی مرکز آموزش صنعت بیمه">
+}
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+
+
+<div class="breadcumb-area black-opacity " style="background:url(@pagebg)">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="breadcumb-wrap">
+                    @if (Model.CourseGroup != null)
+                    {
+                        <h2>@Model.CourseGroup.CourseGroup_Title</h2>
+                    }
+                    else
+                    {
+                        @if (Model.SearchMode == true)
+                        {
+                            <h2>جستجوی دوره ها</h2>
+                        }
+                        else
+                        {
+                            if (pageInfo != null)
+                            {
+                                if (!string.IsNullOrEmpty(pageInfo.PInfo_Title))
+                                {
+                                    <h2>@pageInfo.PInfo_Title</h2>
+
+                                }
+                                else
+                                {
+                                    <h2>دوره های مرکز آموزش صنعت بیمه</h2>
+                                }
+                            }
+                            else
+                            {
+                                <h2>دوره های مرکز آموزش صنعت بیمه</h2>
+                            }
+
+                        }
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="breadcumb-menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul>
+                        <li>
+                            <a href="/">صفحه اصلی</a>
+                        </li>
+                        @if (Model.CourseGroup != null)
+                        {
+                            <li>/</li>
+                            @if (Model.ParentofParentCourseGroup != null)
+                            {
+                                <li>
+                                    <a href="/Home/Courses/?gid=@Model.ParentofParentCourseGroup.CourseGroup_Id">@Model.ParentofParentCourseGroup.CourseGroup_Title</a>
+                                </li>
+                                <li>/</li>
+                            }
+                            @if (Model.ParentCourseGroup != null)
+                            {
+                                <li>
+                                    <a href="/Home/Courses/?gid=@Model.ParentCourseGroup.CourseGroup_Id">@Model.ParentCourseGroup.CourseGroup_Title</a>
+                                </li>
+                                <li>/</li>
+                            }
+                            <li>@Model.CourseGroup.CourseGroup_Title</li>
+                        }
+                        @if (Model.SearchMode == true)
+                        {
+                            <li>/</li>
+                            <li>
+                                <a href="/Home/Courses">دوره ها</a>
+                            </li>
+                            <li>/</li>
+                            <li>
+                                @if (Model.SerachText.Contains("/"))
+                                {
+                                    string[] dte = Model.SerachText.Split("/");
+                                    int y = int.Parse(dte[0].ToString());
+                                    int m = int.Parse(dte[1].ToString());
+                                    string dt = y.ToString() + "/" + m.ToString();
+                                    <span>جستجو بر اساس تاریخ شروع : @dt</span>
+                                }
+                                else
+                                {
+                                    <span>جستجو براساس : @Model.SerachText</span>
+                                }
+
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Courses != null)
+{
+    @if (Model.Courses.Count() != 0)
+    {
+        <section class="blog-area ptb-140 ">
+            <div class="container">
+                <div class="row">
+
+
+                    @foreach (var item in Model.Courses.OrderByDescending(r => r.Course_UpdateDate).ThenByDescending(r => r.Course_CreateDate).ToList())
+                    {
+                        bool st = true;
+
+                        PLCore.DTOs.Course.CourseStatusResult courseStatusResult = await _trainingService.GetCourseStatusResult(item.Course_Id);
+                        int regCount = _trainingService.GetCourseUsersByRoleAsync(item.CourseUsers.ToList(), 4, item.Course_Id).Result.Count();
+
+
+                        <div class="col-md-4 col-sm-6 col-xs-12 col">
+                            @if (courseStatusResult.HasRegTime)
+                            {
+                                @if (courseStatusResult.HasCapicity)
+                                {
+                                    st = true;
+                                    if (courseStatusResult.HasSteppedDiscount)
+                                    {
+
+                                        List<PLCore.DTOs.Course.SteppedDiscountStatusViewModel> steppedDiscountStatusViewModels = await _trainingService.SteppedDiscountStatusForCourseAsync(item.SteppedDiscountCode, item.Course_Id);
+                                        PLCore.DTOs.Course.SteppedDiscountStatusViewModel steppedDiscountStatusViewModel = steppedDiscountStatusViewModels.FirstOrDefault(w => w.IsActive == true);
+
+                                        @if (steppedDiscountStatusViewModel != null)
+                                        {
+                                            <span class="top-right m-r-7  bg-green text-white fs-18 text-xs-center ">تخفیف پلکانی : @steppedDiscountStatusViewModel.DisPercent %</span>
+                                            @if (item.CourseStatus.CourseStatus_Title == "دانلودی")
+                                            {
+                                                <span class="top-left m-l-7  bg-blue text-white fs-18 text-xs-center ">دانلودی</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="top-left m-l-7  bg-blue text-white fs-18 text-xs-center ">در حال ثبت نام</span>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            @if (item.CourseStatus.CourseStatus_Title == "دانلودی")
+                                            {
+                                                <span class="top-left m-l-7  bg-blue text-white fs-18 text-xs-center ">دانلودی</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="top-right m-r-7  bg-red text-white fs-18 text-xs-center ">اتمام تخفیف</span>
+                                            }
+
+                                        }
+
+
+                                    }
+                                    else
+                                    {
+                                        @if (item.CourseStatus.CourseStatus_Title == "دانلودی")
+                                        {
+                                            <span class="top-left m-l-7  bg-blue text-white fs-18 text-xs-center ">دانلودی</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="top-left m-l-7  bg-blue text-white fs-18 text-xs-center ">در حال ثبت نام</span>
+                                        }
+
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    st = false;
+                                    @if (item.CourseStatus.CourseStatus_Title == "دانلودی")
+                                    {
+                                        <span class="top-left m-l-7  bg-blue text-white fs-18 text-xs-center ">دانلودی</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="zShaghLabel m-l-7 bg-red text-white  fs-18 text-xs-center">تکمیل ظرفیت</span>
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                st = false;
+                                @if (item.CourseStatus.CourseStatus_Title == "دانلودی")
+                                {
+                                    <span class="top-left m-l-7  bg-blue text-white fs-18 text-xs-center ">دانلودی</span>
+                                }
+                                else
+                                {
+                                    <span class="zShaghLabel m-l-8 bg-red text-white fs-18 text-xs-center">پایان ثبت نام</span>
+                                }
+
+                            }
+
+                            <div class="blog-wrap mb-30">
+                                <div class="blog-img">
+                                    @if (!string.IsNullOrEmpty(item.Course_Image))
+                                    {
+                                        <img src="/images/course/@item.Course_Image" alt="@item.Course_Title" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/no-img450450.jpg" alt="@item.Course_Title" />
+                                    }
+
+                                </div>
+
+                                <div class="blog-content p-r-0 p-l-0">
+                                    <div class="blog-meta ">
+                                        <div class="p-l-0 w-100">
+                                            <span>
+                                                <a href="/Home/Courses?gid=@item.CourseGroup_Id">
+                                                    <i class="fa fa-group"></i><span>&ensp;@item.CourseGroup.CourseGroup_Title</span>
+                                                </a>
+                                            </span>
+                                            <span data-toggle="tooltip" data-placement="top" title="بازدید" class="float-xs-left">
+                                                <i class="fa fa-eye fs-10"></i>
+                                                <span class="fs-14 text-xl-left"> @item.Course_Visits</span>
+                                            </span>
+
+                                        </div>
+                                    </div>
+                                    <h3>
+                                        <a href="/Home/CourseDetails/@item.Course_Id">@item.Course_Title</a>
+                                       
+                                    </h3>
+                                    @if (item.CourseUsers != null)
+                                    {
+                                        @if (item.CourseUsers.Count() != 0)
+                                        {
+                                            List<UserRole> teachers = await _trainingService.GetCourseUsersByRoleAsync(item.CourseUsers.ToList(), 3, item.Course_Id);
+                                            if (teachers != null)
+                                            {
+                                                @foreach (var th in teachers)
+                                                {
+
+                                                    <h3 class="fs-18">مدرس : <a href="/Home/TeacherInfo?urId=@th.URId" class="fs-18">@th.User.UserFirstName @th.User.UserFamily</a></h3>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <h3 class="fs-18">مدرس : -</h3>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <h3 class="fs-18">مدرس : -</h3>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <h3 class="fs-18">مدرس : -</h3>
+                                    }
+                                    <h3 class="fs-18 text-danger">
+                                        <span>پایان ثبت نام : @item.Course_EndDateRegistration.ToShamsi()</span>
+                                        <span class="float-xs-left p-2 pl-0 fs-14" title="ظرفیت">ظرفیت : <span class="tag tag-default fs-18">@item.Course_Capacity</span></span>
+
+                                    </h3>
+                                    <h3 class="fs-18 text-info">
+                                        شروع : @item.Course_StartDate.ToShamsi() | @item.Course_StartTime
+                                        <span class="float-xs-left p-2 pl-0 fs-14" title="تعداد ثبت نامی">ثبت نامی : <span class="tag tag-default fs-18">@regCount</span></span>
+                                    </h3>
+
+                                    @if (item.Course_Fee == 0)
+                                    {
+                                        <h3><a href="/Home/Courses?search=رایگان" class="myColor1">هزینه دوره : رایگان</a></h3>
+                                    }
+                                    else
+                                    {
+                                        <h3><a href="javascript:void(0)" class="myColor1">هزینه دوره : @item.Course_Fee.ToString("N0") تومان</a></h3>
+                                    }
+                                    @if (string.IsNullOrEmpty(item.Course_Comment))
+                                    {
+                                        <p class="text-justify cabout">-</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-justify cabout">@item.Course_about</p>
+                                    }
+                                    @if (st == true)
+                                    {
+
+                                        <a href="/Home/CourseDetails/@item.Course_Id" class="btn-style text-xs-center col-xs-12 block">مشاهده و ثبت نام</a><br />
+
+
+                                    }
+                                    else
+                                    {
+
+                                        <a href="/Home/CourseDetails/@item.Course_Id" class="btn-style text-xs-center col-xs-12 block">مشاهده</a><br />
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <h2 class="text-xs-center alert alert-warning ptb-140 m-b-0">
+            دوره ای یافت نشد !
+        </h2>
+    }
+
+}
+else
+{
+    <h2 class="text-xs-center alert alert-warning ptb-140 m-b-0">
+        دوره ای یافت نشد !
+    </h2>
+}
+
+<input type="hidden" id="key" class="bg-danger" value="@k" />
+
+@section Footer{
+    <partial name="_Footer" />
+}
+@section Scripts{
+
+
+    <script src="~/LayoutRef/js/jquery.mark.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var k = $("#key").val();
+            $(".blog-area").mark(k, {
+                "className": "bg-info",
+                "separateWordSearch": false,
+                "accuracy": {
+                    "value": "exactly",
+                    "limiters": [",", "."]
+                }
+            });
+        });
+    </script>
+}

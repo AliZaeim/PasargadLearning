@@ -1,0 +1,88 @@
+﻿@model PLDataLayer.Entities.SubEntities.SiteFAQ
+
+@{
+    ViewData["Title"] = "ویرایش پرسش";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">
+    ویرایش پرسش
+    <a asp-action="Index" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+<hr />
+<div class="row">
+    <div class="col-xs-12 offset-md-4 col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SiteFAQ_Id" />
+            <input type="hidden" asp-for="SiteFAQ_Date" />
+            <input type="hidden" asp-for="IsDeleted" />
+
+            <div class="form-group">
+                <label asp-for="SiteFAQ_Name" class="control-label"></label>
+                <input asp-for="SiteFAQ_Name" class="form-control" />
+                <span asp-validation-for="SiteFAQ_Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SiteFAQ_Email" class="control-label"></label>
+                <input asp-for="SiteFAQ_Email" class="form-control" />
+                <span asp-validation-for="SiteFAQ_Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SiteFAQ_Subject" class="control-label"></label>
+                <input asp-for="SiteFAQ_Subject" class="form-control" />
+                <span asp-validation-for="SiteFAQ_Subject" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SiteFAQ_Question" class="control-label"></label>
+                <input asp-for="SiteFAQ_Question" class="form-control" />
+                <span asp-validation-for="SiteFAQ_Question" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SiteFAQ_Reply" class="control-label"></label>
+                <span data-toggle="tooltip" class="fa fa-question-circle-o text-warning cursor-pointer" title="حداکثر می توانید 2000 کاراکتر برای معرفی مهمترین ویژگی های دوره وارد کنید"></span> &ensp;
+                <span class="float-xs-left"><span id="repchar-count" class="tag tag-pill tag-info cursor-pointer" data-toggle="tooltip" title="حداکثر 2000 کاراکتر">2000</span></span>
+                <textarea asp-for="SiteFAQ_Reply" rows="5" maxlength="2000" class="form-control"></textarea>
+                <span asp-validation-for="SiteFAQ_Reply" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+                <a asp-action="Index" class="btn btn-warning col-xs-12 mt-2">بازگشت</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/LayoutRef/js/jquery.validate.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.js"></script>
+    <script>
+        $('[data-toggle="tooltip"]').tooltip();
+        $(document).ready(function () {
+            function charCount(id, max, showId) {
+
+                var tlength = $(id).val().length;
+                $(id).val($(id).val().substring(0, max));
+                var tlength = $(id).val().length;
+                remain = max - parseInt(tlength);
+
+                $(showId).text(remain);
+            }
+            charCount("#SiteFAQ_Reply", 2000, "#repchar-count");
+
+            $('#SiteFAQ_Reply').keyup(function () {
+                charCount(this, 2000, "#repchar-count");
+            });
+
+        })
+    </script>
+}

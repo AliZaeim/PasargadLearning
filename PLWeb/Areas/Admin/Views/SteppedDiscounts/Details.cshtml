@@ -1,0 +1,80 @@
+﻿@model PLDataLayer.Entities.Sale.SteppedDiscount
+@using PLCore.Services.Interfaces;
+@inject ITrainingService _tService
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "جزئیات تخفیف پلکانی";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">جزئیات تخفیف پلکانی @Model.Code</h1>
+
+<div>
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Code)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Code)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RegDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RegDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SteppedDiscountType)
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.SteppedDiscountType.Name == "time")
+            {
+                <span>تخفیف پلکانی زمانی</span>
+            }
+            @if (Model.SteppedDiscountType.Name == "person")
+            {
+                <span>تخفیف پلکانی نفری</span>
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    @{
+        var userrole = await _userService.GetUserRoleBy_UserName_RoleId(User.Identity.Name, roleId);
+        var courses = await _tService.GetSteppedDiscountCoursesByCode(Model.Code);
+        List<PLDataLayer.Entities.Training.Course> TCourses = null;
+        if (roleId == 3)
+        {
+            TCourses = await _tService.GetCoursesByRole(userrole.URId);
+        }
+
+    }
+    @if (roleId == 3)
+    {
+        @foreach (var c in TCourses)
+        {
+            <a href="/Admin/Courses/Details/@c.Course_Id"><span class="p-1 tag tag-primary">@c.Course_Title</span></a>
+
+        }
+    }
+    @if (roleId == 1)
+    {
+        @foreach (var c in courses)
+        {
+            <a href="/Admin/Courses/Details/@c.Course_Id"><span class="p-1 tag tag-primary">@c.Course_Title</span></a>
+        }
+    }
+
+</div>
+<div class="pt-3">
+    <a asp-action="Index">بازگشت</a>
+</div>

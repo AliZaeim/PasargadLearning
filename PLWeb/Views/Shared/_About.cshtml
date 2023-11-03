@@ -1,0 +1,39 @@
+﻿@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subService;
+@{ 
+    var lastabout = _subService.GetAboutsAsync().Result.LastOrDefault();
+}
+
+<section class="about-area ptb-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-xs-12 wow fadeInRight">
+                <div class="about-wrap">
+                    @if (lastabout != null)
+                    {
+                        <h2>@lastabout.About_Title</h2>
+                        @Html.Raw(lastabout.About_Text)
+                    }
+                    else
+                    {
+                        <h2>درباره مرکز آموزش صنعت بیمه</h2>
+                    }
+
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12 wow fadeInLeft">
+                <div class="about-img black-opacity">
+                    @if (lastabout != null)
+                    {
+                        <img src="/images/about/@lastabout.About_Image" alt="@lastabout.About_Title" style="" />
+                    }
+                    else
+                    {
+                        <img src="~/images/no-img450450.jpg" alt="درباره مرکز آموزش صنعت بیمه" />
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

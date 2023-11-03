@@ -1,0 +1,53 @@
+﻿@model PLCore.DTOs.PUser.UpdateUserInfoViewModel
+
+@{
+    ViewData["Title"] = "ویرایش اطلاعات کاربری";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int roleId = int.Parse(User.FindFirst("RoleId").Value.ToString());
+}
+<script src="~/AdminRef/app-assets/js/core/libraries/jquery.min.js"></script>
+<h1 class="text-xs-center alert alert-info">ویرایش اطلاعات کاربری</h1>
+
+@if (Model.IsSuccess == true)
+{
+    <h3 id="mess" class="text-xs-center alert alert-success">عملیات با موفقیت انجام شد</h3>
+    <script>
+        // $("#mess").delay(5000).fadeOut();
+        setTimeout(function () {
+            $('#mess').fadeOut('slow');
+        }, 3000);
+    </script>
+}
+<div class="row">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="UpdateUserInfo" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Avatar" class="control-label"></label>
+                @if (!string.IsNullOrEmpty(Model.OldAvatar))
+                {
+                    <img class="float-xs-left" title="تصویر فعلی" id="Uimg" src="~/images/usersavatar/@Model.OldAvatar" width="100" height="100" />
+                }
+                <input asp-for="Avatar" type="file" class="form-control" />
+                <span asp-validation-for="Avatar" class="text-danger"></span>
+            </div>
+            @if (roleId == 3)
+            {
+                <div class="form-group">
+                    <label asp-for="Biography" class="control-label"></label>
+                    <textarea asp-for="Biography" rows="10" class="form-control" ></textarea>
+                    <span asp-validation-for="Biography" class="text-danger"></span>
+                </div>
+            }
+
+
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+

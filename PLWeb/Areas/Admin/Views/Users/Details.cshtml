@@ -1,0 +1,216 @@
+﻿@model PLDataLayer.Entities.User.User
+@using PLCore.Convertors;
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "جزئیات کاربر";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    PLDataLayer.Entities.User.UserRole teacher = await _userService.GetUserRoleBy_UserName_RoleId(User.Identity.Name, 3);
+}
+
+<h1 class="text-xs-center alert alert-info">جزئیات کاربر</h1>
+
+<div>
+    <h4>کاربر</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserFirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserFirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserFamily)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserFamily)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserNC)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserNC)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserOrgCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserOrgCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserBirthDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.UserBirthDate
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserFatherName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserFatherName)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserAvatar)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="~/images/usersavatar/@Model.UserAvatar" width="50" height="50" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LevelOfEducation)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LevelOfEducation)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EducationFile)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="~/images/usersorgdoc/@Model.EducationFile" width="50" height="50" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserUniversity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserUniversity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserYearofGraduataion)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserYearofGraduataion)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserBiography)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserBiography)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserLabel)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserLabel)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserDescription)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserSex)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserSex)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserCellPhone)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserCellPhone)
+        </dd>
+
+        <dt class="col-sm-2">
+            تایید تلفن همراه
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserCellPhoneConfirmed)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserEmail)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserEmail)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserLevel)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserLevel.UserLevel_Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserIsActive)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserIsActive)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastPassword)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastPassword)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserRegisteredDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.UserRegisteredDate.ToShamsiWithTime()
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ChangedPass)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ChangedPass)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserNCFile)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="~/images/usersnc/@Model.UserNCFile" width="50" height="50" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserContractFile)
+        </dt>
+        <dd class="col-sm-10">
+            <img src="~/images/usersorgdoc/@Model.UserContractFile" width="50" height="50" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.County.State)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.County.State.StateName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.County)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.County.CountyName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UserRestAddress)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UserRestAddress)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sky_userId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Sky_userId)
+        </dd>
+        @if (teacher != null)
+        {
+            <dt class="col-sm-2">
+                اتاق آموزشی
+            </dt>
+            <dd class="col-sm-10">
+                <a href="@teacher.RoomLink" class="btn btn-primary">ورود به اتاق</a>
+            </dd>
+        }
+
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.UserId">ویرایش</a> |
+    <a asp-action="GetAllUsers">بازگشت</a>
+</div>

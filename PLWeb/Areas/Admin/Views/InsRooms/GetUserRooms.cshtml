@@ -1,0 +1,80 @@
+﻿@model IEnumerable<PLCore.DTOs.SkyRoom.RoomReportViewModel>
+
+@{
+    ViewData["Title"] = "اتاقهای کاربر";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">اتاقهای کاربر</h1>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.room_id)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.name)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.title)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.description)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.access)
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.room_id)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.title)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.description)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @switch (item.access)
+                    {
+                        case 1:
+                            {
+                                <span>کاربر عادی</span>
+                                break;
+                            }
+                        case 2:
+                            {
+                                <span>ارایه کننده</span>
+                                break;
+                            }
+                        case 3:
+                            {
+                                <span>اپراتور</span>
+                                break;
+                            }
+                        case 4:
+                            {
+                                <span>مدیر</span>
+                                break;
+                            }
+
+                        default:
+                            break;
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,51 @@
+﻿@model PLDataLayer.Entities.Blog.NewsFile
+
+@{
+    ViewData["Title"] = "حذف فایل خبر";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">
+    حــذف فایل
+    <a asp-action="Details" asp-route-id="@Model.News_Id" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+
+<h3>آیا مطمئن به حذف فایل هستید؟</h3>
+<div>
+    <h4>مشخصات فایل</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NF_File)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NF_File)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NF_Comment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NF_Comment)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NF_Type)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NF_Type)
+        </dd>
+       
+        
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.News)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.News.News_Title)
+        </dd>
+    </dl>
+
+    <form asp-action="DeleteFile">
+        <input type="hidden" asp-for="NF_Id" />
+        <input type="submit" value="حــذف" class="btn btn-danger" /> |
+        <a asp-action="Details" asp-route-id="@Model.News_Id">بازگشت</a>
+    </form>
+</div>

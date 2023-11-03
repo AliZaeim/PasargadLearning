@@ -1,0 +1,76 @@
+﻿@model PLDataLayer.Entities.SubEntities.TimelineComponent
+@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subEntityService
+@{
+    ViewData["Title"] = "ثبت برنامه";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var timeline = await _subEntityService.GetTiemLineByIdAsync(Model.TL_Id);
+}
+
+<h1 class="text-xs-center alert alert-info">
+
+    @if (timeline != null)
+    {
+        <span>ثبت برنامه برای جدول زمانی</span>
+        <span>@timeline.TL_Title</span>
+    }
+    else
+    {
+        <span>ثبت برنامه جدول زمانی</span>
+    }
+<a asp-action="Index" asp-controller="TimelineComponents" asp-route-tlId="@Model.TL_Id" class="float-xs-left btn btn-warning">بازگشت</a>
+</h1>
+<h4 class="text-xs-center alert alert-warning">
+    توجه :<br />
+    1- حجم عکس بیشتر از 50 کیلوبایت نمی تواند باشد<br />
+    2- عرض عکس بهتر است 225 پیکسل و طول آن 150 پیسکل باشد
+</h4>
+<hr />
+<div class="row">
+    <div class="col-xs-12 offset-md-4 col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TL_Id" />
+            <div class="form-group">
+                <label asp-for="TC_Date" class="control-label"></label>
+                <input asp-for="TC_Date" class="form-control" />
+                <span asp-validation-for="TC_Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TC_Title" class="control-label"></label>
+                <input asp-for="TC_Title" class="form-control" />
+                <span asp-validation-for="TC_Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TC_Text" class="control-label"></label>
+                <textarea asp-for="TC_Text" rows="10" class="form-control" ></textarea>
+                <span asp-validation-for="TC_Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TC_Image" class="control-label"></label>
+                <input asp-for="TC_Image" type="file" class="form-control" />
+                <span asp-validation-for="TC_Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TC_Rank" class="control-label"></label>
+                <input asp-for="TC_Rank" class="form-control" />
+                <span asp-validation-for="TC_Rank" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+                <a asp-action="Index" class="btn btn-warning mt-2 col-xs-12">انصراف</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/LayoutRef/js/jquery.validate.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.js"></script>
+    <script>
+
+    </script>
+}

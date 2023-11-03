@@ -1,0 +1,448 @@
+﻿@model PLCore.DTOs.Course.StaticDiscountViewModel
+@{
+    ViewData["Title"] = "ثبت کد تخفیف";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">
+    ثبت کد تخفیف
+    <a asp-action="Index" class="float-xs-left btn btn-warning fs-14">بازگشت</a>
+</h1>
+
+
+<div class="row">
+    <form asp-action="Create">
+        <div class="col-md-4 col-xs-12" id="CPro">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Code" class="control-label"></label>
+                <button type="button" id="btnNewCode">
+                    <span class="fa fa-hand-grab-o text-success" data-toggle="tooltip" title="دریافت کد جدید"></span>
+                </button>
+                <span class="fa fa-info-circle float-xs-left text-danger" data-toggle="tooltip" title="حداقل 4 کاراکتر"></span>
+                <input asp-for="Code" id="stCode" class="form-control font-tahoma" style="font-family:Tahoma" dir="ltr" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            @if (Model.LoginRole.RoleId == 1)
+            {
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input checkbox-1x" id="chkGeneral" asp-for="IsGeneral" /> @Html.DisplayNameFor(model => model.IsGeneral)
+                    </label>
+                    <span class="float-xs-left fa fa-info-circle text-danger" title="درصورت انتخاب این گزینه کد تخفیف برای تمام فراگیران درنظر گرفته خواهد شد و لازم نیست انتخاب شوند" data-toggle="tooltip"></span>
+                </div>
+            }
+
+            <div id="disDet">
+                <div class="form-group pb-2" id="SelCourses">
+
+                    @if (Model.Courses != null)
+                    {
+                        if (Model.Courses.Count != 0)
+                        {
+                            <div class="form-group">
+                                دوره ها
+                                <span id="courseallCount" class="tag tag-warning tag-pill">@Model.Courses.Count()</span>
+                                <span>
+                                    انتخاب شده ها :
+                                    <span class="tag tag-primary tag-pill" id="crSelCount">@Model.SelectedCourses.Count()</span>
+                                </span>
+                            </div>
+                            <div class="button-group col-md-12 col-xs-12">
+                                <button type="button" class="btn btn-default dropdown-toggle col-md-12  text-center border" data-toggle="dropdown">انتخاب دوره ها</button>
+                                <ul class="dropdown-menu w-100 pr-1 black" id="cMainul">
+                                    @if (Model.SelectedCourses.Count == Model.Courses.Count)
+                                    {
+                                        <li>
+                                            <p data-value="1000" tabIndex="-1">
+                                                <input type="checkbox" class="checkbox-1x" id="allcgroups" checked />
+                                                <span class="p-r-2 font-size-large text-danger">همه گروهها</span>
+                                            </p>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <p data-value="1000" tabIndex="-1">
+                                                <input type="checkbox" class="checkbox-1x" id="allcgroups" />
+                                                <span class="p-r-2 font-size-large text-danger">همه گروهها</span>
+                                            </p>
+                                        </li>
+                                    }
+
+                                    @foreach (var cg in Model.CourseGroups.Where(w => w.ParentId != null && w.Courses.Where(r => r.Course_IsActive == true).Count() != 0))
+                                    {
+                                        <li class="font-weight-bold mb-1" tabindex="-1">
+                                            <p data-value="@cg.CourseGroup_Id" tabIndex="-1">
+                                                @{
+                                                    bool res = false;
+                                                    if (Model.LoginRole.RoleId == 1)
+                                                    {
+                                                        res = cg.Courses.Select(s => s.Course_Id).All(x => Model.SelectedCourses.Contains(x));
+                                                    }
+                                                    else
+                                                    {
+                                                        res = cg.Courses.Where(w => w.CourseUsers.Any(a => a.URId == Model.LoginUserRole.URId)).Select(s => s.Course_Id).All(x => Model.SelectedCourses.Contains(x));
+                                                    }
+
+                                                }
+                                                @if (res)
+                                                {
+                                                    <input type="checkbox" data-cg="@cg.CourseGroup_Id" class="cgroup checkbox-1x" checked />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" data-cg="@cg.CourseGroup_Id" class="cgroup checkbox-1x" />
+                                                }
+
+                                                <span class="border-bottom p-r-2">@cg.CourseGroup_Title</span>
+                                            </p>
+                                            <ul class="list-unstyled pb-1">
+                                                @if (Model.LoginRole.RoleId == 1)
+                                                {
+                                                    @foreach (var cr in cg.Courses.ToList())
+                                                    {
+                                                        <li class="p-r-3 text-black">
+                                                            <p class="font-size-xsmall text-black " data-value="@cr.Course_Id" tabIndex="-1">
+                                                                @if (Model.SelectedCourses.Any(a => a == cr.Course_Id))
+                                                                {
+                                                                    <input type="checkbox" class="courses checkbox-1x @cg.CourseGroup_Id" checked name="SelectedCourses" value="@cr.Course_Id" />
+                                                                    <span class="p-r-1">@cr.Course_Title</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="checkbox" class="courses checkbox-1x @cg.CourseGroup_Id" name="SelectedCourses" value="@cr.Course_Id" />
+                                                                    <span class="p-r-1">@cr.Course_Title</span>
+                                                                }
+
+                                                            </p>
+                                                        </li>
+                                                    }
+                                                }
+                                                @if (Model.LoginRole.RoleId == 3)
+                                                {
+                                                    @foreach (var cr in cg.Courses.Where(w => w.CourseUsers.Any(a => a.URId == Model.LoginUserRole.URId)))
+                                                    {
+                                                        <li class="p-r-3 text-black">
+                                                            <p class="font-size-xsmall text-black " data-value="@cr.Course_Id" tabIndex="-1">
+                                                                @if (Model.SelectedCourses.Any(a => a == cr.Course_Id))
+                                                                {
+                                                                    <input type="checkbox" class="courses checkbox-1x @cg.CourseGroup_Id" checked name="SelectedCourses" value="@cr.Course_Id" />
+                                                                    <span class="p-r-1">@cr.Course_Title</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <input type="checkbox" class="courses checkbox-1x @cg.CourseGroup_Id" name="SelectedCourses" value="@cr.Course_Id" />
+                                                                    <span class="p-r-1">@cr.Course_Title</span>
+                                                                }
+
+                                                            </p>
+                                                        </li>
+                                                    }
+                                                }
+
+                                            </ul>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    }
+
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="StartDate" class="control-label"></label>
+                    <input asp-for="StartDate" data-mask="0000/00/00" placeholder="____/__/__" dir="ltr" class="form-control" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StartTime" class="control-label"></label>
+                    <input asp-for="StartTime" data-mask="00:00" placeholder="__:__" dir="ltr" class="form-control" />
+                    <span asp-validation-for="StartTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndDate" class="control-label"></label>
+                    <input asp-for="EndDate" data-mask="0000/00/00" placeholder="____/__/__" dir="ltr" class="form-control" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EndTime" class="control-label"></label>
+                    <input asp-for="EndTime" data-mask="00:00" placeholder="__:__" dir="ltr" class="form-control" />
+                    <span asp-validation-for="EndTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UsableCount" class="control-label"></label>
+                    <input asp-for="UsableCount" class="form-control" />
+                    <span asp-validation-for="UsableCount" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SD_MinCourseValue" class="control-label"></label>
+                    <input asp-for="SD_MinCourseValue" class="form-control" />
+                    <span asp-validation-for="SD_MinCourseValue" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SD_MaxCourseValue" class="control-label"></label>
+                    <input asp-for="SD_MaxCourseValue" class="form-control" />
+                    <span asp-validation-for="SD_MaxCourseValue" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SD_Percent" class="control-label"></label>
+                    <input asp-for="SD_Percent" class="form-control" />
+                    <span asp-validation-for="SD_Percent" class="text-danger"></span>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="SD_IsActive" /> @Html.DisplayNameFor(model => model.SD_IsActive)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SD_Comment" class="control-label"></label>
+                    <input asp-for="SD_Comment" class="form-control" />
+                    <span asp-validation-for="SD_Comment" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="ثبت" class="btn btn-primary col-xs-12" />
+                <a asp-action="Index" class="btn btn-warning col-xs-12 mt-2">بازگشت</a>
+            </div>
+
+        </div>
+        @if (Model.LoginRole.RoleId == 1)
+        {
+           
+                <div class="form-group col-md-8 col-xs-12" id="SelUsers">
+                    <h5 class="text-xs-center alert alert-primary">کاربران <span id="userallCount" class="tag tag-warning tag-pill">@Model.UserRoles.Count()</span></h5>
+
+                    <div class="col-md-4">
+                        <h6>جستجو کاربر :</h6>
+                        <input class="form-control mb-2" id="myInput" type="text" placeholder="جستجو">
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-xs-center pb-1">انتخاب شده ها</h6>
+                        <span class="col-xs-12 text-xs-center">
+                            <span class="tag tag-pill tag-primary" id="chCount">@Model.SelectedUserRoles.Count()</span>
+                        </span>
+                    </div>
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-xs-center align-middle width-5mm">
+                                        @if (Model.SelectedUserRoles.Count() == Model.UserRoles.Count())
+                                        {
+                                            <input type="checkbox" class="checkbox-1x" checked id="SelectAllUsers" />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="checkbox-1x" id="SelectAllUsers" />
+                                        }
+
+                                    </th>
+                                    <th class="text-xs-center align-middle">نام</th>
+                                    <th class="text-xs-center align-middle">فامیل</th>
+                                    <th class="text-xs-center align-middle">نقش</th>
+                                    <th class="text-xs-center align-middle">کد ملی</th>
+                                    <th class="text-xs-center align-middle">تلفن</th>
+                                </tr>
+                            </thead>
+                            <tbody id="UserRolesList">
+                                @foreach (var item in Model.UserRoles.Where(w => w.RoleId == 4 && w.IsActive == true && w.User.UserIsActive == true))
+                                {
+                                    <tr>
+                                        <td class="text-xs-center align-middle">
+                                            @if (Model.SelectedUserRoles.Count != 0)
+                                            {
+                                                if (Model.SelectedUserRoles.Any(a => a == item.URId))
+                                                {
+                                                    <input type="checkbox" class="users checkbox-1x" checked value="@item.URId" name="SelectedUserRoles" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" class="users checkbox-1x" value="@item.URId" name="SelectedUserRoles" />
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" class="users checkbox-1x" value="@item.URId" name="SelectedUserRoles" />
+                                            }
+                                        </td>
+                                        <td class="text-xs-center align-middle">@item.User.UserFirstName</td>
+                                        <td class="text-xs-center align-middle">@item.User.UserFamily</td>
+                                        <td class="text-xs-center align-middle @item.RoleId">@item.Role.RoleTitle</td>
+                                        <td class="text-xs-center align-middle">@item.User.UserNC</td>
+                                        <td class="text-xs-center align-middle">@item.User.UserCellPhone</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+           
+
+        }
+
+    </form>
+
+</div>
+
+
+
+@section Scripts
+{
+
+    <script src="~/AdminRef/app-assets/js/jquery.mask.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.min.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        //('[data-toggle="tooltip"]').tooltip();
+        $(document).ready(function () {
+            $('#myInput').on('input', function (e) {
+                var rows = $("#UserRolesList").find("tr").hide();
+                var trs;
+                if (this.value.length) {
+                    var data = this.value.split(" ");
+                    $.each(data, function (i, v) {
+                        trs = rows.filter(":contains('" + v + "')").find('td:eq(0) input.users')/*.prop('checked', true)*/;
+                        rows.filter(":contains('" + v + "')").show();
+                    });
+                    var total = $("#UserRolesList").find('.users:checked').length;
+                    $("#chCount").text(total);
+                }
+                else {
+                    rows.show();
+                }
+            });
+            $("#SelectAllUsers").click(function () {
+                $("input:checkbox.users").prop('checked', $(this).prop("checked"));
+                var total = $("#UserRolesList").find('.users:checked').length;
+                $("#chCount").text(total);
+            });
+            $('.users').click(function () {
+                var chv = $(this).prop('checked');
+                var allcount = $("#userallCount").text();
+                if (chv === false) {
+                    $("#SelectAllUsers").prop('checked', false);
+                }
+                var total = $("#UserRolesList").find('.users:checked').length;
+                $("#chCount").text(total);
+                if (parseInt(total) === 0) {
+                    $("#btnODSubmit").addClass('disabled');
+                    $("#OD_IsGeneral").prop('checked', false);
+                }
+                else {
+                    if (parseInt(total) === parseInt(allcount)) {
+                        $("#SelectAllUsers").prop('checked', true);
+                    }
+                    else {
+                        $("#SelectAllUsers").prop('checked', false);
+                    }
+                    $("#btnODSubmit").removeClass('disabled');
+                }
+            });
+            $("#btnNewCode").click(function () {
+                $.ajax({
+                    url: "/Admin/StaticDiscounts/GetNewDiscountCode",
+                    type: 'POST',
+                    data: {},
+                    success: function (result) {
+                        $("#stCode").val(result);
+                    }
+                });
+            });
+            $("#allcgroups").click(function () {
+                $("input:checkbox.cgroup").prop('checked', $(this).prop("checked"));
+                $("input:checkbox.courses").prop('checked', $(this).prop("checked"));
+
+                var total = $("#cMainul").find('.courses:checked').length;
+                $("#crSelCount").text(total);
+                //if (parseInt(total) === 0) {
+                //    $("#btnODSubmit").addClass('disabled');
+                //    $("#OD_IsGeneral").prop('checked', false);
+                //}
+                //else {
+                //    $("#btnODSubmit").removeClass('disabled');
+                //}
+            });
+            $(".cgroup").click(function () {
+                var cgid = $(this).attr("data-cg");
+                var allcount = $("#courseallCount").text();
+                $("input:checkbox." + cgid).prop('checked', $(this).prop("checked"));
+                var grv = $(this).prop('checked');
+                if (grv === false) {
+                    $("#allcgroups").prop('checked', false);
+                }
+                var total = $("#cMainul").find('.courses:checked').length;
+                $("#crSelCount").text(total);
+                if (parseInt(total) === 0) {
+                    $("#btnODSubmit").addClass('disabled');
+                    $("#OD_IsGeneral").prop('checked', false);
+                }
+                else {
+                    if (parseInt(total) === parseInt(allcount)) {
+                        $("#allcgroups").prop('checked', true);
+                        $(this).parent().parent().parent().prev().children('.cgroup').prop('checked', true);
+                    }
+                    else {
+                        $("#allcgroups").prop('checked', false);
+                        $(this).parent().parent().parent().prev().children('.cgroup').prop('checked', false);
+                    }
+                    $("#btnODSubmit").removeClass('disabled');
+                }
+            });
+            $('.courses').change(function () {
+                var prv = $(this).prop('checked');
+                var allcount = $("#courseallCount").text();
+                if (prv === false) {
+                    $("#allcgroups").prop('checked', false);
+                    $(this).parent().parent().parent().prev().children('.cgroup').prop('checked', false);
+                }
+                var total = $("#cMainul").find('.courses:checked').length;
+                $("#crSelCount").text(total);
+                if (parseInt(total) === 0) {
+                    $("#btnODSubmit").addClass('disabled');
+                    $("#OD_IsGeneral").prop('checked', false);
+                }
+                else {
+                    if (parseInt(total) === parseInt(allcount)) {
+                        $("#allcgroups").prop('checked', true);
+                        $(this).parent().parent().parent().prev().children('.cgroup').prop('checked', true);
+                    }
+                    else {
+                        $("#allcgroups").prop('checked', false);
+                        $(this).parent().parent().parent().prev().children('.cgroup').prop('checked', false);
+                    }
+                    $("#btnODSubmit").removeClass('disabled');
+                }
+            });
+            if ($("#chkGeneral").is(":checked")) {
+                //$("#SelCourses").hide();
+                $("#SelUsers").hide();
+                $("#CPro").addClass("offset-md-4");
+            }
+            else {
+                //$("#SelCourses").show();
+                $("#SelUsers").show();
+                $("#CPro").removeClass("offset-md-4");
+            }
+            $("#chkGeneral").change(function () {
+                if ($(this).is(":checked")) {
+                   // $("#SelCourses").hide();
+                    $("#SelUsers").hide();
+                    $("#CPro").addClass("offset-md-4");
+                }
+                else {
+                    //$("#SelCourses").show();
+                    $("#SelUsers").show();
+                    $("#CPro").removeClass("offset-md-4");
+
+                }
+            });
+
+        })
+    </script>
+}

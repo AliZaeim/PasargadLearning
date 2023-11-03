@@ -1,0 +1,92 @@
+﻿@model IEnumerable<PLDataLayer.Entities.Sale.SteppedDiscountDetail>
+@using PLCore.Services.Interfaces;
+@inject IUserService _UserService
+@using PLCore.Convertors;
+@{
+    string title = string.Empty;
+    string code = string.Empty;
+    if (ViewData["code"] != null)
+    {
+        title = "ردیفهای کد تخفیف" + " " + ViewData["code"].ToString();
+        code = ViewData["code"].ToString();
+    }
+    else
+    {
+        title = "ردیفهای کدهای تخفیف";
+    }
+    ViewData["Title"] = title;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">@title</h1>
+
+<p>
+    @if (_UserService.CheckPermission(149, User.Identity.Name, roleId))
+    {
+        <a asp-action="Create" asp-route-stcode="@code" class="btn btn-success">ثبت ردیف تخفیف</a>
+    }
+    @if (_UserService.CheckPermission(143, User.Identity.Name, roleId))
+    {
+        <a asp-action="Index" asp-controller="SteppedDiscounts" class="btn btn-warning">تخفیفهای پله ای</a>
+    }
+
+</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.SteppedDiscount)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.FromPerson)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.ToPerson)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.FromDate)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.ToDate)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.Percent)
+            </th>
+
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderByDescending(r => r.Id))
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.SteppedDiscount.Code)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.FromPerson)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.ToPerson)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @item.FromDate.ToShamsiN_WithTime()
+                </td>
+                <td class="text-xs-center align-middle">
+                    @item.ToDate.ToShamsiN_WithTime()
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.Percent)
+                </td>
+
+                <td class="text-xs-center align-middle">
+                    <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">جزئیات</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">حــذف</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

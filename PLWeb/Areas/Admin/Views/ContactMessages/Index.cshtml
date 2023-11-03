@@ -1,0 +1,56 @@
+﻿@model IEnumerable<PLDataLayer.Entities.SubEntities.ContactMessage>
+@using PLCore.Convertors; 
+@{
+    ViewData["Title"] = "پیامها";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">پیامهای کاربران</h1>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.CM_FullName)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.CM_Subject)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.CM_Email)
+            </th>
+            
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.CM_Date)
+            </th>
+            
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.OrderByDescending(r=>r.CM_Date)) {
+        <tr>
+            <td class="text-xs-center align-middle">
+                @Html.DisplayFor(modelItem => item.CM_FullName)
+            </td>
+            <td class="text-xs-center align-middle">
+                @Html.DisplayFor(modelItem => item.CM_Subject)
+            </td>
+            <td class="text-xs-center align-middle">
+                @Html.DisplayFor(modelItem => item.CM_Email)
+            </td>
+            
+            <td class="text-xs-center align-middle">
+                @item.CM_Date.ToShamsiWithTime()
+            </td>
+            
+            <td class="text-xs-center align-middle">
+                <a asp-action="Edit" asp-route-id="@item.CM_Id">ویرایش</a> |
+                <a asp-action="Details" asp-route-id="@item.CM_Id">جزئیات</a>
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

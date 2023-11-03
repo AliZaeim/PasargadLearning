@@ -1,0 +1,131 @@
+﻿@model IEnumerable<PLDataLayer.Entities.Training.Course>
+@using PLCore.Convertors;
+@using PLDataLayer.Entities.User;
+@using PLCore.Services.Interfaces;
+@inject ITrainingService _trainingService
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "دوره های شما";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+    PLDataLayer.Entities.User.UserRole userRole = await _userService.GetUserRoleBy_UserName_RoleId(User.Identity.Name, roleId);
+}
+
+<h1 class="text-xs-center alert alert-info">دوره های شما</h1>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-xs-center align-middle p-1">#</th>
+                <th class="text-xs-center align-middle">نام دوره</th>
+                <th class="text-xs-center align-middle">مدرس</th>
+                <th class="text-xs-center align-middle">تاریخ شروع</th>
+                <th class="text-xs-center align-middle">تاریخ پایان</th>
+                <th class="text-xs-center align-middle">مدت کلاس</th>
+                <th class="text-xs-center align-middle">ظرفیت</th>
+
+                @if (roleId == 3)
+                {
+                    <th class="text-xs-center align-middle">تعداد ثبت نام</th>
+                }
+
+                <th class="text-xs-center align-middle">شهریه(تومان)</th>
+                @if (roleId == 4)
+                {
+                    <th class="text-xs-center align-middle">پرداختی(تومان)</th>
+
+                    <th class="text-xs-center align-middle">لینک ورود</th>
+                }
+
+            </tr>
+        </thead>
+        <tbody>
+            @{ int radif = 1;}
+            @foreach (var item in Model.ToList().OrderByDescending(r => r?.Course_StartDate))
+            {
+                List<UserRole> strudents = await _trainingService.GetCourseUsersByRoleAsync(item.CourseUsers.ToList(), 4,item.Course_Id);
+                UserRole teacher = await _trainingService.GetCourseTeacherAsync(item.Course_Id);
+            <tr>
+                <td class="text-xs-center align-middle p-1">@radif</td>
+                <td class="text-xs-center align-middle"><a href="/Home/CourseDetails/@item.Course_Id">@item.Course_Title</a></td>
+                @if (teacher != null)
+                {
+                    <td class="text-xs-center align-middle"><a href="/Home/TeacherInfo?urId=@teacher.URId">@teacher.User.UserFirstName @teacher.User.UserFamily</a></td>
+                }
+                else
+                {
+                    <td class="text-xs-center align-middle">-</td>
+                }
+
+                <td class="text-xs-center align-middle">@item.Course_StartDate.ToShamsi() | @item.Course_StartTime</td>
+                <td class="text-xs-center align-middle">@item.Course_EndDate.ToShamsi() | @item.Course_EndTime</td>
+
+                <td class="text-xs-center align-middle">@item.Course_Duration</td>
+                <td class="text-xs-center align-middle">@item.Course_Capacity</td>
+
+                @if (roleId == 3)
+                {
+                    <td class="text-xs-center align-middle">
+                        @strudents.Count()
+                        <a href="/Admin/Reports/CourseUsers?cid=@item.Course_Id&rolid=@roleId" class="float-xs-left" title="مشاهده"><i class="fa fa-eye"></i></a>
+                    </td>
+                }
+
+                <td class="text-xs-center align-middle">@item.Course_Fee.ToString("N0")</td>
+
+                @if (roleId == 4)
+                {
+
+                    <td class="text-xs-center align-middle">
+                        @if (item.CourseUsers.Any(a => a.URId == userRole.URId && a.IsActive == true))
+                        {
+                            PLDataLayer.Entities.Training.CourseUser courseUser = item.CourseUsers.FirstOrDefault(f => f.URId == userRole.URId && f.IsActive == true);
+                            if (courseUser != null)
+                            {
+                                <span>@courseUser.PayValue.ToString("N0")</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        }
+                        else
+                        {
+                            <a href="/Account/PrepareFee?cId=@item.Course_Id&urId=@userRole.URId" class="btn btn-primary">پرداخت شهریه</a>
+                        }
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @if (item.CourseUsers.Any(a => a.URId == userRole.URId && a.IsActive == true))
+                        {
+                            @if (teacher != null)
+                            {
+                                @if (item.CourseStatus.CourseStatus_Title != "دانلودی")
+                                {
+                                    <span>
+                                        <a href="@teacher.RoomLink" target="_blank" class="btn btn-success">ورود به کلاس</a>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        <a href="/Home/CourseDetails/@item.Course_Id" class="btn btn-success">دانلود فایلها</a>
+                                    </span>
+                                }
+
+                            }
+
+                        }
+                        else
+                        {
+                            <span class="text-danger fs-10">بعد از پرداخت قابل رویت است</span>
+                        }
+                    </td>
+                }
+
+            </tr>
+                radif++;
+            }
+        </tbody>
+    </table>
+</div>
+

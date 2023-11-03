@@ -1,0 +1,49 @@
+﻿@using PLCore.Services.Interfaces;
+@using PLDataLayer.Entities.SubEntities;
+@inject ISubEntityService _subService
+@{
+    string sepbg;
+    Separator sep = await _subService.GetSeparatorByName("newsletter");
+    if (sep != null)
+    {
+        sepbg = sep.BgImage;
+    }
+    else
+    {
+        sepbg = "3.jpg";
+    }
+}
+<section class="newsletter-area parallax black-opacity fadeInUp wow ptb-50" data-speed="5" data-bg-image="../images/bg/@sepbg">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-xs-12">
+                <div class="newsletter-form form-style">
+                    <input type="email" name="email" id="txtmail" placeholder="ایمیل خودتان را وارد کنید" />
+                    <button type="submit" class="btn-style" id="btnSendEmail">ارسال</button>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <div class="newsletter-wrap">
+                    @if (sep == null)
+                    {
+                        <h2>خبرنامه مرکز آموزش صنعت بیمه</h2>
+                        <p>
+                            با عضویت در خبرنامه از جدیدترین اخبار و مطالب مرکز آموزش مطلع باشید.
+                        </p>
+                    }
+                    else
+                    {
+                        <h2>@sep.Title</h2>
+                        <p>
+                            @sep.Comment
+                        </p>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+

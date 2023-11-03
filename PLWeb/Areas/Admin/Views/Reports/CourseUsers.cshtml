@@ -1,0 +1,41 @@
+﻿@model PLDataLayer.Entities.Training.Course;
+@using PLCore.Services.Interfaces;
+@inject ITrainingService _trainingService
+@using PLDataLayer.Entities.User;
+@{
+    ViewData["Title"] = "فراگیران دوره";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+    List<UserRole> students = await _trainingService.GetCourseUsersByRoleAsync(Model.CourseUsers.ToList(), 4,Model.Course_Id);
+}
+@if (roleId == 3)
+{
+    <h1 class="alert alert-info text-xs-center">
+        فراگیران
+      دوره @Model.Course_Title
+    </h1>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">#</th>
+            <th class="text-xs-center align-middle">نام </th>
+            <th class="text-xs-center align-middle">نام خانوادگی</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @{ int radif = 1;}
+        @foreach (var item in students.Where(w=>w.User.UserIsActive==true && w.IsActive==true).ToList())
+        {
+            <tr>
+                <td class="text-xs-center align-middle">@radif</td>
+                <td class="text-xs-center align-middle">@item.User.UserFirstName</td>
+                <td class="text-xs-center align-middle">@item.User.UserFamily</td>
+            </tr>
+            radif++;
+        }
+    </tbody>
+</table>
+

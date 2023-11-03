@@ -1,0 +1,109 @@
+﻿@using PLDataLayer.Entities.SubEntities;
+@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subService
+@section PageDescription{
+    <meta name="description" content="سامانه جامع آموزش و سنجش بیمه ، مرکزی علمی برای آموزش مقدماتی متقاضیان اخذ نمایندگی بیمه و همچنین آموزش ادواری نمایندگان عمومی
+           عمر و ارکان سازمان فروش می باشد،">
+}
+@{
+    ViewData["Title"] = "مرکز آموزش صنعت بیمه";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    PackInfo faqInfo = await _subService.GetPackInfoByName("pfaq");
+}
+
+
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+@section Slider{
+    <div class="hidden-sm hidden-xs">
+        <partial name="_Slider" />
+    </div>
+
+}
+
+@section Courses{
+    <div>
+        <h1 class="text-xs-center m-b-20 bg-zinfo p-t-20 p-b-20 text-white">دوره های آموزشی</h1>
+        <partial name="_CoursesService" />
+    </div>
+}
+
+@section Blog{
+    <div>
+        <partial name="_Blog" />
+    </div>
+
+
+}
+@section Service{
+    <partial name="_Service" />
+}
+@section Fanfact{
+    <partial name="_Fanfact" />
+}
+
+@section Featured{
+    <partial name="_Featured" />
+}
+
+@section Team{
+    <partial name="_Team" />
+}
+@section Praller{
+    <partial name="_Praller" />
+}
+@section FAQ{
+    <section>
+        <div class="container">
+            <div class="row m-t-50 m-b-50">
+                <div class="col-xs-offset-0 col-xs-12 col-md-8 col-md-offset-2 wow fadeInUp">
+                    <div class="section-title text-center">
+                        @if (faqInfo != null)
+                        {
+                            <h2>@faqInfo.PackInfo_Title</h2>
+                            <p class="fs-18 text-justify">
+                                @faqInfo.PackInfo_Comment
+                            </p>
+                        }
+                        else
+                        {
+                            <h2>پرسش و پاسخ</h2>
+                            <p class="fs-18 text-justify">
+                                در این بخش پرسش و پاسخ های متداولی که سایر بازدیدکنندگان سایت از همکاران ما در بخش پشتیبانی پرسیده اند
+                                برای استفاده سایر علاقمندان قرار داده شده است. چنانچه پاسخ سوال خود را در این بخش نیافتید می توانید
+                                از طریق فرم مربوطه سوالتان را برای ما ارسال نموده و پاسخ آنرا در ایمیل خود دریافت نمائید.
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+            <partial name="_FAQ" />
+            <div>
+                <a href="/Home/FrAQu" class="float-xs-left m-t-10 btn btn-info">پرسش و پاسخ</a>
+            </div>
+        </div>
+    </section>
+
+}
+@section Testmonial{
+    <partial name="_Testmonial" />
+}
+@section Videoarea{
+    <partial name="_Videoarea" />
+}
+
+
+@section Newsletter{
+    <partial name="_Newsletter" />
+
+}
+@section Footer{
+    <partial name="_Footer" />
+}
+
+
+

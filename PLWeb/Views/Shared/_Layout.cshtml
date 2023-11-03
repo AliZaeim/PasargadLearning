@@ -1,0 +1,73 @@
+﻿<!doctype html >
+<html  lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>@ViewData["Title"]</title>
+    @RenderSection("PageDescription", false)
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @RenderSection("TelegramOpenG", false)
+    @RenderSection("WhatsaapOpenG", false)
+    <partial name="_CssRefrences" />
+    <script src="~/LayoutRef/js/vendor/modernizr-2.8.3.min.js"></script>
+    <link rel="shortcut icon" type="image/png" href="~/favicon.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-149004014-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-149004014-2');
+    </script>
+
+
+</head>
+<body dir="rtl" lang="fa" xml:lang="fa">
+    @RenderSection("Cart", false)
+    @RenderSection("Search", false)
+    @RenderSection("Header", false)
+    @RenderSection("Slider", false)
+
+    <div class="btn-back-to-top bg0-hov" id="myBtn">
+        <span class="symbol-btn-back-to-top">
+            <i class="fa fa-angle-double-up" aria-hidden="true"></i>
+        </span>
+    </div>
+    <div id="LayoutBody">
+        @RenderBody()
+    </div>
+    @RenderSection("Courses", false)
+    @RenderSection("About", false)
+    @RenderSection("Service", false)
+    @RenderSection("Blog", false)
+    @RenderSection("Fanfact", false)
+    @RenderSection("Porftolio", false)
+    @RenderSection("Featured", false)
+    @RenderSection("Videoarea", false)
+    @RenderSection("Team", false)
+    @RenderSection("Praller", false)
+    @RenderSection("FAQ", false)
+    @RenderSection("Testmonial", false)
+    @RenderSection("Newsletter", false)
+    @RenderSection("Footer", false)
+    <partial name="_JsRefrences" />
+    @RenderSection("Scripts", false)
+</body>
+</html>
+<div id="LayProgress" style="display:none; position:fixed; top:45%;left:45%;z-index:100000">
+    <span class="fa fa-spinner fa-5x fa-spin text-info"></span>
+</div>
+<script>   
+    $(function () {        
+        var url = window.location.href;
+        $("#navigation li").removeClass("active");
+        $("#navigation li a").each(function () { 
+            if (url == (this.href)) {
+                $(this).parent().closest('li').addClass('active');
+                $(this).parent().parent().closest('li').addClass('active');
+            }
+        });
+    });    
+</script>

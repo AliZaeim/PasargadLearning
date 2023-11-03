@@ -1,0 +1,91 @@
+﻿@using PLCore.Services.Interfaces;
+@inject IBlogService _blogService
+@inject ISubEntityService _subService
+@using PLDataLayer.Entities.Blog;
+@using PLDataLayer.Entities.SubEntities;
+@using PLCore.Convertors;
+@{
+    List<News> news =await _blogService.GetNewsAsync();
+    PackInfo newsInfo = await _subService.GetPackInfoByName("pnews");
+}
+<section class="blog-area ptb-50 bg-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-12 col-xs-offset-0 wow fadeInUp">
+                <div class="section-title text-xs-center">
+                    @if (newsInfo != null)
+                    {
+                        <h2>@newsInfo.PackInfo_Title</h2>
+                        <p class="text-center fs-18">
+                            @newsInfo.PackInfo_Comment
+                        </p>
+                    }
+                    else
+                    {
+                        <h2>آخرین اخبار دنیای بیمه</h2>
+                        <p class="text-center fs-18">
+                            اخبار و مطالب مهم صنعت بیمه را همراه ما دنبال کنید
+                        </p>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var item in news.OrderByDescending(r => r.News_Date).Take(6))
+            {
+                <div class="col-md-4 col-sm-6 col-xs-12 col wow fadeInUp m-b-5" data-wow-delay=".1s">
+                    <div class="blog-wrap">
+                        <div class="blog-img">
+                            @if (!string.IsNullOrEmpty(item.News_Image))
+                            {
+                                <img src="/images/blog/@item.News_Image" alt="@item.News_Title" />
+                            }
+                            else
+                            {
+                                <img src="~/images/no-img450450.jpg" alt="@item.News_Title" />
+                            }
+                        </div>
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <ul>
+                                    <li>
+                                        @{
+                                            string kp = "p" + item.Publisher_Id.ToString();
+                                        }
+                                        <a href="/News/@kp"><i class="fa fa-user" title="ناشر"></i>@item.Publisher.Publisher_Title</a>
+                                    </li>
+                                    <li>
+                                        @{
+                                            string kg = "g" + item.NewsGroup_Id.ToString();
+                                        }
+                                        <a href="/News/@kg"><i class="fa fa-group" title="گروه خبر"></i>@item.NewsGroup.NewsGroup_Title</a>
+                                    </li>
+                                    <li>
+                                        @{
+                                            string kd = "d" + item.News_Date.ToShortDateString().Replace("/", " ");
+                                        }
+                                        <a href="~/News/@kd"><i class="fa fa-calendar-times-o" title="تاریخ"></i>@item.News_Date.ToShamsi()</a>
+                                    </li>
+                                    @*<li><a href="#"><i class="fa fa-user"></i>@item.Publisher.Publisher_Title</a></li>
+                                    <li><a href="#"><i class="fa fa-calendar-times-o"></i>@item.News_Date.ToShamsiWithTime()</a></li>*@
+
+                                </ul>
+                            </div>
+                            <h3><a href="~/News/d/@item.News_Code">@item.News_Title</a></h3>
+                            <p class="text-justify">
+                                @Html.Raw(item.News_Abstract)
+
+                            </p>
+                            <a href="~/News/d/@item.News_Code" class="btn-style float-l block">ادامه خبر</a><br />
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+        <div>
+            <a href="/News" class="float-xs-left m-t-10 btn btn-info">اخبار</a>
+        </div>
+    </div>
+</section>

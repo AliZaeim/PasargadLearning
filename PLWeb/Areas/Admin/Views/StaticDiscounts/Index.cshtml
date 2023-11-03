@@ -1,0 +1,233 @@
+﻿@model IEnumerable<PLDataLayer.Entities.Sale.StaticDiscount>
+@using PLCore.Convertors;
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService;
+@{
+    ViewData["Title"] = "کدهای تخفیف";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">کدهای تخفیف</h1>
+@if (_userService.CheckPermission(154, User.Identity.Name, roleId))
+{
+    <p class="offset-md-4 col-md-4 col-xs-12">
+        <a asp-action="Create" class="btn btn-primary col-xs-12">ثبت تخفیف جــدید</a>
+    </p>
+}
+
+<p class="offset-md-4 col-md-4 col-xs-12">
+    <input class="form-control mb-2 text-xs-center" id="DiscountInput" type="text" placeholder="جستجو">
+</p>
+<div class="table-responsive m-b-20">
+    <table class="table table-bordered fs-13 m-b-10">
+        <thead>
+            <tr class="fs-12 bg-primary white">
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.SD_Code)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.SD_IsGeneral)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.SD_StartDate)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.SD_EndDate)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.SD_UsableCount)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.SD_Used)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.SD_MinCourseValue)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.SD_MaxCourseValue)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.SD_Percent)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    @Html.DisplayNameFor(model => model.SD_IsActive)
+                </th>
+                <th class="text-xs-center align-middle p-0">
+                    توسط
+                </th>
+                <th class="text-xs-center align-middle p-0">عملیات</th>
+            </tr>
+        </thead>
+        <tbody id="Discounts">
+            @foreach (var item in Model.OrderByDescending(r => r.RegisterDate))
+            {
+                <tr>
+                    <td class="text-xs-center align-middle p-0 pt-1 pb-1 " title="@item.RegisterDate.ToShamsiWithTime()">
+                        <span class="font-tahoma" dir="ltr">
+                            @Html.DisplayFor(modelItem => item.SD_Code)
+                        </span>
+
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @Html.DisplayFor(modelItem => item.SD_IsGeneral)
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @item.SD_StartDate.ToShamsiN_WithTime()
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @item.SD_EndDate.ToShamsiN_WithTime()
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @Html.DisplayFor(modelItem => item.SD_UsableCount)
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @Html.DisplayFor(modelItem => item.SD_Used)
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+
+                        @item.SD_MinCourseValue?.ToString("N0")
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @item.SD_MaxCourseValue?.ToString("N0")
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @Html.DisplayFor(modelItem => item.SD_Percent)
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @if (item.SD_IsActive)
+                        {
+                            @if (_userService.CheckPermission(157, User.Identity.Name, roleId))
+                            {
+                                <span class="chkAct tag tag-success cursor-pointer" data-active="true" data-code="@item.SD_Code" data-id="@item.SD_Id">فعال</span>
+                            }
+                            else
+                            {
+                                <span class="tag tag-success" data-active="true" data-code="@item.SD_Code" data-id="@item.SD_Id">فعال</span>
+                            }
+
+                        }
+                        else
+                        {
+                            @if (_userService.CheckPermission(157, User.Identity.Name, roleId))
+                            {
+                                <span class="chkAct tag tag-danger cursor-pointer" data-active="false" data-code="@item.SD_Code" data-id="@item.SD_Id">غیرفعال</span>
+                            }
+                            else
+                            {
+                                <span class="tag tag-danger" data-active="false" data-code="@item.SD_Code" data-id="@item.SD_Id">غیرفعال</span>
+                            }
+
+                        }
+
+
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @{
+                            PLDataLayer.Entities.User.UserRole userRole = new PLDataLayer.Entities.User.UserRole();
+                            userRole = await _userService.GetUserRoleByIdAsync((int)item.Op_Creator_urID).ConfigureAwait(false);
+                            if (userRole != null)
+                            {
+                                string fullname = userRole.User.UserName;
+                                if (!string.IsNullOrEmpty(userRole.User.UserFirstName))
+                                {
+                                    fullname = userRole.User.UserFirstName;
+                                }
+                                if (!string.IsNullOrEmpty(userRole.User.UserFamily))
+                                {
+                                    fullname += " " + userRole.User.UserFamily;
+                                }
+                                <span>@fullname  </span>
+                            }
+                        }
+
+                    </td>
+                    <td class="text-xs-center align-middle p-0">
+                        @if (_userService.CheckPermission(155, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.SD_Id" data-toggle="tooltip" title="ویرایش"><span class="fa fa-edit"></span></a> <span>|</span>
+                        }
+                        @if (_userService.CheckPermission(156, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.SD_Id" data-toggle="tooltip" title="جزئیات"><span class="fa fa-list"></span></a>
+                        }
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#DiscountInput').on('input', function (e) {
+                var rows = $("#Discounts").find("tr").hide();
+                if (this.value.length) {
+                    var data = this.value.split(" ");
+                    $.each(data, function (i, v) {
+                        rows.filter(":contains('" + v + "')").show();
+                    });
+                }
+                else {
+                    rows.show();
+                }
+            });
+            $(".chkAct").click(function () {
+                var sdId = $(this).attr("data-id");
+                var isact = $(this).attr("data-active");
+                var code = $(this).attr("data-code");
+                var pr;
+                if (isact === "true") {
+                    pr = "آیا مطمئن به غیرفعال کردن کد " + code + " هستید؟";
+                }
+                else {
+                    pr = "آیا مطمئن به فعال کردن کد " + code + " هستید؟";
+                }
+                var th = $(this);
+                Swal.fire({
+                    title: 'فعال/غیرفعال کردن تخفیف',
+                    text: pr,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'بله هستم',
+                    cancelButtonText: "انصراف"
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url: "/Admin/StaticDiscounts/ActDeact",
+                            data: { id: sdId },
+                            type: "POST",
+                            success: function (result) {
+
+                                Swal.fire(
+                                    'انجام شد',
+                                    'عملیات با موفقیت انجام شد',
+                                    'success'
+                                );
+                                if (result === true) {
+                                    th.removeClass("tag-danger").addClass("tag-success");
+                                    th.text("فعال");
+                                }
+                                else {
+                                    th.removeClass("tag-success").addClass("tag-danger");
+                                    th.text("غیرفعال");
+                                }
+
+
+                            }
+                        })
+
+                    }
+                })
+            });
+        });
+
+    </script>
+}

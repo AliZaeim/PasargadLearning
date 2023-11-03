@@ -1,0 +1,52 @@
+﻿@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subEntity
+@{
+    var timelines = await _subEntity.GetTimelinesAsync();
+    var lastTimeLine = timelines.LastOrDefault();
+}
+@if (lastTimeLine != null)
+{
+    <div class="featured-area ptb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1 col-xs-offset-0 col-xs-12  wow fadeInUp ">
+                    <div class="section-title text-center">
+                        <h2>@lastTimeLine.TL_Title</h2>
+                        <p>
+                            @lastTimeLine.TL_Text
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="featured-wrap">
+                        <ul>
+                            @foreach (var item in lastTimeLine.TimelineComponents.OrderBy(r=>r.TC_Rank).ThenBy(r=>r.TC_Id))
+                            {
+                                <li class="wow fadeInLeft">
+                                    <h3>@item.TC_Date</h3>
+                                    <div class="featured-content">
+                                        <div class="featured-img">
+                                            <img src="/images/featured/@item.TC_Image" alt="@item.TC_Title" />
+                                        </div>
+                                        <div class="featured-info">
+                                            <h4>@item.TC_Title</h4>
+                                            <p class="text-justify">
+                                                @item.TC_Text
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+
+                            <li>
+                                <h3>پایان</h3>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

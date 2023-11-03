@@ -1,0 +1,189 @@
+﻿@model PLCore.DTOs.Account.InitialRegisterViewModel
+
+<hr />
+
+<div class="row">
+    <div class="col-xs-12">
+        <form asp-action="InitialRegister" asp-controller="Account" data-ajax="true"
+              data-ajax-method="POST"
+              data-ajax-mode="replace"
+              data-ajax-update="#step1" class="mt-1">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Key" />
+            <input type="hidden" asp-for="CId" />
+            @if (Model.IsPaied == false && Model.UserRole == null)
+            {
+                @if (Model.Key.ToLower() == "s")
+                {
+                    <h2 class="text-xs-center"> ثبت نام فراگیر</h2>
+                }
+                @if (Model.Key.ToLower() == "t")
+                {
+                    <h2 class="text-xs-center"> ثبت نام مدرس</h2>
+                }
+                <h4 class="text-xs-center ">
+                    <span class="tag tag-warning">مرحله 1</span>
+                </h4>
+                
+                <hr />
+
+                <div class="form-group">
+                    <label asp-for="UserCellphone" class="control-label"></label> &ensp;
+                    <span class="float-xs-left text-danger hidden-md hidden-lg">در حالت موبایل صفحه کلید انگلیسی باشد</span>
+                    <div class="input-group">
+                        <input asp-for="UserCellphone" autocomplete="off" autofocus class="form-control text-xs-center" />
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-red"><span class="fa fa-times text-white fa-2x spSign"></span></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="UserCellphone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserNC" class="control-label"></label> &ensp;
+                    <span class="float-xs-left text-danger  hidden-md hidden-lg">در حالت موبایل صفحه کلید انگلیسی باشد</span>
+                    <div class="input-group">
+                        <input asp-for="UserNC" autocomplete="off" class="form-control text-xs-center" />
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-red"><span class="fa fa-times text-white fa-2x spSign"></span></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="UserNC" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="مرحله بعد" class="btn btn-primary btn-lg  col-xs-12 m-t-10" />
+                    @if (Model.RegisteredAsStudent == true)
+                    {
+                        <a href="/Login/S" class="btn btn-success btn-lg col-xs-12 col-md-5 m-t-10">ورود فراگیر</a>
+                        <a href="/ForgotPassword/S" class="btn btn-warning btn-lg col-xs-offset-0 col-xs-12 col-md-offset-2 col-md-5 m-t-10">رمز را فراموش کرده ام !</a>
+                    }
+                </div>
+            }
+            else
+            {
+                @if (Model.RegisteredAsStudent == true)
+                {
+                    @if (Model.UserRole != null)
+                    {
+                        <h2 class="text-xs-center text-danger">ثبت نام شما پس از پرداخت شهریه نهایی خواهد شد</h2>
+                        <a href="/Account/PrepareFee?cId=@Model.CId&urId=@Model.UserRole.URId" class="btn btn-success btn-lg col-md-offset-4 col-md-4 col-xs-offset-0 col-xs-12  m-t-10">پرداخت شهریه</a>
+                    }
+                    else
+                    {
+                        <h2 class="text-xs-center alert alert alert-success">شما قبلا در دوره @Model.Course.Course_Title ثبت نام شده اید</h2>
+                        PLDataLayer.Entities.User.UserRole Teacher = Model.Course.CourseUsers.FirstOrDefault(f => f.UserRole.RoleId == 3).UserRole;
+                        @if (Teacher != null)
+                        {
+                            if (!string.IsNullOrEmpty(Teacher.RoomLink))
+                            {
+                                <a href="@Teacher.RoomLink" class="btn btn-success btn-lg col-md-offset-4 col-md-4 col-xs-offset-0 col-xs-12  m-t-10">ورود به کلاس</a>
+                            }
+                            else
+                            {
+                                <h4 class="text-xs-center alert alert-warning">لینک ورود به کلاس فعال نیست</h4>
+                            }
+
+                        }
+                        else
+                        {
+                            <h4 class="text-xs-center alert alert-warning">لینک ورود به کلاس فعال نیست</h4>
+                        }
+
+                    }
+                }
+                else
+                {
+
+                }
+            }
+
+        </form>
+    </div>
+</div>
+<script src="~/LayoutRef/js/jquery-3.2.1.min.js"></script>
+<script src="~/LayoutRef/js/jquery.validate.min.js"></script>
+<script src="~/LayoutRef/js/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript">
+
+    function vmsNationalCode(input) {
+        if (!/^\d{10}$/.test(input)
+            || input == '0000000000'
+            || input == '1111111111'
+            || input == '2222222222'
+            || input == '3333333333'
+            || input == '4444444444'
+            || input == '5555555555'
+            || input == '6666666666'
+            || input == '7777777777'
+            || input == '8888888888'
+            || input == '9999999999')
+            return false;
+        var check = parseInt(input[9]);
+        var sum = 0;
+        var i;
+        for (i = 0; i < 9; ++i) {
+            sum += parseInt(input[i]) * (10 - i);
+        }
+        sum %= 11;
+        return (sum < 2 && check == sum) || (sum >= 2 && check + sum == 11);
+    }
+    function validatePhone(inputtxt) {
+        var phoneno = /^(\+98|0098|98|0)\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        return phoneno.test(inputtxt)
+    }
+    function toEnglishNumber(strNum) {
+        var pn = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+        var en = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+        var an = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+        var cache = strNum;
+        for (var i = 0; i < 10; i++) {
+            var regex_fa = new RegExp(pn[i], 'g');
+            var regex_ar = new RegExp(an[i], 'g');
+            cache = cache.replace(regex_fa, en[i]);
+            cache = cache.replace(regex_ar, en[i]);
+        }
+        return cache;
+    }
+    function convertNumbers2English(str) {
+        return str.replace(/[\u0660-\u0669\u06f0-\u06f9]/g, function (c) {
+            return c.charCodeAt(0) & 0xf;
+        });
+    }
+    $(document).ready(function () {
+        $("#UserNC").keyup(function () {
+            if (!vmsNationalCode($(this).val())) {
+                $(this).next(".input-group-prepend").find(".input-group-text").css("background-color", "red");
+                $(this).next(".input-group-prepend").find(".spSign").removeClass("fa-check").addClass("fa-times");
+                $('input[type="submit"]').attr('disabled', 'disabled');
+            }
+            else {
+                $(this).next(".input-group-prepend").find(".spSign").removeClass("fa-times").addClass("fa-check");
+                $(this).next(".input-group-prepend").find(".input-group-text").css("background-color", "green");
+                $('input[type="submit"]').removeAttr('disabled');
+            }
+            $(this).val(convertNumbers2English($(this).val()));
+
+        });
+        $("#UserCellphone").keyup(function () {
+
+            if (!validatePhone($(this).val())) {
+                $(this).next(".input-group-prepend").find(".input-group-text").css("background-color", "red");
+                $(this).next(".input-group-prepend").find(".spSign").removeClass("fa-check").addClass("fa-times");
+
+                $('input[type="submit"]').attr('disabled', 'disabled');
+            }
+            else {
+                $(this).next(".input-group-prepend").find(".spSign").removeClass("fa-times").addClass("fa-check");
+                $(this).next(".input-group-prepend").find(".input-group-text").css("background-color", "green");
+                if ($("#UserNC").val() != "") {
+                    if (vmsNationalCode($("#UserNC").val())) {
+                       
+                        $('input[type="submit"]').removeAttr('disabled');
+                    };
+                }
+                
+
+            }
+            $(this).val(convertNumbers2English($(this).val()));
+        });
+    });
+</script>

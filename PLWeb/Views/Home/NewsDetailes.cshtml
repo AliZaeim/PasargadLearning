@@ -1,0 +1,346 @@
+﻿@model PLDataLayer.Entities.Blog.News
+@using System.Globalization;
+@using PLCore.Convertors;
+@using PLCore.Services.Interfaces;
+@using PLDataLayer.Entities.SubEntities;
+@inject IBlogService _blogService
+@inject ISubEntityService _subService
+@section TelegramOpenG{
+    <meta property="og:url" content="https://inslearn.ir/News/d/@Model.News_Code" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@Model.News_Title" />
+    <meta property="og:site_name" content="https://inslearn.ir/" />
+    <meta property="og:image" content="https://inslearn.ir/images/blog/@Model.News_Image" />
+    <meta property="og:description" content="@Model.News_Abstract">
+}
+@section PageDescription{
+    <meta name="description" content="اخبار مرکز آموزش صنعت بیمه | جزئیات خبر " + @Model.News_Title>
+}
+
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    PersianCalendar pc = new PersianCalendar();
+    var AllNews = await _blogService.GetNewsAsync();
+    string k = string.Empty;
+    if (ViewData["key"] != null)
+    {
+        k = ViewData["key"].ToString();
+    }
+    PageInfo pageInfo = await _subService.GetPageInfoByNameAsync("contact");
+    ContactInfo contactInfo = _subService.GetContactInfosAsync().Result.LastOrDefault();
+    string pagebg = null;
+    if (pageInfo != null)
+    {
+        pagebg = "../../images/page/" + pageInfo.PInfo_Image;
+        ViewData["Title"] = pageInfo.PInfo_Title;
+    }
+    else
+    {
+        pagebg = "../../images/bg/" + "9.jpg";
+        ViewData["Title"] = "جزئیات خبر";
+    }
+}
+
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+<!-- breadcumb-area start -->
+<div class="breadcumb-area black-opacity bg-img-6">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="breadcumb-wrap">
+                    @if (pageInfo == null)
+                    {
+                        <span>@pageInfo.PInfo_Title</span>
+                    }
+                    else
+                    {
+                        <h2>اخبار مرکز آموزشی بیمه</h2>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="breadcumb-menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul>
+                        <li><a href="/">صفحه اصلی</a></li>
+                        <li>/</li>
+                        <li><a href="/News">اخبار</a></li>
+                        <li>/</li>
+                        <li>جزئیات خبر</li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcumb-area end -->
+<!-- blog-details-area start -->
+<section class="blog-details-area ptb-140">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-xs-12">
+                <div class="blog-details-wrap">
+                    <div class="blog-details-img">
+
+                        @if (!string.IsNullOrEmpty(Model.News_Image))
+                        {
+                            <img src="/images/blog/@Model.News_Image" width="800" alt="@Model.News_Title" />
+                        }
+                        else
+                        {
+                            <img src="~/images/noImg800600.jpg" alt="@Model.News_Title" />
+                        }
+
+                    </div>
+                    <div class="blog-details-content">
+                        <h3>@Model.News_Title</h3>
+
+                        @Html.Raw(Model.News_Text)
+
+                    </div>
+                    @if (Model.NewsFiles != null)
+                    {
+                        @if (Model.NewsFiles.Count() != 0)
+                        {
+                            <div class="col-xs-12 m-t-10">
+
+                                <table class="table table-bordered">
+                                    <caption class="text-xs-center mb-0">
+                                        <span class="tag tag-default col-xs-12">فایلهای خبر</span>
+                                    </caption>
+                                    <thead>
+                                        <tr>
+
+                                            <th class="text-xs-center align-middle">توضیحات</th>
+                                            <th class="text-xs-center align-middle">نوع</th>
+                                            <th class="text-xs-center align-middle">عملیات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var fl in Model.NewsFiles)
+                                        {
+                                            <tr>
+                                                <td class="text-xs-center align-middle">@fl.NF_Comment</td>
+                                                <td class="text-xs-center align-middle">
+                                                    @if (fl.NF_Type.Contains("image"))
+                                                    {
+                                                        <span>تصویر</span>
+                                                    }
+                                                    @if (fl.NF_Type.Contains("video"))
+                                                    {
+                                                        <span>فیلم</span>
+                                                    }
+                                                    @if (fl.NF_Type.Contains("audio"))
+                                                    {
+                                                        <span>صوت</span>
+                                                    }
+                                                    @if (fl.NF_Type.Contains("pdf"))
+                                                    {
+                                                        <span>pdf</span>
+                                                    }
+
+                                                </td>
+
+                                                <td class="text-xs-center align-middle">
+
+                                                    <a href="~/newsFiles/@fl.NF_File" title="دانلود"><i class="fa fa-download"></i></a>
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+
+                    }
+                    <div class="m-t-15">
+                        @{
+                            string Tadd = "https://t.me/share/?url=https://inslearn.ir/News/d/" + Model.News_Code;
+
+                        }
+                        <span class="float-xs-left" title="اشتراک گذاری در تلگرام"><a href="@Tadd" target="_blank" class="m-r-3"><span class="fa fa-telegram fa-2x"></span></a></span>
+
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12 col">
+                <aside class="right-sidebar">
+                    <div class="search-sidebar mb-30">
+                        <form action="/News" method="post">
+                            <input type="text" name="key" data-val="true" required oninvalid="this.setCustomValidity('متن جستجو را وارد کنید')"
+                                   oninput="this.setCustomValidity('')" placeholder="اخبار را جستجو کنید">
+
+                            <button type="submit" name="button"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+                    <div class="category-wrap mb-30">
+                        <h3 class="sidebar-title">گروههای خبر</h3>
+                        @{
+                            var groups = await _blogService.GetNewsGroupsAsync();
+                        }
+                        <ul>
+                            @foreach (var g in groups)
+                            {
+
+                                string kg = "g" + g.NewsGroup_Id.ToString();
+
+                                <li>
+                                    <a href="/News/@kg">@g.NewsGroup_Title</a>
+                                </li>
+                            }
+
+
+                        </ul>
+                    </div>
+                    @{
+                        var groupNews = AllNews.Where(w => w.NewsGroup_Id == Model.NewsGroup_Id && w.News_Id != Model.News_Id).OrderByDescending(r => r.News_Date).Take(5).ToList();
+                    }
+                    @if (groupNews != null)
+                    {
+                        @if (groupNews.Count() != 0)
+                        {
+                            <div class="related-post mb-30">
+                                <h3 class="sidebar-title">سایر اخبار</h3>
+                                <ul>
+                                    @foreach (var skh in groupNews)
+                                    {
+
+                                        <li class="related-post-items">
+                                            <div class="post-img">
+                                                @if (!string.IsNullOrEmpty(skh.News_Image))
+                                                {
+                                                    <img src="/images/blog/@skh.News_Image" width="100" height="100" class="p-l-2" alt="@skh.News_Title" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/images/no-img450450.jpg" width="100" height="100" class="p-l-2" alt="@skh.News_Title" />
+                                                }
+                                            </div>
+                                            <div class="post-info">
+                                                @*@{
+                                                        string[] abs = skh.News_Abstract.Split(" ");
+                                                        string selabs = string.Empty;
+                                                        for (int i = 0; i < abs.Length-1; i++)
+                                                        {
+                                                            if(i<=10)
+                                                            {
+                                                                selabs += abs[i] + " ";
+                                                            }
+                                                        }
+                                                    }
+                                                    <a href="/News/d/@skh.News_Code">@selabs ...</a>*@
+                                                <a href="/News/d/@skh.News_Code">@skh.News_Title</a>
+                                                <p>@skh.News_Date.ToShamsiWithTime()</p>
+                                            </div>
+                                        </li>
+                                    }
+
+
+                                </ul>
+                            </div>
+                        }
+
+                    }
+
+                    <div class="archive-wrap mb-30">
+                        <h3 class="sidebar-title">آرشیو @pc.GetYear(DateTime.Now)</h3>
+                        @{
+                            var list = await _blogService.GetNewsAsync();
+                            list = list.Where(w => pc.GetYear(w.News_Date) == pc.GetYear(DateTime.Now)).ToList();
+
+                            if (list != null)
+                            {
+                                <ul>
+                                    @foreach (var item in list.GroupBy(g => pc.GetMonth(g.News_Date)))
+                                    {
+                                        <li>
+                                            @{
+                                                string ka = "a" + pc.GetYear(DateTime.Now).ToString() + "|" + item.Key;
+                                            }
+                                            <a href="/News/@ka"> @item.Key.ToString("0#")|@pc.GetYear(DateTime.Now).ToString() <span class="pull-right tag tag-info tag-pill">@item.Count()</span></a>
+                                        </li>
+                                    }
+
+                                </ul>
+                            }
+                        }
+
+                    </div>
+                    <div class="tags-wrap">
+                        <h3 class="sidebar-title">تگ ها</h3>
+                        <ul>
+                            @{
+                                string[] tags = Model.News_Tags.Split("-");
+                            }
+                            @if (tags.Count() == 0)
+                            {
+                                <li>-</li>
+                            }
+                            else
+                            {
+                                foreach (var tg in tags)
+                                {
+
+                                    string tk = "t" + tg;
+
+                                    <li><a href="/News/@tk">@tg</a></li>
+                                }
+
+                            }
+
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+
+<input type="hidden" id="key" class="bg-danger" value="@k" />
+@section Scripts{
+    <script src="~/LayoutRef/js/jquery.mark.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var k = $("#key").val();
+
+            $(".blog-details-content").mark(k, {
+                "className": "bg-info",
+                "separateWordSearch": false,
+                "accuracy": {
+                    "value": "exactly",
+                    "limiters": [",", "."]
+                },
+                "exclude": [
+                    '.btn-style'
+                ]
+            });
+
+            $(".tags-wrap").mark(k, {
+                "className": "bg-info",
+                "separateWordSearch": false,
+                "accuracy": {
+                    "value": "exactly",
+                    "limiters": [",", "."]
+                },
+                "exclude": [
+                    '.sidebar-title'
+                ]
+            });
+        });
+    </script>
+}

@@ -1,0 +1,651 @@
+﻿
+@model PLDataLayer.Entities.Training.Course
+@using System.Globalization;
+@using PLCore.Convertors;
+@using PLDataLayer.Entities.Training;
+@using PLDataLayer.Entities.User;
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@inject ITrainingService _trainingService
+@section TelegramOpenG{
+    <meta property="og:url" content="http://inslearn.ir/Home/CourseDetails?id=@Model.Course_Id" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@Model.Course_Title" />
+    <meta property="og:site_name" content="http://inslearn.ir/" />
+    <meta property="og:image" content="http://inslearn.ir/images/course/@Model.Course_Image" />
+    <meta property="og:description" content="@Model.Course_abstract">
+
+
+}
+@section PageDescription{
+    <meta name="description" content="دوره های مرکز آموزش بیمه | جزئیات دوره " + @Model.Course_Title>
+}
+
+@{
+    ViewData["Title"] = "جزئیات دوره" + " " + Model.Course_Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int roleId = 0;
+    string k = string.Empty;
+    if (ViewData["key"] != null)
+    {
+        k = ViewData["key"].ToString();
+    }
+    UserRole LogUserRole = null;
+    UserRole UserRole = null;
+    if (User.Identity.IsAuthenticated)
+    {
+        roleId = int.Parse(User.FindFirst("RoleId").Value);
+        LogUserRole = await _userService.GetUserRoleBy_UserName_RoleId(User.Identity.Name, 4);
+        UserRole = await _userService.GetUserRoleBy_UserName_RoleId(User.Identity.Name, roleId);
+    }
+    int cid = 0;
+    if (ViewData["cid"] != null)
+    {
+        cid = int.Parse(ViewData["cid"].ToString());
+    }
+    PLCore.DTOs.Course.CourseStatusResult courseStatusResult = await _trainingService.GetCourseStatusResult(Model.Course_Id);
+
+}
+
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+<!-- breadcumb-area start -->
+<div class="breadcumb-area black-opacity bg-img-6">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="breadcumb-wrap">
+                    <h2>@Model.CourseGroup.CourseGroup_Title</h2>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="breadcumb-menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    @{
+                        CourseGroup courseGroup = await _trainingService.GetCourseGroupByIdAsync((int)Model.CourseGroup.ParentId);
+                        CourseGroup pcourseGroup = null;
+                        if (courseGroup != null)
+                        {
+                            if (courseGroup.ParentId != null)
+                            {
+                                pcourseGroup = await _trainingService.GetCourseGroupByIdAsync((int)courseGroup.ParentId);
+                            }
+
+                        }
+                    }
+                    <ul>
+                        <li>
+                            <a href="/">صفحه اصلی</a>
+                        </li>
+
+
+                        @if (courseGroup.ParentId != null)
+                        {
+                            <li>/</li>
+                            <li>
+                                <a href="/Home/Courses/?gid=@courseGroup.ParentId">@pcourseGroup.CourseGroup_Title</a>
+                            </li>
+                        }
+
+                        @if (Model.CourseGroup.ParentId != null)
+                        {
+                            <li>/</li>
+                            <li>
+                                <a href="/Home/Courses/?gid=@Model.CourseGroup.ParentId">@courseGroup.CourseGroup_Title</a>
+                            </li>
+                        }
+
+                        <li>/</li>
+
+                        <li>
+                            <a href="/Home/Courses/?gid=@Model.CourseGroup.CourseGroup_Id">@Model.CourseGroup.CourseGroup_Title</a>
+                        </li>
+
+
+                        <li>/</li>
+                        <li>
+                            @Model.Course_Title
+                        </li>
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcumb-area end -->
+<!-- blog-details-area start -->
+@{
+    bool Registered = false;
+
+    if (Model.CourseUsers.Any(a => a.UserRole == UserRole && a.IsActive == true))
+    {
+        Registered = true;
+    }
+}
+
+<section class="blog-details-area ptb-140">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <div class="blog-details-wrap">
+                    <div class="blog-details-img">
+                        <img src="/images/course/@Model.Course_Image" class="w-100 h-100" alt="@Model.Course_Title">
+                    </div>
+                    <div class="blog-details-content">
+                        <h3>@Model.Course_Title</h3>
+                        @if (!string.IsNullOrEmpty(Model.Course_abstract))
+                        {
+                            <blockquote class="text-justify">
+                                @Model.Course_abstract
+                            </blockquote>
+                        }
+
+                        <p>@Html.Raw(Model.Course_Comment)</p>
+                        @if (!string.IsNullOrEmpty(Model.SteppedDiscountCode))
+                        {
+                            PLDataLayer.Entities.Sale.SteppedDiscount steppedDiscount = await _trainingService.GetSteppedDiscountByCodeAsync(Model.SteppedDiscountCode).ConfigureAwait(false);
+                            if (steppedDiscount != null)
+                            {
+                                if (steppedDiscount.IsActive)
+                                {
+                                    string type = steppedDiscount.SteppedDiscountType.Name;
+                                    int nubat = _trainingService.GetCourseUsersByRoleAsync(Model.CourseUsers.ToList(), 4, Model.Course_Id).Result.Count;
+
+                                    <div class="col-xs-12">
+                                        <table class="table table-bordered w-100">
+                                            <thead>
+                                                <tr class="bg-primary white">
+                                                    @if (type.ToLower() == "person")
+                                                    {
+                                                        <th class="text-xs-center align-middle">شرح تخفیف بر اساس اولویت ثبت نام</th>
+                                                    }
+                                                    @if (type.ToLower() == "time")
+                                                    {
+                                                        <th class="text-xs-center align-middle">شرح تخفیف بر اساس تاریخ ثبت نام</th>
+                                                    }
+                                                    <th class="text-xs-center align-middle ">درصد تخفیف</th>
+                                                    <th class="text-xs-center align-middle ">مبلغ قابل پرداخت برای دوره</th>
+                                                    <th class="text-xs-center align-middle ">وضعیت</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                
+                                                @foreach (var item in steppedDiscount.SteppedDiscountDetails.OrderBy(r => r.FromPerson).OrderBy(r =>r.FromDate).ToList())
+                                                {
+                                                    <tr>
+                                                        @if (type.ToLower() == "time")
+                                                        {
+                                                            <td class="text-xs-center align-middle">از تاریخ @item.FromDate.ToShamsiN_WithTime() تا تاریخ @item.ToDate.ToShamsiN_WithTime()</td>
+                                                        }
+                                                        @if (type.ToLower() == "person")
+                                                        {
+                                                            <td class="text-xs-center align-middle">از نفر @item.FromPerson تا نفر @item.ToPerson</td>
+                                                        }
+                                                        <td class="text-xs-center align-middle">@item.Percent %</td>
+                                                        <td class="text-xs-center align-middle">
+                                                            @{
+                                                                int fee = Model.Course_Fee - (int)Math.Round((Model.Course_Fee * item.Percent / 100), 0);
+
+                                                            }
+                                                            @fee.ToString("N0") تومان
+                                                        </td>
+                                                        <td class="text-xs-center align-middle">
+                                                            @if (type == "person")
+                                                            {
+                                                                if ((int)item.ToPerson > nubat)
+                                                                {
+                                                                    <span class="tag tag-success p-2">فعال</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="tag tag-danger p-2">اتمام</span>
+                                                                }
+
+                                                            }
+                                                            @if (type == "time")
+                                                            {
+                                                                if (item.ToDate >= DateTime.Now)
+                                                                {
+                                                                    <span class="tag tag-success p-2">فعال</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="tag tag-danger p-2">اتمام</span>
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                            }
+                        }
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            (bool, string) Vali = await _trainingService.ValidateRegisterinCourse(Model.Course_Id, UserRole.URId);
+                            if (Vali.Item1 == true)
+                            {
+                                @if (Model.CourseUsers.Any(a => a.URId == UserRole.URId && a.IsActive == false))
+                                {
+
+                                    <a class="btn btn-info btn-lg col-md-offset-4  col-md-4 col-xs-offset-0 col-xs-12 m-t-2" href="/Account/PrepareFee?cId=@Model.Course_Id&urId=@UserRole.URId">پرداخت شهریه</a>
+                                }
+                                else
+                                {
+                                    <h4 class="text-xs-center col-xs-12"><span class="tag tag-danger">ثبت نام در دوره برای فراگیران امکان پذیر است</span> </h4>
+                                    <a class="btn btn-info btn-lg col-md-offset-4  col-md-4 col-xs-offset-0 col-xs-12   m-t-2" href="/Home/AddUserRoleToCourse?cId=@Model.Course_Id">ثبت نام در دوره</a>
+                                }
+
+                            }
+                            else
+                            {
+                                <h4 class="text-xs-center alert alert-danger col-xs-12 ">@Vali.Item2 </h4>
+                            }
+                        }
+                        else
+                        {
+                            @if (Model.Course_IsActive == true)
+                            {
+                                @if (courseStatusResult.HasRegTime)
+                                {
+                                    if (courseStatusResult.HasCapicity)
+                                    {
+                                        <h4 class="text-xs-center col-xs-12"><span class="tag tag-danger">ثبت نام در دوره برای فراگیران امکان پذیر است</span> </h4>
+                                        <a class="btn btn-info btn-lg col-md-offset-4  col-md-4 col-xs-offset-0 col-xs-12   m-t-2" href="/Register/S?cId=@Model.Course_Id">ثبت نام در دوره</a>
+                                    }
+                                    else
+                                    {
+                                        <h4 class="alert alert-danger text-xs-center col-xs-12">ظرفیت ثبت نام دوره تکمیل شده است !</h4>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <h4 class="alert alert-danger text-xs-center col-xs-12">مهلت ثبت نام دوره به پایان رسیده است !</h4>
+                                }
+                            }
+                            else
+                            {
+                                <h4 class="alert alert-danger text-xs-center col-xs-12">دسترسی به دوره امکان پذیر نیست</h4>
+                            }
+
+                        }
+                    </div>
+
+
+                </div>
+                @if (Model.CourseFiles != null)
+                {
+                    @if (Model.CourseFiles.Count != 0)
+                    {
+                        <div class="col-xs-12 m-t-10">
+
+                            <table class="table table-bordered">
+                                <caption class="text-xs-center mb-0">
+                                    <span class="tag tag-default col-xs-12">فایلهای دوره</span>
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th class="text-xs-center align-middle">عنوان</th>
+                                        <th class="text-xs-center align-middle">توضیحات</th>
+                                        <th class="text-xs-center align-middle">دسترسی</th>
+                                        <th class="text-xs-center align-middle">تعداد دانلود</th>
+                                        <th class="text-xs-center align-middle">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="coursefilebody">
+                                    @foreach (var fl in Model.CourseFiles)
+                                    {
+                                        <tr>
+                                            <td class="text-xs-center align-middle">@fl.CF_Title</td>
+                                            <td class="text-xs-center align-middle">@fl.CF_Comment</td>
+                                            <td class="text-xs-center align-middle">
+                                                @if (fl.CF_IsFree == true)
+                                                {
+                                                    <span>عمومی</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>پس از ثبت نام</span>
+                                                }
+                                            </td>
+                                            <td class="text-xs-center align-middle tdDown">
+                                                <span class="down">
+                                                    @fl.CF_Download
+                                                </span>
+                                            </td>
+                                            <td class="text-xs-center align-middle">
+                                                @if (fl.CF_IsFree == true)
+                                                {
+
+                                                    <a href="~/courseFiles/@fl.CF_File" rel="nofollow" title="دانلود" data-id="@fl.CF_Id" class="downFree"><i class="fa fa-download"></i></a>
+                                                }
+                                                else
+                                                {
+                                                    @if (User.Identity.IsAuthenticated)
+                                                    {
+                                                        if (Registered == true)
+                                                        {
+
+                                                            <a href="~/courseFiles/@fl.CF_File" rel="nofollow" title="دانلود" data-id="@fl.CF_Id" class="downFree"><i class="fa fa-download"></i></a>
+
+
+                                                        }
+                                                        else
+                                                        {
+                                                            if (courseStatusResult.HasRegTime)
+                                                            {
+                                                                if (courseStatusResult.HasCapicity)
+                                                                {
+                                                                    <a href="/Home/AddUserRoleToCourse?cId=@Model.Course_Id" class="btn btn-success"> ثبت نام در دوره</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="fa fa-lock" title="ظرفیت تکمیل شده است"></span>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="fa fa-lock" title="مهلت به پایان رسیده است"></span>
+                                                            }
+
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="/Login/S?returl=/Home/CourseDetails?id=@Model.Course_Id"><span class="fa fa-lock" title="ورود به سایت"></span></a>
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+
+
+                }
+                <div class="m-t-15">
+                    @{
+                        string Tadd = "https://t.me/share/?url=http://inslearn.ir/Home/CourseDetails?id=" + Model.Course_Id;
+
+                    }
+                    <span class="float-xs-left" title="اشتراک گذاری در تلگرام"><a href="@Tadd" target="_blank" class="m-r-3"><span class="fa fa-telegram fa-2x"></span></a></span>
+
+
+                </div>
+
+
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12 col p-r-20">
+                <aside class="right-sidebar">
+                    <div class="search-sidebar mb-30">
+                        <form action="/Home/Courses" method="post">
+                            <input type="text" name="search" placeholder="جستجو در دوره ها" required oninvalid="this.setCustomValidity('متن جستجو را وارد کنید')"
+                                   oninput="this.setCustomValidity('')">
+                            <button type="submit" name="button"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+
+                    <div class="category-wrap mb-30">
+                        <h3 class="text-center text-white courseInfoTitle" style="">اطلاعات دوره</h3>
+                        <h4 class="text-xs-center m-t-10 alert alert-warning m-b-0">
+                            مدرس :
+                            @if (Model.CourseUsers != null)
+                            {
+                                @if (Model.CourseUsers.Count() != 0)
+                                {
+                                    List<UserRole> teachers = await _trainingService.GetCourseUsersByRoleAsync(Model.CourseUsers.ToList(), 3, Model.Course_Id);
+                                    if (teachers != null)
+                                    {
+                                        @foreach (var item in teachers)
+                                        {
+                                            <span>
+                                                <a asp-action="TeacherInfo" asp-route-urId="@item.URId">
+                                                    @item.User.UserFirstName @item.User.UserFamily
+                                                </a>
+                                            </span>
+
+
+                                        }
+                                    }
+                                }
+                            }
+                        </h4>
+                        <h4 class="text-xs-center m-t-10 alert alert-info m-b-10 fs-24 Bold">
+                            @if (Model.Course_Fee == 0)
+                            {
+                                <span>شهریه دوره : رایگان</span>
+                            }
+                            else
+                            {
+                                <span>مبلغ دوره : @Model.Course_Fee.ToString("N0") تومان</span>
+                            }
+                        </h4>
+                        <ul class="zborder1 p-r-5 zborder-radius5">
+
+                            <li>مدت کلاس : @Model.Course_Duration</li>
+                            <li>تاریخ شروع : @Model.Course_StartDate.ToShamsi()</li>
+                            <li>تاریخ پایان : @Model.Course_EndDate.ToShamsi()</li>
+                            <li>ساعت شروع : @Model.Course_StartTime</li>
+                            <li>ساعت پایان : @Model.Course_EndTime</li>
+                            <li>مهلت ثبت نام : @Model.Course_EndDateRegistration.ToShamsi()</li>
+                            <li>ظرفیت دوره : @Model.Course_Capacity  نفر</li>
+                            <li>
+                                @{
+                                    int regCount = 0;
+                                    if (Model.CourseUsers != null)
+                                    {
+                                        if (Model.CourseUsers.Count() != 0)
+                                        {
+                                            regCount = _trainingService.GetCourseUsersByRoleAsync(Model.CourseUsers.ToList(), 4, Model.Course_Id).Result.Count;
+                                        }
+                                    }
+
+                                }
+
+                                تعداد ثبت نام : @regCount نفر
+                            </li>
+
+                            <li>
+                                @{ int Rcap = Model.Course_Capacity - regCount;
+                                    if (Rcap < 0)
+                                    {
+                                        Rcap = 0;
+                                    }
+                                }
+                                ظرفیت باقیمانده : @Rcap نفر
+                            </li>
+                            <li>
+
+                            </li>
+                            <li>
+                                @{
+                                    CourseTypeofMeasurment courseTypeofMeasurment = await _trainingService.GetCourseTypeofMeasurmentAsync(Model.CTM_Id);
+                                }
+                                نوع سنجش : @courseTypeofMeasurment.CTM_Title
+                            </li>
+
+
+                        </ul>
+                    </div>
+                    <div class="category-wrap mb-30">
+                        @{
+                            var groups = await _trainingService.GetCourseGroupsAsync();
+                        }
+                        <h3 class="sidebar-title">گروه ها</h3>
+                        <ul>
+                            @foreach (var g in groups.Where(w => w.ParentId != null).Where(w => w.Courses.Count != 0))
+                            {
+                                <li class="w-100">
+                                    <a href="/Home/Courses/?gid=@g.CourseGroup_Id">
+                                        @g.CourseGroup_Title
+                                        <span class="tag tag-info tag-pill float-xs-left">@g.Courses.Where(w => w.Course_IsActive == true).Count()</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
+                    <div class="related-post mb-30">
+                        @{
+                            List<Course> otherCourses = await _trainingService.GetCoursesAsync();
+                        }
+                        <h3 class="sidebar-title">سایر دوره ها</h3>
+
+                        <ul>
+                            @foreach (var co in otherCourses.Where(w => w.CourseGroup_Id == Model.CourseGroup_Id && w.Course_Id != Model.Course_Id && w.Course_IsActive == true).OrderByDescending(r => r.Course_StartDate).Take(7).ToList())
+                            {
+                                <li class="related-post-items">
+                                    <div class="post-img">
+                                        <img src="~/images/course/@co.Course_Image" width="80" height="80" alt="@co.Course_Title">
+                                    </div>
+                                    <div class="post-info">
+                                        <a href="/Home/CourseDetails/@co.Course_Id">@co.Course_Title</a>
+                                        <p>@co.Course_StartDate.ToShamsi()</p>
+                                    </div>
+                                </li>
+                            }
+
+                        </ul>
+                    </div>
+
+                    <div class="archive-wrap mb-30">
+                        <h3 class="sidebar-title">برنامه آموزشی</h3>
+                        <ul>
+                            @{
+                                PersianCalendar pc = new PersianCalendar();
+
+                                int nowM = pc.GetMonth(DateTime.Now);
+                                int nowY = pc.GetYear(DateTime.Now);
+                                string dte = nowY + "/" + nowM;
+
+                            }
+                            @for (int m = nowM; m <= 12; m++)
+                            {
+                                List<Course> courses = await _trainingService.GetCoursesByMounth(nowY, m);
+                                courses = courses.Where(w => w.Course_IsActive == true).ToList();
+                                if (courses != null)
+                                {
+                                    @if (courses.Count() > 0)
+                                    {
+                                        <li><a href="/Home/Courses?search=@dte">@m / @nowY <span class="pull-right tag tag-pill tag-info">@courses.Count</span></a></li>
+                                    }
+                                }
+
+                            }
+
+                        </ul>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Course_Tags))
+                    {
+                        <div class="tags-wrap">
+                            <h3 class="sidebar-title">کلمات کلیدی</h3>
+                            @{
+                                string[] tags = Model.Course_Tags.Split("-");
+                            }
+                            @if (tags != null)
+                            {
+                                <ul class="cTags">
+                                    @foreach (var tg in tags)
+                                    {
+                                        <li><a href="/Home/Courses?search=@tg.Trim()">@tg</a></li>
+                                    }
+                                </ul>
+                            }
+
+                        </div>
+                    }
+
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- blog-details-area end -->
+@section Footer{
+    <partial name="_Footer" />
+}
+<input type="hidden" id="key" class="bg-danger" value="@k" />
+@section Scripts{
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="~/LayoutRef/js/jquery.mark.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var k = $("#key").val();
+
+            $(".blog-details-content").mark(k, {
+
+                "className": "bg-info",
+                "separateWordSearch": false,
+                "accuracy": {
+                    "value": "exactly",
+                    "limiters": [",", "."]
+                }
+            });
+            $(".category-wrap").mark(k, {
+
+                "className": "bg-info",
+                "separateWordSearch": false,
+                "accuracy": {
+                    "value": "exactly",
+                    "limiters": [",", "."]
+                }
+            });
+            $(".cTags").mark(k, {
+
+                "className": "bg-info",
+                "separateWordSearch": false,
+                "accuracy": {
+                    "value": "exactly",
+                    "limiters": [",", "."]
+                }
+            });
+            $("#coursefilebody").mark(k, {
+
+                "className": "bg-info",
+                "separateWordSearch": false,
+                "accuracy": {
+                    "value": "exactly",
+                    "limiters": [",", "."]
+                }
+            });
+
+            $(".downFree").click(function () {
+                var $th = $(this);
+                var idd = $th.attr("data-id");
+
+                $.ajax({
+                    url: "/Home/AddDown",
+                    data: { fileId: idd },
+                    type: "POST",
+                    success: function (result) {
+                        $th.parent().siblings(".tdDown").text(result);
+                    }
+                });
+
+            });
+        });
+
+
+
+    </script>
+}
+

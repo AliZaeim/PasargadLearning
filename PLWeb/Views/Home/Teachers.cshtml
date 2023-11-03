@@ -1,0 +1,127 @@
+﻿@model IEnumerable<PLDataLayer.Entities.User.UserRole>
+@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subService
+@using PLDataLayer.Entities.SubEntities;
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    PageInfo pageInfo = await _subService.GetPageInfoByNameAsync("teacher");
+    string pagebg = null;
+    if (pageInfo != null)
+    {
+        pagebg = "../../images/page/" + pageInfo.PInfo_Image;
+        ViewData["Title"] = pageInfo.PInfo_Title;
+    }
+    else
+    {
+        pagebg = "../../images/bg/" + "9.jpg";
+        ViewData["Title"] = "مدرسان مرکز آموزش صنعت بیمه";
+    }
+}
+@section PageDescription{
+    <meta name="description" content="مدرسان مرکز آموزش صنعت بیمه ">
+}
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+
+<!-- breadcumb-area start -->
+<div class="breadcumb-area black-opacity" style="background:url(@pagebg)">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="breadcumb-wrap">
+                    @if (pageInfo == null)
+                    {
+                        <h2>مدرسان مرکز آموزش صنعت بیمه </h2>
+                    }
+                    else
+                    {
+                        <h2>@pageInfo.PInfo_Title </h2>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="breadcumb-menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul>
+                        <li><a href="/">صفحه اصلی</a></li>
+                        <li>/</li>
+                        <li>مدرسان</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcumb-area end -->
+<!-- team-area start -->
+<section class="team-area team-area2 ptb-100">
+    <div class="container">
+        <div class="row">
+            @foreach (var th in Model.Where(w => w.IsActive == true && w.User.UserIsActive==true))
+            {
+            <div class="col-md-3 col-xs-12 col wow m-b-20 fadeInUp " data-wow-delay=".1s">
+                <div class="team-wrap2 pr-3 pl-3">
+                    <div class="team-img text-xs-center">
+
+                        @if (!string.IsNullOrEmpty(th.User.UserAvatar))
+                        {
+                            <img class="w-100" src="~/images/usersavatar/@th.User.UserAvatar" alt="@th.User.UserFirstName @th.User.UserFamily" />
+                        }
+                        else
+                        {
+                            <img class="w-100" src="~/images/no-img450450.jpg" alt="@th.User.UserFirstName @th.User.UserFamily" />
+                        }
+
+                        <div class="overlay">
+                            <h3>@th.User.UserFirstName @th.User.UserFamily </h3>
+                            <span>@th.User.UserLabel</span>
+                            <p>@th.User.UserDescription  </p>
+                        </div>
+                    </div>
+                    <div class="team-content">
+                        <h3>
+                            <a href="/Home/TeacherInfo?urId=@th.URId" class="fs-20">
+                                @th.User.UserFirstName @th.User.UserFamily
+                            </a>
+                        </h3>
+                        <p>@th.User.UserLabel</p>
+                    </div>
+                </div>
+            </div>
+            }
+
+
+        </div>
+    </div>
+</section>
+<!-- team-area end -->
+<!-- quote-area start -->
+<div class="quote-area bg-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-xs-12">
+                <div class="quote-wrap">
+                    <h2>مرکز آموزش صنعت بیمه از علاقمندان به فعالیت آموزشی دعوت به همکاری می نماید</h2>
+                </div>
+            </div>
+            <div class="col-sm-3 col-xs-12">
+                <div class="quote-wrap text-right">
+                    <a href="/Register/T">درخواست همکاری</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- quote-area end -->
+@section Footer{
+    <partial name="_Footer" />
+}

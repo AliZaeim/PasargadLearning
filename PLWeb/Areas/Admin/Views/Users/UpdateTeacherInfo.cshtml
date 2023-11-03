@@ -1,0 +1,36 @@
+﻿@model PLCore.DTOs.PUser.UpdateTaecherSkyInfo
+
+@{
+    ViewData["Title"] = "ویرایش اطلاعات اسکای مدرس";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="text-xs-center alert alert-info">ویرایش اطلاعات اسکای مدرس</h1>
+
+
+<div class="row">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="UpdateTeacherInfo">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="urId" />
+            <div class="form-group">
+                <label asp-for="Sky_roomId" class="control-label"></label>
+                <input asp-for="Sky_roomId" class="form-control" />
+                <span asp-validation-for="Sky_roomId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sky_roomLink" class="control-label"></label>
+                <input asp-for="Sky_roomLink" class="form-control" />
+                <span asp-validation-for="Sky_roomLink" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="GetAllUsers">بازگشت</a>
+</div>
+

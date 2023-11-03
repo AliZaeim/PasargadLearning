@@ -1,0 +1,52 @@
+﻿@model PLDataLayer.Entities.Training.CourseGroup
+
+@{
+    ViewData["Title"] = "ویرایش گروه";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1 class="alert alert-info text-xs-center">ویرایش گروه</h1>
+
+
+<hr />
+<div class="row">
+    <div class="offset-md-4 col-md-4 col-xs-12">
+        <form asp-action="EditSub" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CourseGroup_Id" />
+            <input type="hidden" asp-for="CourseGroup_Image" />
+            <div class="form-group">
+                <label class="control-label">گروه</label>
+                <select asp-for="ParentId" class="form-control" asp-items="ViewBag.ParentId"></select>
+                <span asp-validation-for="ParentId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseGroup_Title" class="control-label"></label>
+                <input asp-for="CourseGroup_Title" class="form-control" />
+                <span asp-validation-for="CourseGroup_Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseGroup_Comment" class="control-label"></label>
+                <textarea rows="3" asp-for="CourseGroup_Comment" class="form-control"></textarea>
+                <span asp-validation-for="CourseGroup_Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseGroup_Image" class="control-label"></label><img class="float-xs-left" src="~/images/coursegroup/@Model.CourseGroup_Image" width="50" height="50" />
+                <input asp-for="CourseGroup_Image" class="form-control" type="file" />
+                <span asp-validation-for="CourseGroup_Image" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="ویرایش" class="btn btn-primary col-xs-12" />
+                <a asp-action="Index" class="btn btn-warning col-xs-12 mt-1">انصراف</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/LayoutRef/js/jquery.validate.min.js"></script>
+    <script src="~/LayoutRef/js/jquery.validate.unobtrusive.min.js"></script>
+}
+

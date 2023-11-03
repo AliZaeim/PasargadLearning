@@ -1,0 +1,115 @@
+﻿@using PLCore.DTOs.PUser;
+@using PLCore.Services.Interfaces;
+@inject ISubEntityService _subService
+@using PLDataLayer.Entities.SubEntities;
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    PageInfo pageInfo = await _subService.GetPageInfoByNameAsync("faq");
+    string pagebg = null;
+    if (pageInfo != null)
+    {
+        pagebg = "../../images/page/" + pageInfo.PInfo_Image;
+        ViewData["Title"] = pageInfo.PInfo_Title;
+    }
+    else
+    {
+        pagebg = "../../images/bg/" + "9.jpg";
+        ViewData["Title"] = "سئوالات متداول";
+    }
+}
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+<!-- breadcumb-area start -->
+<div class="breadcumb-area black-opacity" style="background:url(@pagebg)">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="breadcumb-wrap">
+                    @if (pageInfo != null)
+                    {
+                    <h2>@pageInfo.PInfo_Title</h2>
+                    }
+                    else
+                    {
+                    <h2>سئوالات متداول</h2>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="breadcumb-menu">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul>
+                        <li><a href="/">صفحه اصلی</a></li>
+                        <li>/</li>
+                        <li>سئوالات متداول</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcumb-area end -->
+<!-- contact-area start -->
+
+<div class="contact-area ptb-50">
+    <div class="container">
+        <div class="col-xs-12">
+            <div class="contact-wrap">
+                <h3 class="text-xs-center alert alert-info">پرسش و پاسخ</h3>
+                <partial name="_FAQ" />
+            </div>
+        </div>
+        <div class="col-xs-12 p-t-20">
+            <div class="contact-wrap form-style">
+                <h3 class="text-xs-center alert alert-info">ارسال سوال</h3>
+                @{
+                    AskQuestionViewModel askQuestionViewModel = new AskQuestionViewModel()
+                    {
+                        IsSuccess = false
+                    };
+                }
+                <div class="col-md-offset-2 col-md-8 col-xs-offset-0 col-xs-12">
+                    <partial name="AskQuestion" model="askQuestionViewModel" />
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- contact-area end -->
+<!-- quote-area start -->
+<div class="quote-area bg-1">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12  col-xs-12">
+                <div class="quote-wrap">
+
+                    @if (pageInfo == null)
+                    {
+                    <h2 class="text-xs-center">مرکز آموزش صنعت بیمه برای ارتقاء سطح کیفی خدمات مرکز از نظرات و پیشنهادات شما استقبال می کند</h2>
+                    }
+                    else
+                    {
+                    <h2 class="text-xs-center">@Html.Raw(pageInfo.PInfo_Comment)</h2>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- quote-area end -->
+@section Footer{
+    <partial name="_Footer" />
+}

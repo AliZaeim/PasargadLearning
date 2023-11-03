@@ -1,0 +1,89 @@
+﻿@model PLDataLayer.Entities.User.UserRole
+@using PLCore.Services.Interfaces;
+@inject ITrainingService _tService
+@{
+    ViewData["Title"] = "مشخصات مدرس";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Search{
+    <partial name="_Search" />
+}
+@section Header{
+    <partial name="_Header" />
+}
+@if (Model != null)
+{
+
+    <h2 class="text-xs-center alert alert-info">
+        مشخصات مدرس @Model.User.UserFirstName  @Model.User.UserFamily
+    </h2>
+    <div class="row m-r-10 m-l-10" @*style="margin-right:1mm; margin-left:1mm"*@>
+        <div class="col-md-offset-4 col-md-4 col-xs-offset-0 col-xs-12 pricing-wrap p-1 ">
+            @if (!string.IsNullOrEmpty(Model.User.UserAvatar))
+            {
+                <img src="~/images/usersavatar/@Model.User.UserAvatar" class="my-xs-center mtb-5 w-100" />
+            }
+
+
+            <h3>@Model.User.UserFirstName @Model.User.UserFamily</h3>
+
+            <ul>
+                <li>مدرک تحصیلی : @Model.User.LevelOfEducation</li>
+                <li>
+                    دوره ها :
+                    <span class="tag tag-info tag-pill"> @_tService.GetCoursesByRole(Model.URId).Result.Where(w=>w.Course_IsActive==true).Count()</span>
+                </li>
+                @if (!string.IsNullOrEmpty(Model.User.UserLabel))
+                {
+                    <li>عنوان : @Model.User.UserLabel</li>
+                }
+                else
+                {
+                    <li>عنوان : -</li>
+                }
+                @if (!string.IsNullOrEmpty(Model.User.UserDescription))
+                {
+                    <li>سِمت : @Model.User.UserDescription</li>
+                }
+                else
+                {
+                    <li>سمت : -</li>
+                }
+                <li>دانشگاه : @Model.User.UserUniversity</li>
+                @if (!string.IsNullOrEmpty(Model.User.UserEmail))
+                {
+                    <li>ایمیل : @Model.User.UserEmail</li>
+                }
+                else
+                {
+                    <li>ایمیل : -</li>
+                }
+                <li>
+                    مدت عضویت : @DateTime.Now.Subtract(Model.RegisterDate).TotalDays.ToString("N0") روز
+                </li>
+
+                @if (!string.IsNullOrEmpty(Model.User.UserBiography))
+                {
+                    <li class="text-justify p-r-5 p-l-5">@Model.User.UserBiography</li>
+                }
+                
+
+
+            </ul>
+            @{
+                string src = "t" + Model.URId.ToString();
+            }
+            <a href="/Home/Courses?search=@src" class="btn btn-light-blue">دوره ها</a>
+        </div>
+    </div>
+}
+else
+{
+    <h2 class="text-xs-center alert alert-info">مشخصات مدرس</h2>
+    <h3 class="text-xs-center alert alert-warning m-t-20">مدرسی یافت نشد !</h3>
+}
+
+@section Footer{
+    <partial name="_Footer" />
+}

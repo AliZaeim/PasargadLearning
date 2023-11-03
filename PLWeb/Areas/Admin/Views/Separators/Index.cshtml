@@ -1,0 +1,78 @@
+﻿@model IEnumerable<PLDataLayer.Entities.SubEntities.Separator>
+@using PLCore.Services.Interfaces;
+@inject IUserService _UserService
+@{
+    ViewData["Title"] = "جداکننده ها";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">جداکننده ها</h1>
+@if (_UserService.CheckPermission(135, User.Identity.Name, roleId))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثــبت</a>
+    </p>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Comment)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BgImage)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FileLink)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Comment)
+                    </td>
+                    <td>
+                        <img src="~/images/bg/@item.BgImage" width="300" height="100" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FileLink)
+                    </td>
+                    <td>
+                        @if (_UserService.CheckPermission(136, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> <span> | </span>
+                        }
+                        @if (_UserService.CheckPermission(137, User.Identity.Name, roleId))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id">حــذف</a>
+                        }
+
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

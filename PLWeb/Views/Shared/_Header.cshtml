@@ -1,0 +1,355 @@
+﻿@using PLDataLayer.Entities.Training;
+@using PLDataLayer.Entities.SubEntities;
+@using PLCore.Services.Interfaces;
+@inject ITrainingService tService
+@inject ISubEntityService subService
+@{
+    ContactInfo contactInfo = await subService.GetLastContactInfo();
+    Header header = await subService.GetLastHeader();
+
+}
+<header class="header-area">
+    <div class="header-top bg-2">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4 col-xs-12 text-xs-center">
+                    <div class="header-top-left text-xs-center">
+                        @if (header != null)
+                        {
+                            <p class="text-xs-center">
+                                @header.Header_Text
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="text-xs-center">
+                                سرمایه گذاری بروی آموزش بزرگترین سرمایه گذاری فردی شماست
+                            </p>
+                        }
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-12 m-b-5 text-xs-center">
+                    <div>
+                        <p class="text-center">
+                            @if (header != null)
+                            {
+                                @if (!string.IsNullOrEmpty(header.Header_Btn1Text) && !string.IsNullOrEmpty(header.Header_Btn1Link))
+                                {
+                                    <a class="btn btn-danger myBold" href="@header.Header_Btn1Link" target="_blank">@header.Header_Btn1Text</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-danger myBold" href="#">مرکز آزمون</a>
+                                }
+                                @if (!string.IsNullOrEmpty(header.Header_Btn2Text) && !string.IsNullOrEmpty(header.Header_Btn2Link))
+                                {
+                                    <a class="btn btn-warning myBold" href="@header.Header_Btn2Link" target="_blank">@header.Header_Btn2Text</a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-warning myBold" href="#">آموزش غیر حضوری</a>
+                                }
+                            }
+                            else
+                            {
+                                <a class="btn btn-danger myBold" href="#">مرکز آزمون</a>
+                                <a class="btn btn-warning myBold" href="#">آموزش غیر حضوری</a>
+                            }
+
+
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4  col-xs-12 text-xs-center">
+                    <div class="header-top-right text-xs-center">
+                        <ul>
+                            @if (header != null)
+                            {
+                                @if (!string.IsNullOrEmpty(header.Header_Social1Class) && !string.IsNullOrEmpty(header.Header_Social1Link))
+                                {
+                                    <li>
+                                        <a href="@header.Header_Social1Link" target="_blank"><i class="@header.Header_Social1Class" title="@header.Header_Social1Text"></i></a>
+                                    </li>
+                                }
+                                @if (!string.IsNullOrEmpty(header.Header_Social2Class) && !string.IsNullOrEmpty(header.Header_Social2Link))
+                                {
+                                    <li>
+                                        <a href="@header.Header_Social2Link" target="_blank"><i class="@header.Header_Social2Class" title="@header.Header_Social2Text"></i></a>
+                                    </li>
+                                }
+                                @if (!string.IsNullOrEmpty(header.Header_Social3Class) && !string.IsNullOrEmpty(header.Header_Social3Link))
+                                {
+                                    <li>
+                                        <a href="@header.Header_Social3Link" target="_blank"><i class="@header.Header_Social3Class" title="@header.Header_Social3Text"></i></a>
+                                    </li>
+                                }
+                                @if (!string.IsNullOrEmpty(header.Header_Social4Class) && !string.IsNullOrEmpty(header.Header_Social4Link))
+                                {
+                                    <li>
+                                        <a href="@header.Header_Social4Link" target="_blank"><i class="@header.Header_Social4Class" title="@header.Header_Social4Text"></i></a>
+                                    </li>
+                                }
+                                @if (!string.IsNullOrEmpty(header.Header_Social5Class) && !string.IsNullOrEmpty(header.Header_Social5Link))
+                                {
+                                    <li>
+                                        <a href="@header.Header_Social5Link" target="_blank"><i class="@header.Header_Social5Class" title="@header.Header_Social5Text"></i></a>
+                                    </li>
+                                }
+
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-middle bg-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 hidden-sm hidden-xs">
+                    <div class="logo p-0">
+                        @if (header != null)
+                        {
+                            @if (!string.IsNullOrEmpty(header.Header_Title))
+                            {
+                                <h1><a href="/">@header.Header_Title</a></h1>
+                            }
+                            else
+                            {
+                                <h1><a href="/">مرکز آموزش  صنعت بیمه</a></h1>
+                            }
+                        }
+                        else
+                        {
+                            <h1><a href="/">مرکز آموزش صنعت بیمه</a></h1>
+                        }
+
+
+                    </div>
+                </div>
+                <div class="col-md-8 col-xs-12 hidden-sm hidden-xs">
+                    <div class="header-middle-right">
+                        <ul>
+                            <li>
+
+                                <div class="contact-icon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <div class="contact-info">
+                                    <p>ساعات پاسخگویی</p>
+                                    @if (contactInfo != null)
+                                    {
+                                        <span class="fs-14">@contactInfo.CI_ContactTime</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="fs-14">شنبه تا پنجشنبه- 8 تا 16</span>
+                                    }
+
+                                </div>
+                            </li>
+                            <li>
+                                <div class="contact-icon">
+                                    <i class="fa fa-envelope"></i>
+                                </div>
+                                <div class="contact-info">
+                                    <p>ایمیل</p>
+                                    @if (contactInfo != null)
+                                    {
+                                        <span class="font-tahoma fs-14">@contactInfo.CI_Email1</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="font-tahoma fs-14">info@inslearn.ir</span>
+                                    }
+
+                                </div>
+                            </li>
+                            <li>
+                                <div class="contact-icon">
+                                    <i class="fa fa-phone"></i>
+                                </div>
+                                <div class="contact-info">
+                                    <p>تلفن</p>
+                                    @if (contactInfo != null)
+                                    {
+                                        <span class="fs-14">@contactInfo.CI_Phone1</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="fs-14">026-32712734</span>
+                                    }
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-bottom" id="sticky-header">
+        <div class="container">
+            <div class="row">
+                <div class="hidden-md hidden-lg col-sm-8 col-xs-6">
+                    <div class="logo">
+                        @if (header != null)
+                        {
+                            @if (!string.IsNullOrEmpty(header.Header_Title))
+                            {
+                                <h1><a class="fs-14"  href="/">@header.Header_Title</a></h1>
+                            }
+                            else
+                            {
+                                <h1><a class="fs-14" href="/">مرکز آموزش و سنجش بیمه</a></h1>
+                            }
+                        }
+                        else
+                        {
+                            <h1><a class="fs-14" href="/">مرکز آموزش و سنجش بیمه</a></h1>
+                        }
+
+                    </div>
+                </div>
+                <div class="col-md-11 hidden-sm hidden-xs">
+                    <div class="mainmenu">
+                        <ul id="navigation">
+                            <li class="active">
+                                <a href="/">صفحه اصلی</a>
+
+                            </li>
+                            <li>
+                                <a href="/about">درباره مرکز</a>
+                            </li>
+                            @{
+                                List<CourseGroup> courseGroups = await tService.GetCourseGroupsAsync();
+                            }
+                            @if (courseGroups != null)
+                            {
+                                @if (courseGroups.Count() != 0)
+                                {
+
+                                    foreach (var cg in courseGroups.Where(w => w.ParentId == null))
+                                    {
+
+                                        <li>
+
+                                            <a href="/Home/Courses?gid=@cg.CourseGroup_Id">@cg.CourseGroup_Title <i class="fa fa-angle-down"></i></a>
+                                            <ul class="submenu">
+                                                @{int rd = 1;}
+                                                @foreach (var g in cg.CourseGroups.OrderBy(r => r.CourseGroup_Id))
+                                                {
+                                                    @if (rd == 1)
+                                                    {
+                                                        <li class="hidden-lg hidden-md">
+                                                            <a href="/Home/Courses?gid=1">تمام دوره ها </a>
+                                                        </li>
+                                                    }
+
+                                                    <li>
+                                                        <a href="/Home/Courses?gid=@g.CourseGroup_Id">
+                                                            @g.CourseGroup_Title
+                                                            @if (g.CourseGroups != null)
+                                                            {
+                                                                @if (g.CourseGroups.Count() != 0)
+                                                                {
+                                                                    <span class="fa fa-angle-left float-xs-left"></span>
+                                                                }
+
+                                                            }
+                                                        </a>
+                                                        @if (g.CourseGroups != null)
+                                                        {
+                                                            @if (g.CourseGroups.Count() != 0)
+                                                            {
+                                                                <ul class="submenu">
+                                                                    @foreach (var sub in g.CourseGroups)
+                                                                    {
+                                                                        <li><a href="/Home/Courses?gid=@sub.CourseGroup_Id">@sub.CourseGroup_Title</a></li>
+                                                                    }
+
+                                                                </ul>
+                                                            }
+
+                                                        }
+                                                    </li>
+                                                    rd++;
+                                                }
+
+                                            </ul>
+                                        </li>
+                                    }
+
+                                }
+                            }
+
+                            <li>
+                                <a href="/Teachers">مدرسان </a>
+
+                            </li>
+                            <li>
+                                <a href="/Archive">آرشیو<i class="fa fa-angle-down"></i></a>
+                                <ul class="submenu">
+                                    <li><a href="/Archive?type=video">ویدئو</a></li>
+                                    <li><a href="/Archive?type=sound">صوت</a></li>
+                                    <li><a href="/Archive?type=image">تصویر</a></li>
+                                    <li><a href="/Archive?type=file">فایل</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="/News">اخبار </a>
+
+                            </li>
+                            <li><a href="/Contact">تماس با ما</a></li>
+                            <li><a href="/Home/FrAQu">سئوالات متداول</a></li>
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                string rt = User.FindFirst("RoleTitle").Value.ToString();
+
+                                <li><a href="/Admin" data-url="/Admin" title="@User.Identity.Name | @rt">کاربری</a></li>
+                                <li><a href="/Logout" data-url="/Home/Index">خروج</a></li>
+                            }
+                            else
+                            {
+
+                                <li>
+                                    <a href="javascript:void(0)">ثبت نام <i class="fa fa-angle-down"></i></a>
+                                    <ul class="submenu right">
+                                        <li><a href="/Register/S" data-url="Register/S">فراگیر</a></li>
+                                        <li><a href="/Register/T" data-url="Register/T">مدرس</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0)">ورود <i class="fa fa-angle-down"></i></a>
+                                    <ul class="submenu right">
+                                        <li><a href="/Login/S" data-url="/Login/S">فراگیر</a></li>
+                                        <li><a href="/Login/T" data-url="/Login/T">مدرس</a></li>
+                                    </ul>
+                                </li>
+
+
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-1 col-sm-2 col-xs-3 ">
+                    <div class="search-wrap text-right">
+                        <ul>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-search"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-2 clear col-xs-3 hidden-md hidden-lg">
+                    <div class="responsive-menu-wrap  pull-left"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

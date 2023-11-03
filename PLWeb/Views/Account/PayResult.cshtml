@@ -1,0 +1,78 @@
+﻿@model PLCore.DTOs.General.PayResultViewModel
+@using PLCore.Convertors;
+@{
+    ViewData["Title"] = "نتیجه پرداخت";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@section Header{
+    <partial name="_Header" />
+}
+<h1 class="text-xs-center alert alert-info">نتیجه پرداخت</h1>
+@if (Model.IsSuccess == true)
+{
+    <div class="row m-t-20 m-b-20">
+        <h2 class="text-xs-center alert alert-warning">فراگیر محترم @Model.RegUserRole.User.UserFirstName @Model.RegUserRole.User.UserFamily</h2>
+        <div class="col-md-offset-4 col-md-4 col-xs-offset-0 col-xs-12 m-t-10 p-3">
+            @if (Model.TotalPayValue == null)
+            {
+                <h4 class="text-xs-center fs-24 alert alert-success m-t-2 m-b-2 p-2">
+                    پرداخت شما با موفقیت انجام شد
+                </h4>
+            }
+            else
+            {
+                if (Model.TotalPayValue == 0)
+                {
+                    <h4 class="text-xs-center fs-24 alert alert-success m-t-2 m-b-2 p-2">
+                        ثبت نام شما با موفقیت انجام شد
+                    </h4>
+                }
+            }
+            @if (Model.Course.CourseStatus.CourseStatus_Title != "دانلودی")
+            {
+                <div class="bg-success p-r-5">
+                    <p class="p-2">نام دوره : @Model.Course.Course_Title</p>
+                    <p class="p-2">نام مدرس : @Model.Teacher.User.UserFirstName @Model.Teacher.User.UserFamily</p>
+                    <p class="p-2">تاریخ برگزاری : @Model.Course.Course_StartDate.ToShamsi()</p>
+                    <p class="p-2">ساعت شروع : @Model.Course.Course_StartTime</p>
+
+                </div>
+                <p class="p-2 m-t-5"><a href="@Model.Teacher.RoomLink" target="_blank" class="btn btn-primary btn-lg fs-20 col-xs-12">ورود به کلاس</a></p><br />
+            }
+            else
+            {
+                <div class="bg-success p-r-5">
+                    <p class="p-2">نام دوره : @Model.Course.Course_Title</p>
+                    <p class="p-2">نام مدرس : @Model.Teacher.User.UserFirstName @Model.Teacher.User.UserFamily</p>
+
+                </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <p class="p-2 m-t-5"><a href="/Home/CourseDetails/@Model.Course.Course_Id" class="btn btn-primary btn-lg fs-20 col-xs-12">دانلود فایلها</a></p><br />
+                }
+                else
+                {
+                    <p class="p-2 m-t-5"><a href="/Login/S?returl=/Home/CourseDetails/@Model.Course.Course_Id" class="btn btn-primary btn-lg fs-20 col-xs-12">ورود برای دانلود فایلها</a></p><br />
+                }
+
+            }
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="row m-t-20 m-b-20">
+        <h2 class="text-xs-center alert alert-danger col-md-offset-4 col-md-4 col-xs-offset-0 col-xs-12">
+            پرداخت موفقیت آمیز نبود
+        </h2>
+    </div>
+
+}
+
+
+@section Footer{
+    <partial name="_Footer" />
+}
+

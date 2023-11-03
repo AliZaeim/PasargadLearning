@@ -1,0 +1,386 @@
+﻿@model PLCore.DTOs.General.AdminIndexViewModel;
+@using PLCore.Services.Interfaces;
+@inject IUserService _userService
+@{
+    ViewData["Title"] = "پنل کاربری";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int roleid = int.Parse(User.FindFirst("RoleId").Value.ToString());
+    PLDataLayer.Entities.User.UserRole teacher = await _userService.GetUserRoleBy_UserName_RoleId(User.Identity.Name, 3);
+}
+
+<!-- stats -->
+<div class="row">
+    <div class="col-xl-3 col-lg-6 col-xs-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block">
+                    <div class="media">
+                        <div class="media-body text-xs-left">
+                            <h3 class="pink">@Model.Courses.Count()</h3>
+
+                            <span>تعداد دوره ها</span>
+                        </div>
+                        <div class="media-right media-middle">
+                            <i class="icon-diagram2 pink font-large-2 float-xs-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-xs-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block">
+                    <div class="media">
+                        <div class="media-body text-xs-left">
+                            <h3 class="teal">@Model.AllSchools.Where(w => w.IsActive == true && w.User.UserIsActive == true).Count()</h3>
+                            <span>تعداد فراگیران</span>
+                        </div>
+                        <div class="media-right media-middle">
+                            <i class="icon-user1 teal font-large-2 float-xs-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-xs-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block">
+                    <div class="media">
+                        <div class="media-body text-xs-left">
+                            <h3 class="deep-orange">@Model.AllTeachers.Where(w => w.IsActive == true && w.User.UserIsActive == true).ToList().Count()</h3>
+                            <span>تعداد مدرسین</span>
+                        </div>
+                        <div class="media-right media-middle">
+                            <i class="icon-bag2 deep-orange font-large-2 float-xs-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-6 col-xs-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-block">
+                    <div class="media">
+                        <div class="media-body text-xs-left">
+                            <h3 class="cyan">@Model.CourseFilesCount</h3>
+                            <span>فایلهای آموزشی</span>
+                        </div>
+                        <div class="media-right media-middle">
+                            <i class="icon-file cyan font-large-2 float-xs-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 m-b-5">
+        <div class="col-md-4 col-xs-12 p-1">
+            <a href="/Home/Courses?gid=1" class="btn btn-info btn-lg col-xs-12">تمام دوره ها</a>
+        </div>
+        <div class="col-md-4 col-xs-12 p-1">
+            <a href="/Admin/Reports/yCourses" class="btn btn-warning btn-lg col-xs-12">دوره های شما</a>
+        </div>
+
+        @if (roleid == 3)
+        {
+            @if (teacher != null)
+            {
+                <div class="col-md-4 col-xs-12 p-1">
+                    <a href="@teacher.RoomLink" class="btn btn-primary btn-lg  col-xs-12">لینک اتاق آموزش</a>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-4 col-xs-12 p-1">
+                    <a href="/News" class="btn btn-primary btn-lg  col-xs-12">آخرین اخبار</a>
+                </div>
+            }
+
+        }
+        else
+
+        {
+            <div class="col-md-4 col-xs-12 p-1">
+                <a href="/News" class="btn btn-primary btn-lg  col-xs-12">آخرین اخبار</a>
+            </div>
+        }
+
+
+    </div>
+    <br />
+    <br />
+    <h2 class="text-xs-center col-xs-12 alert alert-success ">به پنل کاربری سایت آموزش صنعت بیمه خوش آمدید !</h2>
+</div>
+@if (roleid == 1)
+{
+
+    <div class="row">
+        <div class="col-xl-8 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="list-inline text-xs-center pt-2 m-0">
+                        <li class="mr-1">
+                            <h6><i class="icon-circle warning"></i> <span class="grey darken-1">در حال برگزاری</span></h6>
+                        </li>
+                        <li class="mr-1">
+                            <h6><i class="icon-circle success"></i> <span class="grey darken-1">برگزار شده</span></h6>
+                        </li>
+                    </ul>
+                    <div class="chartjs height-250">
+                        <canvas id="line-stacked-area" height="250"></canvas>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-xs-3 text-xs-center">
+                            <span class="text-muted">کل دوره ها</span>
+                            <h2 class="block font-weight-normal">18</h2>
+                            <progress class="progress progress-xs mt-2 progress-success" value="70" max="100"></progress>
+                        </div>
+                        <div class="col-xs-3 text-xs-center">
+                            <span class="text-muted">برگزار شده</span>
+                            <h2 class="block font-weight-normal">125</h2>
+                            <progress class="progress progress-xs mt-2 progress-success" value="40" max="100"></progress>
+                        </div>
+                        <div class="col-xs-3 text-xs-center">
+                            <span class="text-muted">درحال برگزاری</span>
+                            <h2 class="block font-weight-normal">242</h2>
+                            <progress class="progress progress-xs mt-2 progress-success" value="60" max="100"></progress>
+                        </div>
+                        <div class="col-xs-3 text-xs-center">
+                            <span class="text-muted">مجموع شهریه</span>
+                            <h2 class="block font-weight-normal">ریال11,582</h2>
+                            <progress class="progress progress-xs mt-2 progress-success" value="90" max="100"></progress>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-12">
+            <div class="card card-inverse bg-info">
+                <div class="card-body">
+                    <div class="position-relative">
+                        <div class="chart-title position-absolute mt-2 ml-2 white">
+                            <h1 class="display-4">20852</h1>
+                            <span>آمار فراگیران</span>
+                        </div>
+                        <canvas id="emp-satisfaction" class="height-400 block"></canvas>
+                        <div class="chart-stats position-absolute position-bottom-0 position-right-0 mb-2 mr-3 white">
+                            <a href="#" class="btn bg-info bg-darken-3 mr-1 white">گزارش کامل <i class="icon-stats-bars"></i></a> یکسال اخیر .
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row match-height">
+        <div class="col-xl-4 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="p-2 text-xs-center bg-deep-orange media-left media-middle">
+                            <i class="icon-user1 font-large-2 white"></i>
+                        </div>
+                        <div class="p-2 media-body">
+                            <h5 class="deep-orange">فراگیران فعال</h5>
+                            <h5 class="text-bold-400">1,222</h5>
+                            <progress class="progress progress-sm progress-deep-orange mt-1 mb-0" value="45" max="100"></progress>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="p-2 text-xs-center bg-green media-left media-middle">
+                            <i class="icon-user1 font-large-2 white"></i>
+                        </div>
+                        <div class="p-2 media-body">
+                            <h5 class="green">فراگیران امروز</h5>
+                            <h5 class="text-bold-400">356</h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="media">
+                        <div class="p-2 text-xs-center bg-cyan media-left media-middle">
+                            <i class="icon-camera7 font-large-2 white"></i>
+                        </div>
+                        <div class="p-2 media-body">
+                            <h5>مدرسین امروز</h5>
+                            <h5 class="text-bold-400">28</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xl-8 col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">فاکتورهای اخیر</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-block">
+                        <p>پرداخت شده 240, پرداخت نشده 150. <span class="float-xs-right"><a href="#">گزارش کامل<i class="icon-arrow-right2"></i></a></span></p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th title="شماره فاکتور">#</th>
+                                    <th>فراگیر</th>
+                                    <th>وضعیت</th>
+                                    <th>تاریخ</th>
+                                    <th>مبلغ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-truncate"><a href="#">INV-001001</a></td>
+                                    <td class="text-truncate">مریم مطلبی</td>
+                                    <td class="text-truncate"><span class="tag tag-default tag-success">پرداخت شده</span></td>
+                                    <td class="text-truncate">98/09/10</td>
+                                    <td class="text-truncate">2000000 تومان</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-truncate"><a href="#">INV-001012</a></td>
+                                    <td class="text-truncate">جواد عزتی</td>
+                                    <td class="text-truncate"><span class="tag tag-default tag-success">پرداخت شده</span></td>
+                                    <td class="text-truncate">98/10/10</td>
+                                    <td class="text-truncate">1000000 تومان</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-truncate"><a href="#">INV-001401</a></td>
+                                    <td class="text-truncate">مجید حیدری</td>
+                                    <td class="text-truncate"><span class="tag tag-default tag-success">پرداخت شده</span></td>
+                                    <td class="text-truncate">98/11/24</td>
+                                    <td class="text-truncate">5000000 تومان</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-truncate"><a href="#">INV-01112</a></td>
+                                    <td class="text-truncate">فهیمه باقری</td>
+                                    <td class="text-truncate"><span class="tag tag-default tag-warning">پرداخت نشده</span></td>
+                                    <td class="text-truncate">98/11/01</td>
+                                    <td class="text-truncate">3200000 تومان</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-truncate"><a href="#">INV-008101</a></td>
+                                    <td class="text-truncate">امیر زعیم</td>
+                                    <td class="text-truncate"><span class="tag tag-default tag-warning">پرداخت نشده</span></td>
+                                    <td class="text-truncate">98/11/05</td>
+                                    <td class="text-truncate">2000000 تومان</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section id="chartjs-pie-charts">
+        <div class="row">
+            <!-- Simple Pie Chart -->
+            <div class="col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">پراکندگی استانی فراگیران</h4>
+                        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                        <div class="heading-elements">
+                            <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                                <li><a data-action="close"><i class="icon-cross2"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body collapse in">
+                        <div class="card-block">
+                            <iframe class="chartjs-hidden-iframe" tabindex="-1" style="width: 100%; display: block; border: 0px none; height: 0px; margin: 0px; position: absolute; inset: 0px;"></iframe>
+                            <canvas id="simple-pie-chart" height="480" style="display: block; width: 579px; height: 400px;" width="694"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simple Doughnut Chart -->
+            <div class="col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">پراکندگی استانی مدرسین</h4>
+                        <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                        <div class="heading-elements">
+                            <ul class="list-inline mb-0">
+                                <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                                <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                                <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                                <li><a data-action="close"><i class="icon-cross2"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body collapse in">
+                        <div class="card-block">
+                            <iframe class="chartjs-hidden-iframe" tabindex="-1" style="width: 100%; display: block; border: 0px none; height: 0px; margin: 0px; position: absolute; inset: 0px;"></iframe>
+                            <canvas id="simple-doughnut-chart" height="480" style="display: block; width: 579px; height: 400px;" width="694"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">ترکیب جنسیتی فراگیران</h4>
+                    <a class="heading-elements-toggle"><i class="icon-ellipsis font-medium-3"></i></a>
+                    <div class="heading-elements">
+                        <ul class="list-inline mb-0">
+                            <li><a data-action="collapse"><i class="icon-minus4"></i></a></li>
+                            <li><a data-action="reload"><i class="icon-reload"></i></a></li>
+                            <li><a data-action="expand"><i class="icon-expand2"></i></a></li>
+                            <li><a data-action="close"><i class="icon-cross2"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body collapse in">
+                    <div class="card-block">
+                        <iframe class="chartjs-hidden-iframe" tabindex="-1" style="width: 100%; display: block; border: 0px; height: 0px; margin: 0px; position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px;"></iframe>
+                        <canvas id="column-chart" height="479" width="1484" style="display: block; width: 1239px; height: 400px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts{
+
+    @*<script src="~/AdminRef/app-assets/js/scripts/charts/chartjs/pie-doughnut/pie.js" type="text/javascript"></script>*@
+    <script src="~/AdminRef/app-assets/js/scripts/charts/chartjs/pie-doughnut/pie-simple.js" type="text/javascript"></script>
+    @*<script src="~/AdminRef/app-assets/js/scripts/charts/chartjs/pie-doughnut/doughnut.js" type="text/javascript"></script>*@
+    <script src="~/AdminRef/app-assets/js/scripts/charts/chartjs/pie-doughnut/doughnut-simple.js" type="text/javascript"></script>
+    <script src="~/AdminRef/app-assets/js/scripts/charts/chartjs/bar/column.js" type="text/javascript"></script>
+    <script src="~/AdminRef/app-assets/js/scripts/charts/chartjs/bar/column-stacked.js" type="text/javascript"></script>
+}

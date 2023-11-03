@@ -1,0 +1,84 @@
+﻿@model IEnumerable<PLDataLayer.Entities.SubEntities.SiteFAQ>
+@using PLCore.Convertors;
+@using PLCore.Services.Interfaces;
+@inject IUserService _UserService
+@{
+    ViewData["Title"] = "سئوالات متداول";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    int roleId = int.Parse(User.FindFirst("RoleId").Value);
+}
+<h1 class="text-xs-center alert alert-info">سوالات متداول</h1>
+@if (_UserService.CheckPermission(123, User.Identity.Name, roleId))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-success">ثبت سوال</a>
+    </p>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.SiteFAQ_Date)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.SiteFAQ_Name)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.SiteFAQ_Email)
+            </th>
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.SiteFAQ_Subject)
+            </th>
+            
+            <th class="text-xs-center align-middle">
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+
+            <th class="text-xs-center align-middle">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderBy(r => r.SiteFAQ_Date))
+        {
+            <tr>
+                <td class="text-xs-center align-middle">
+                   @item.SiteFAQ_Date.ToShamsiN_WithTime()
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.SiteFAQ_Name)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.SiteFAQ_Email)
+                </td>
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.SiteFAQ_Subject)
+                </td>
+                
+                <td class="text-xs-center align-middle">
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+
+                <td class="text-xs-center align-middle">
+                    @if (_UserService.CheckPermission(124, User.Identity.Name, roleId))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.SiteFAQ_Id">ویرایش</a> <span> | </span>
+                    }
+                    @if (_UserService.CheckPermission(125, User.Identity.Name, roleId))
+                    {
+                        <a asp-action="Details" asp-route-id="@item.SiteFAQ_Id">جزئیات</a> <span> | </span>
+                    }
+                    @if (_UserService.CheckPermission(126, User.Identity.Name, roleId))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.SiteFAQ_Id">حــذف</a>
+                    }
+
+
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

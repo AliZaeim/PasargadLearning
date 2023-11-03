@@ -1,0 +1,377 @@
+﻿@model PLCore.DTOs.Account.TeacherRegisterViewModel
+@using System.Globalization;
+@{
+    PersianCalendar pc = new PersianCalendar();
+}
+<hr />
+<h2 class="text-xs-center"> ثبت نام مدرس</h2>
+<h4 class="text-xs-center ">
+    <span class="tag tag-warning">مرحله 3</span>
+</h4>
+<hr />
+<div class="row">
+    <div class="col-xs-12">
+       
+        <form asp-action="RegisterTeacher" asp-controller="Account" data-ajax="true"
+              data-ajax-method="POST"
+              data-ajax-mode="replace"
+              data-ajax-update="#step1" class="mt-1" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Key" />
+            @if (Model.IsConfirmed == true)
+            {
+                <input type="hidden" asp-for="RoleId" />
+                <input type="hidden" asp-for="UserSex" />
+                <input type="hidden" asp-for="UserEduLevel" />
+                <input type="hidden" asp-for="IsConfirmed" />
+                
+                <input type="hidden" asp-for="StateId" />
+                <input type="hidden" asp-for="CountyId" />
+                <input type="hidden" asp-for="UserBirthDateYear" />
+                <input type="hidden" asp-for="UserBirthDateMouth" />
+                <input type="hidden" asp-for="UserBirthDateDay" />
+            }
+            <div class="form-group">
+                <label asp-for="UserNC" class="control-label"></label>
+                <input asp-for="UserNC" readonly class="form-control" />
+                <span asp-validation-for="UserNC" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserCellphone" class="control-label"></label>
+                <input asp-for="UserCellphone" readonly class="form-control" />
+                <span asp-validation-for="UserCellphone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserFirstName" class="control-label"></label>
+                @if (Model.IsConfirmed)
+                {
+                    <input asp-for="UserFirstName" readonly class="form-control" />
+                }
+                else
+                {
+                    <input asp-for="UserFirstName" autofocus class="form-control" />
+                }
+                <span asp-validation-for="UserFirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserFamily" class="control-label"></label>
+                @if (Model.IsConfirmed)
+                {
+                    <input asp-for="UserFamily" readonly class="form-control" />
+                }
+                else
+                {
+                    <input asp-for="UserFamily" class="form-control" />
+                }
+                <span asp-validation-for="UserFamily" class="text-danger"></span>
+            </div>
+
+            
+            <div class="form-group">
+                <label class="control-label">تاریخ تولد</label>
+                <br />
+                @{
+                    int nowy = pc.GetYear(DateTime.Now);
+                    int miny = nowy - 60;
+                    int maxy = nowy - 18;
+                }
+                <div class="form-group col-xs-4">
+                    <label asp-for="UserBirthDateYear" class="control-label"></label>
+                    @if (Model.IsConfirmed == true)
+                    {
+                        <select disabled asp-for="UserBirthDateYear" class="form-control">
+                            <option value="">لطفا انتخاب کنید</option>
+                            @for (int y = miny; y <= maxy; y++)
+                            {
+
+                                @if (Model.UserBirthDateYear == y)
+                                {
+                                    <option selected value="@y">@y</option>
+                                }
+                                else
+                                {
+                                    <option value="@y">@y</option>
+                                }
+
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select asp-for="UserBirthDateYear" class="form-control">
+                            <option value="">لطفا انتخاب کنید</option>
+                            @for (int y = miny; y <= maxy; y++)
+                            {
+
+                                @if (Model.UserBirthDateYear == y)
+                                {
+                                    <option selected value="@y">@y</option>
+                                }
+                                else
+                                {
+                                    <option value="@y">@y</option>
+                                }
+
+                            }
+                        </select>
+                    }
+
+                    <span asp-validation-for="UserBirthDateYear" class="text-danger"></span>
+                </div>
+                <div class="form-group col-xs-4">
+                    <label asp-for="UserBirthDateMouth" class="control-label"></label>
+                    @if (Model.IsConfirmed == true)
+                    {
+                        <select disabled asp-for="UserBirthDateMouth" class="form-control">
+                            <option value="">لطفا انتخاب کنید</option>
+                            @for (int m = 1; m <= 12; m++)
+                            {
+                                @if (Model.UserBirthDateMouth == m)
+                                {
+                                    <option selected value="@m">@m</option>
+                                }
+                                else
+                                {
+                                    <option value="@m">@m</option>
+                                }
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select asp-for="UserBirthDateMouth" class="form-control">
+                            <option value="">لطفا انتخاب کنید</option>
+                            @for (int m = 1; m <= 12; m++)
+                            {
+                                @if (Model.UserBirthDateMouth == m)
+                                {
+                                    <option selected value="@m">@m</option>
+                                }
+                                else
+                                {
+                                    <option value="@m">@m</option>
+                                }
+                            }
+                        </select>
+                    }
+
+                    <span asp-validation-for="UserBirthDateMouth" class="text-danger"></span>
+                </div>
+                <div class="form-group col-xs-4">
+                    <label asp-for="UserBirthDateDay" class="control-label"></label>
+                    @if (Model.IsConfirmed == true)
+                    {
+                        <select disabled asp-for="UserBirthDateDay" class="form-control">
+                            <option value="">لطفا انتخاب کنید</option>
+                            @for (int d = 1; d <= 31; d++)
+                            {
+                                @if (Model.UserBirthDateDay == d)
+                                {
+                                    <option selected value="@d">@d</option>
+                                }
+                                else
+                                {
+                                    <option value="@d">@d</option>
+                                }
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <select asp-for="UserBirthDateDay" class="form-control">
+                            <option value="">لطفا انتخاب کنید</option>
+                            @for (int d = 1; d <= 31; d++)
+                            {
+                                @if (Model.UserBirthDateDay == d)
+                                {
+                                    <option selected value="@d">@d</option>
+                                }
+                                else
+                                {
+                                    <option value="@d">@d</option>
+                                }
+                            }
+                        </select>
+                    }
+                    <span asp-validation-for="UserBirthDateDay" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserSex" class="control-label"></label>
+                @if (Model.IsConfirmed == true)
+                {
+                    <select disabled asp-for="UserSex" class="form-control">
+                        <option value="">لطفا جنسیت خود را انتخاب کنید</option>
+                        <option value="مرد">مرد</option>
+                        <option value="زن">زن</option>
+                    </select>
+                }
+                else
+                {
+                    <select asp-for="UserSex" class="form-control">
+                        <option value="">لطفا جنسیت خود را انتخاب کنید</option>
+                        <option value="مرد">مرد</option>
+                        <option value="زن">زن</option>
+                    </select>
+                }
+
+                <span asp-validation-for="UserSex" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UserEduLevel" class="control-label"></label>
+                <select asp-for="UserEduLevel" class="form-control">
+                    <option value="">لطفا میزان تحصیلات خود را انتخاب کنید</option>
+
+                    @if (Model.UserEduLevel == "زیر دیپلم")
+                    {
+                        <option value="زیر دیپلم" selected>زیر دیپلم</option>
+                    }
+                    else
+                    {
+                        <option value="زیر دیپلم">زیر دیپلم</option>
+                    }
+                    @if (Model.UserEduLevel == "دیپلم")
+                    {
+                        <option value="دیپلم" selected>دیپلم</option>
+                    }
+                    else
+                    {
+                        <option value="دیپلم">دیپلم</option>
+                    }
+                    @if (Model.UserEduLevel == "فوق دیپلم")
+                    {
+                        <option value="فوق دیپلم" selected>فوق دیپلم</option>
+                    }
+                    else
+                    {
+                        <option value="فوق دیپلم">فوق دیپلم</option>
+                    }
+
+                    @if (Model.UserEduLevel == "لیسانس")
+                    {
+                        <option value="لیسانس" selected>لیسانس</option>
+                    }
+                    else
+                    {
+                        <option value="لیسانس">لیسانس</option>
+                    }
+                    @if (Model.UserEduLevel == "فوق لیسانس")
+                    {
+                        <option value="فوق لیسانس" selected>فوق لیسانس</option>
+                    }
+                    else
+                    {
+                        <option value="فوق لیسانس">فوق لیسانس</option>
+                    }@if (Model.UserEduLevel == "دکتری")
+                    {
+                        <option value="دکتری" selected>دکتری</option>
+                    }
+                    else
+                    {
+                        <option value="دکتری">دکتری</option>
+                    }
+                </select>
+                <span asp-validation-for="UserEduLevel" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="UserEduGraYear" class="control-label"></label>
+                <input asp-for="UserEduGraYear" class="form-control" />
+                <span asp-validation-for="UserEduGraYear" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserUniversity" class="control-label"></label>
+                <input asp-for="UserUniversity" class="form-control" />
+                <span asp-validation-for="UserUniversity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserSkills" class="control-label"></label>
+                <input asp-for="UserSkills" class="form-control" />
+                <span asp-validation-for="UserSkills" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StateId" class="control-label"></label>
+
+                <select asp-for="StateId" class="form-control" id="state">
+                    <option value="">لطفا استان خود را انتخاب کنید</option>
+                    @foreach (var st in Model.States)
+                    {
+                        @if (Model.StateId == st.StateId)
+                        {
+                            <option value="@st.StateId" selected>@st.StateName</option>
+                        }
+                        else
+                        {
+                            <option value="@st.StateId">@st.StateName</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="StateId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CountyId" class="control-label"></label>
+                <select asp-for="CountyId" class="form-control" id="county">
+                    <option value="">لطفا شهرستان خود را انتخاب کنید</option>
+                    @if (Model.Counties != null)
+                    {
+                        @foreach (var co in Model.Counties)
+                        {
+                            @if (Model.CountyId == co.CountyId)
+                            {
+                                <option value="@co.CountyId" selected>@co.CountyName</option>
+                            }
+                            else
+                            {
+                                <option value="@co.CountyId">@co.CountyName</option>
+                            }
+                        }
+                    }
+
+                </select>
+                <span asp-validation-for="CountyId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="ثبت نام" class="btn btn-primary btn-lg fs-18 col-xs-12" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/LayoutRef/js/jquery.validate.js"></script>
+<script src="~/LayoutRef/js/jquery.validate.unobtrusive.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).find("#st1").attr("disabled", "disabled");
+        $(document).find("#st1").addClass("btn-circle");
+        $(document).find("#st1").removeClass("btn-primary");
+        $(document).find("#st1").addClass("btn-success");
+        $(document).find("#st2").attr("disabled", "disabled");
+        $(document).find("#st2").addClass("btn-circle");
+        $(document).find("#st2").removeClass("btn-primary");
+        $(document).find("#st2").addClass("btn btn-success");
+        $(document).find("#st3").removeAttr("disabled");
+        $(document).find("#st3").toggleClass("btn-primary btn-default");
+        $("#state").change(function () {
+            var sid = $(this).children("option:selected").val();
+            //alert(sid);
+            if (sid !== "") {
+                $.ajax({
+                    url: "/Account/GetCounties",
+                    data: { stateId: sid },
+                    type: "GET",
+                    success: function (result) {
+                        $("#county").html(result);
+                    }
+                });
+            }
+            else {
+                $("#county").html("<option value=''>لطفا شهرستان خود را انتخاب کنید</option>");
+            }
+        });
+
+    });
+
+</script>
+
